@@ -8,19 +8,19 @@
     }
 
     //Crear Receta
-    if(isset($_POST['guardar'])){
+    if(isset($_POST['subir'])){
         $ConsultaAgregar = "INSERT INTO receta 
         (idreceta,  nombre_receta ,  porciones ,  tiempo_preparacion ,  tiempo_comida ,  tipo_comida ,  tipo_preferencia ,  dificultad ,  preparacion ,  fotos ,  usuario_idusuario ) 
         VALUES 
         (NULL, 
+        '".$_POST['titulo']."', 
+        '".$_POST['porciones']."', 
+        '".$_POST['tiempo_preparacion']."', 
+        '".$_POST['tiempo_comida']."', 
         '".$_POST['tipo_comida']."', 
-        '2', 
-        'prueba', 
-        'prueba', 
-        'prueba', 
-        'prueba', 
-        'prueba', 
-        'prueba', 
+        '".$_POST['tipo_preferencia']."', 
+        '".$_POST['dificultad']."', 
+        '".$_POST['preparacion']."', 
         'prueba', 
         '1');";
         $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
@@ -200,11 +200,9 @@
                     <div class="section-title product__discount__title">
                     <form action="subir_recetas.php" method="post">
                         <h2>Título: </h2><br><br>
-                        <form action="#">
                             <div class="row">
                                 <input id="nombre" name="nombre" type="text" placeholder="Título">
                             </div>
-                        </form>
 
                         <button type="button">
                             <img src="img/subetufoto.png" width="1150px" id="imagen"
@@ -232,7 +230,7 @@
                                     </li>
                                     <li>
                                       
-                                        <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()">
+                                        <select id="tiempo_comida" name="tiempo_comida" onchange="mostrarOpcionSeleccionadaTiempoComida()">
                                             <option value=""><strong>Tiempo de Comida:</strong></option>
                                             <option value="Desayuno">Desayuno</option>
                                             <option value="Almuerzo">Almuerzo</option>
@@ -265,11 +263,11 @@
                                         <p id="opcion-seleccionada"></p>
                                     </li>
                                     <li><div class="row">
-                                        <input type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                        <input type="text" id="tiempo_preparacion" name="tiempo_preparacion" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
  
                                     </div></li>
                                     <li><div class="row">
-                                        <input type="text" placeholder="Porciones" style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
+                                        <input type="text" id="porciones" name="porciones" placeholder="Porciones" style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
                                     </div></li>
                                 </ul>
                             </nav><br>
@@ -288,12 +286,8 @@
                                             <th>Cantidad</th>
                                             <th>Medida</th>
                                             <th>
-                                                <form class="hero__search__form">
                                                     <input type="text" id="buscarInput" placeholder="Buscar..."
                                                         onkeydown="if(event.keyCode==13) { buscarTabla(); return false; }">
-
-
-                                                </form>
                                             </th>
 
                                         </tr>
@@ -377,14 +371,12 @@
 
                         <div class="section-title product__discount__title">
                             <h2>Pasos de Preparación: </h2><br><br><br>
-                            <form action="#">
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
                                         <textarea placeholder="Escribe los pasos de preparación..."></textarea>
-                                        <button type="submit" class="site-btn">SUBIR RECETA</button>
+                                        <button type="submit" name="subir" id="subir" class="site-btn">SUBIR RECETA</button>
                                     </div>
                                 </div>
-                            </form>
                         </div>
                     </form>
                     </div>
@@ -417,9 +409,16 @@ ropa.addEventListener('change', () => {
             var seleccion = document.getElementById("opciones").value;
         }
 
+        
         function mostrarOpcionSeleccionadaTipoComida () {
             var seleccion = document.getElementById("tipo_comida").value;
         }
+
+        function mostrarOpcionSeleccionadaTiempoComida() {
+            var seleccion = document.getElementById("tiempo_comida").value;
+        }
+
+
     </script>
     <script>
         function buscarTabla() {
