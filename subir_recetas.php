@@ -25,7 +25,7 @@
 
     if(isset($_POST['subir'])){
         $ConsultaAgregar = "INSERT INTO receta 
-        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario ) 
+        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario, idingredientes ) 
         VALUES 
         (NULL, 
         '".$_POST['titulo']."', 
@@ -37,11 +37,14 @@
         '".$_POST['dificultad']."', 
         '".$_POST['preparacion']."', 
         'prueba', 
-        '1');";
+        '1',
+        '".$_POST['ingredientes']."');";
 
-        $SeleccionarUltimaReceta = "SELECT last_insert_id();";
+        $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
+
+        /*$SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;";
         echo($SeleccionarUltimaReceta);
-        
+
         $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
         (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
         VALUES 
@@ -50,11 +53,27 @@
         '".$_POST['cantidad']."',
         '".$_POST['medida']."');";
 
-        $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
+        $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);*/
+
     }
 
-    echo "Parametros por POST: ";
-    print_r($_POST);
+    /*if(isset($_POST['mas'])){
+        $SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;"+1;
+        echo($SeleccionarUltimaReceta);
+
+        $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
+        (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
+        VALUES 
+        ('".$SeleccionarUltimaReceta."', 
+        '".$_POST['ingredientes']."',
+        '".$_POST['cantidad']."',
+        '".$_POST['medida']."');";
+
+        $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
+    }*/
+
+    //echo "Parametros por POST: ";
+    //print_r($_POST);
 
 ?>
 
@@ -312,7 +331,7 @@
                                 </ul>
                             </nav><br>
                         </div>
-
+                    
                         <div class="section-title product__discount__title">
                             <h2>Ingredientes: </h2><br><br><br>
 
@@ -389,9 +408,9 @@
                                                     
                                                   </select>
                                             </td>
-                                            <td>
+                                            <td><!--
                                                 <button id="mas" name="mas" class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                <button id="menos" name="menos" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>                                                
+                                                <button id="menos" name="menos" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>   -->                                             
                                             </td>
                                         </tr>
                                     </tbody>
@@ -400,7 +419,7 @@
 
                             </div>
                         </div>
-
+                  
                         <div class="section-title product__discount__title">
                             <h2>Pasos de Preparación: </h2><br><br><br>
                                 <div class="row">
@@ -473,6 +492,7 @@ btnEliminarFila.addEventListener('click', eliminarFila);
 const tabla = document.getElementById('tablaDatos');
 const btnAgregar = tabla.querySelector('button.btn-success');
 
+
 // Función para agregar una nueva fila
 function agregarFila(event) {
   // Obtener la fila en la que se encuentra el botón
@@ -506,6 +526,11 @@ function eliminarFila(event) {
 
 // Agregar el evento onclick al botón "+"
 btnAgregar.onclick = agregarFila;
+
+var numeroDeFilas = tabla.rows.length;
+for (let index = 0; index < numeroDeFilas; index++) {
+    const element = array[index];
+}
 
 </script>
     <script>
