@@ -217,13 +217,13 @@
                                     <ul>
                                         <li><img src="img/foto_perfil2.png" width="70px" height="70px">
                                             <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="Perfil.html">Perfil</a></li>
-                                                <li><a class="text-center" href="Perfil.html">Mis Recetas</a></li>
+                                                <li><a class="text-center" href="perfil.html">Perfil</a></li>
+                                                <li><a class="text-center" href="perfil.html">Mis Recetas</a></li>
                                                 <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
                                                 <li><a class="text-center">Lista de Compras</a></li>
                                                 <li><a class="text-center">Colecciones</a></li>
                                                 <li><a class="text-center">Planeador de Menú</a></li>
-                                                <li><a class="text-center" href="subir_recetas.html">Subir Receta</a></li>
+                                                <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
                                                 <li><a class="text-center">Cerrar Sesión</a></li>
                                             </ul>
                                         </li>
