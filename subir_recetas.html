@@ -185,56 +185,51 @@
                         <div class="col-lg-12">
                             <nav class="header__menu">
                                 <ul>
-                                    <li>
-                                        
+                                    <li>                                        
                                         <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()">
                                             <option value=""><strong>Tipo de Comida:</strong></option>
-                                            <option value="opcion1">Entrada</option>
-                                            <option value="opcion2">Sopa</option>
-                                            <option value="opcion3">Plato Principal</option>
-                                            <option value="opcion4">Ensalada</option>
-                                            <option value="opcion5">Bebida</option>
-                                            <option value="opcion6">Sopa</option>
-                                            <option value="opcion7">Pasta</option>
-                                            <option value="opcion8">Postre</option>
+                                            <option value="Entrada">Entrada</option>
+                                            <option value="Sopa">Sopa</option>
+                                            <option value="Plato Principa">Plato Principal</option>
+                                            <option value="Ensalada">Ensalada</option>
+                                            <option value="Bebida">Bebida</option>
+                                            <option value="Sopa">Sopa</option>
+                                            <option value="Pasta">Pasta</option>
+                                            <option value="Postre">Postre</option>
                                         </select>
                                         <p id="opcion-seleccionada"></p>
                                     </li>
                                     <li>
                                       
-                                        <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()">
-                                            <option value=""><strong>Tiempo de Comida:</strong></option>
-                                            <option value="opcion1">Desayuno</option>
-                                            <option value="opcion2">Almuerzo</option>
-                                            <option value="opcion3">Aperativo</option>
-                                            <option value="opcion4">Comida</option>
-                                            <option value="opcion5">Cena</option>
-                                        
+                                        <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()" placeholder="Tiempo de comida">
+                                            <!--<option value=""><strong>Tiempo de Comida:</strong></option>-->
+                                            <option value="Desayuno">Desayuno</option>
+                                            <option value="Almuerzo">Almuerzo</option>
+                                            <option value="Aperativo">Aperativo</option>
+                                            <option value="Comida">Comida</option>
+                                            <option value="Cena">Cena</option>
                                         </select>
                                         <p id="opcion-seleccionada"></p>
                                     </li>
                                     <li>
                                         <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()">
                                             <option value=""><strong>Preferencias</strong></option>
-                                            <option value="opcion1">Mariscos</option>
-                                            <option value="opcion2">Lácteos</option>
+                                            <option value="Mariscos">Mariscos</option>
+                                            <option value="Lácteos">Lácteos</option>
                                             <option value="opcion3">Omnívoro</option>
-                                            <option value="opcion4">Vegetariano</option>
-                                            <option value="opcion5">Nueves y Dátlies</option>
-                                            <option value="opcion6">Saludables</option>
-                                            <option value="opcion7">Vegano</option>
-                                        
+                                            <option value="Vegetariano">Vegetariano</option>
+                                            <option value="Nueces y Dátlies">Nueces y Dátlies</option>
+                                            <option value="Saludables">Saludables</option>
+                                            <option value="Vegano">Vegano</option>
                                         </select>
                                         <p id="opcion-seleccionada"></p>
                                     </li>
                                     <li>
                                         <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()">
                                             <option value=""><strong>Dificultad:</strong></option>
-                                            <option value="opcion1">Alta</option>
-                                            <option value="opcion2">Media</option>
-                                            <option value="opcion3">Baja</option>
-                                            
-                                        
+                                            <option value="Alta">Alta</option>
+                                            <option value="Media">Media</option>
+                                            <option value="Baja">Baja</option>                                        
                                         </select>
                                         <p id="opcion-seleccionada"></p>
                                     </li>
@@ -309,24 +304,15 @@
                                                     <option value="Oregano">Oregano</option>
                                                   </select>
                                             </td>
-                                            <td>
-                                                <select id="ropa">
-                                                    <option value="">Seleccione una prenda</option>
-                                                    <option value="camisa">Camisa</option>
-                                                    <option value="pantalon">Pantalón</option>
-                                                  </select>
-                                                  
-                                                  <div id="opciones-adicionales" style="display:none">
-                                                    <select>
-                                                      <option value="">Seleccione una opción adicional</option>
-                                                      <option value="negro">Negro</option>
-                                                      <option value="rojo">Rojo</option>
-                                                      <option value="azul">Azul</option>
-                                                    </select>
-                                                  </div>
-                                                  
-                                                  
+                                            
+                                            <td class="shoping__cart__quantity">
+                                                <div class="quantity">
+                                                    <div class="pro-qty">
+                                                        <input type="text" value="1">
+                                                    </div>
+                                                </div>
                                             </td>
+                                            
                                             <td>
                                                 <nav class="header__menu">
                                                     <ul>
