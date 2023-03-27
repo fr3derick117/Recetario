@@ -1,0 +1,63 @@
+<table id="tablaDatos">
+    <thead>
+        <tr>
+            <th class="shoping__product">
+                Ingrediente
+            </th>
+            <th>Cantidad</th>
+            <th>Medida</th>
+            <th>
+                <form class="hero__search__form">
+                    <input type="text" id="buscarInput" placeholder="Buscar..."
+                        onkeydown="if(event.keyCode==13) { buscarTabla(); return false; }">
+                </form>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="shoping__cart__item">
+                <select id="ingredientes">
+                    <option value="">Selecciona un ingrediente</option>
+                    <option value="Esencia de Vainilla">Esencia de Vainilla</option>
+                    <option value="Leche">Leche</option>
+                    <option value="Leche evaporada Carnation">Leche evaporada Carnation</option>
+                    <option value="Agua">Agua</option>
+                    <option value="Jugo de limon">Jugo de limon</option>
+                    <option value="Jugo de naranja">Jugo de naranja</option>
+                    <option value="Jugo de uva">Jugo de uva</option>
+                    <option value="Vinagre Blanco">Vinagre Blanco</option>
+                  </select>
+            </td>
+            
+            <td class="shoping__cart__quantity">
+                <div class="quantity">
+                    <div class="pro-qty">
+                        <input type="text" value="1">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <nav class="header__menu">
+                    <ul><!--Hola -->
+                        <li><a href="#">Selecciona</a>
+                            <ul class="header__menu__dropdown">
+                                <li><a></a></li>
+                                <li><a></a></li>
+                                <li><a></a></li>
+                                <li><a></a></li>
+                                <li><a></a></li>
+                                <li><a></a></li>
+                                <li><a></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </td>
+            <td>
+                <button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
+                <button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

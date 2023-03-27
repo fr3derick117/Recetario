@@ -1,3 +1,33 @@
+<?php
+    //Establecer la conexion a la base de datos
+    $conexion=mysqli_connect('localhost','root','','ingsoft');
+
+    //Verificar que se pudo conectar a la base de datos
+    if(!$conexion){
+        die("Error al conectarse a la base de datos: ".mysqli_connect_error());
+    }
+
+    //Crear Receta
+    if(isset($_POST['guardar'])){
+        $ConsultaAgregar = "INSERT INTO receta 
+        (idreceta,  nombre_receta ,  porciones ,  tiempo_preparacion ,  tiempo_comida ,  tipo_comida ,  tipo_preferencia ,  dificultad ,  preparacion ,  fotos ,  usuario_idusuario ) 
+        VALUES 
+        (NULL, 
+        '".$_POST['tipo_comida']."', 
+        '2', 
+        'prueba', 
+        'prueba', 
+        'prueba', 
+        'prueba', 
+        'prueba', 
+        'prueba', 
+        'prueba', 
+        '1');";
+        $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -168,10 +198,11 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title product__discount__title">
+                    <form action="subir_recetas.php" method="post">
                         <h2>Título: </h2><br><br>
                         <form action="#">
                             <div class="row">
-                                <input type="text" placeholder="Título">
+                                <input id="nombre" name="nombre" type="text" placeholder="Título">
                             </div>
                         </form>
 
@@ -186,7 +217,7 @@
                             <nav class="header__menu">
                                 <ul>
                                     <li>                                        
-                                        <select id="opciones" name="opciones" onchange="mostrarOpcionSeleccionada()">
+                                        <select id="tipo_comida" name="tipo_comida" onchange="mostrarOpcionSeleccionadaTipoComida()">
                                             <option value=""><strong>Tipo de Comida:</strong></option>
                                             <option value="Entrada">Entrada</option>
                                             <option value="Sopa">Sopa</option>
@@ -257,14 +288,12 @@
                                             <th>Cantidad</th>
                                             <th>Medida</th>
                                             <th>
-                                                
-                                                <!-- Boton de Buscar
                                                 <form class="hero__search__form">
                                                     <input type="text" id="buscarInput" placeholder="Buscar..."
                                                         onkeydown="if(event.keyCode==13) { buscarTabla(); return false; }">
 
 
-                                                </form>-->
+                                                </form>
                                             </th>
 
                                         </tr>
@@ -314,11 +343,10 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <!--asdasdas-->
+                                            
                                             <td>
                                                 <nav class="header__menu">
-                                                    <ul><!--Holaaaaa -->
-                                                        <!---->
+                                                    <ul><!--Hola -->
                                                         <li><a href="#">Selecciona</a>
                                                             <ul class="header__menu__dropdown">
                                                                 <li><a></a></li>
@@ -335,7 +363,7 @@
                                             </td>
                                             <td>
                                                 <button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                <button class="btn btn-danger" style="width: 40px; height: 40px;">-</button> 
+                                                <button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>
                                                
                                             </td>
 
@@ -358,7 +386,7 @@
                                 </div>
                             </form>
                         </div>
-
+                    </form>
                     </div>
                 </div>
             </div>
@@ -383,53 +411,14 @@ ropa.addEventListener('change', () => {
 });
 
     </script>
-<script>
-    // obtener elementos HTML
-const tablaDatos = document.getElementById('tablaDatos');
-const ingredientes = document.getElementById('ingredientes');
-const btnAgregarFila = document.querySelector('.btn-success');
-const btnEliminarFila = document.querySelector('.btn-danger');
-
-// función para agregar una nueva fila
-function agregarFila() {
-  // clonar la fila original
-  const filaOriginal = tablaDatos.querySelector('tbody tr');
-  const nuevaFila = filaOriginal.cloneNode(true);
-
-  // resetear valores en la fila clonada
-  const selectIngrediente = nuevaFila.querySelector('#ingredientes');
-  selectIngrediente.selectedIndex = 0;
-  const inputCantidad = nuevaFila.querySelector('.pro-qty input');
-  inputCantidad.value = '1';
-
-  // agregar eventos a los botones de la fila clonada
-  const btnAgregar = nuevaFila.querySelector('.btn-success');
-  btnAgregar.addEventListener('click', agregarFila);
-  const btnEliminar = nuevaFila.querySelector('.btn-danger');
-  btnEliminar.addEventListener('click', eliminarFila);
-
-  // agregar la fila clonada a la tabla
-  const tbody = tablaDatos.querySelector('tbody');
-  tbody.appendChild(nuevaFila);
-}
-
-// función para eliminar la fila actual
-function eliminarFila() {
-  const filaActual = this.closest('tr');
-  if (filaActual) {
-    filaActual.remove();
-  }
-}
-
-// agregar eventos a los botones de la fila original
-btnAgregarFila.addEventListener('click', agregarFila);
-btnEliminarFila.addEventListener('click', eliminarFila);
-
-</script>
+  
     <script>
         function mostrarOpcionSeleccionada() {
             var seleccion = document.getElementById("opciones").value;
-            
+        }
+
+        function mostrarOpcionSeleccionadaTipoComida () {
+            var seleccion = document.getElementById("tipo_comida").value;
         }
     </script>
     <script>
@@ -475,3 +464,4 @@ btnEliminarFila.addEventListener('click', eliminarFila);
 </body>
 
 </html>
+<!---->
