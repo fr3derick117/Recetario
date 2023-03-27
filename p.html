@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Botón de opciones con subopciones</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		#opciones {
+			background-color: #eee;
+			border: none;
+			padding: 10px;
+			font-size: 16px;
+			border-radius: 5px;
+			cursor: pointer;
+			width: 150px;
+			margin-right: 10px;
+		}
+		.subopciones {
+			display: none;
+			background-color: #f9f9f9;
+			border: none;
+			padding: 10px;
+			font-size: 14px;
+			border-radius: 5px;
+			cursor: pointer;
+			width: 150px;
+			margin-top: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Botón de opciones con subopciones</h1>
+	<select id="opciones">
+		<option value="">Seleccione una opción</option>
+		<option value="camisas">Camisas</option>
+		<option value="pantalones">Pantalones</option>
+	</select>
+	<div id="camisas-subopciones" class="subopciones">
+		<option value="">Seleccione una opción</option>
+		<option value="camisa-roja">Camisa roja</option>
+		<option value="camisa-verde">Camisa verde</option>
+		<option value="camisa-azul">Camisa azul</option>
+	</div>
+	<div id="pantalones-subopciones" class="subopciones">
+		<option value="">Seleccione una opción</option>
+		<option value="pantalon-negro">Pantalón negro</option>
+		<option value="pantalon-rojo">Pantalón rojo</option>
+		<option value="pantalon-azul">Pantalón azul</option>
+	</div>
+
+	<script>
+		var opciones = document.getElementById("opciones");
+		var camisasSubopciones = document.getElementById("camisas-subopciones");
+		var pantalonesSubopciones = document.getElementById("pantalones-subopciones");
+
+		opciones.addEventListener("change", function() {
+			if (opciones.value == "camisas") {
+				camisasSubopciones.style.display = "block";
+				pantalonesSubopciones.style.display = "none";
+			} else if (opciones.value == "pantalones") {
+				pantalonesSubopciones.style.display = "block";
+				camisasSubopciones.style.display = "none";
+			} else {
+				camisasSubopciones.style.display = "none";
+				pantalonesSubopciones.style.display = "none";
+			}
+		});
+	</script>
+</body>
+</html>
