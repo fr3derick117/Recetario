@@ -210,12 +210,29 @@
                         </nav>
                     </div>
                     <div class="col-lg-2">
-                        <div class="header__cart">
-                            <ul>
-                                <li><img src="img/foto_perfil.png" width="60px" height="60px"> </img></li>
-                            </ul>
-                        </div>
+                    <div class="header__cart">
+                        <ul>
+                            <li>
+                                <nav class="header__menu">
+                                    <ul>
+                                        <li><img src="img/foto_perfil2.png" width="70px" height="70px">
+                                            <ul class="header__menu__dropdown" width="60px" height="60px">
+                                                <li><a class="text-center" href="Perfil.html">Perfil</a></li>
+                                                <li><a class="text-center" href="Perfil.html">Mis Recetas</a></li>
+                                                <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
+                                                <li><a class="text-center">Lista de Compras</a></li>
+                                                <li><a class="text-center">Colecciones</a></li>
+                                                <li><a class="text-center">Planeador de Menú</a></li>
+                                                <li><a class="text-center" href="subir_recetas.html">Subir Receta</a></li>
+                                                <li><a class="text-center">Cerrar Sesión</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </li>
+                        </ul>
                     </div>
+                </div>
                 </div>
                 <div class="humberger__open">
                     <i class="fa fa-bars"></i>
