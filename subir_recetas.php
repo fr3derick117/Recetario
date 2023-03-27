@@ -1,4 +1,5 @@
 <?php
+
     //Establecer la conexion a la base de datos
     $conexion=mysqli_connect('localhost','root','','ingsoft');
 
@@ -8,22 +9,23 @@
     }
 
     //Crear Receta
-    <?php
-if(isset($_FILES['imagen'])){
-  $imagen = $_FILES['imagen']['tmp_name'];
-  $nombre = $_FILES['imagen']['name'];
-  $tipo = $_FILES['imagen']['type'];
+    if(isset($_FILES['imagen'])){
+    $imagen = $_FILES['imagen']['tmp_name'];
+    $nombre = $_FILES['imagen']['name'];
+    $tipo = $_FILES['imagen']['type'];
   
   // Aquí debes agregar código para conectarte a la base de datos MySQL
   // y guardar la imagen en una tabla de la base de datos.
   
-  // Ejemplo de código para guardar la imagen en una carpeta en el servidor:
-  $ruta = 'uploads/' . $nombre;
-  move_uploaded_file($imagen, $ruta);
-}
+    // Ejemplo de código para guardar la imagen en una carpeta en el servidor:
+    $ruta = 'uploads/' . $nombre;
+    move_uploaded_file($imagen, $ruta);
+    }
+
+
     if(isset($_POST['subir'])){
         $ConsultaAgregar = "INSERT INTO receta 
-        (idreceta,  nombre_receta ,  porciones ,  tiempo_preparacion ,  tiempo_comida ,  tipo_comida ,  tipo_preferencia ,  dificultad ,  preparacion ,  fotos ,  usuario_idusuario ) 
+        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario ) 
         VALUES 
         (NULL, 
         '".$_POST['titulo']."', 
@@ -36,10 +38,27 @@ if(isset($_FILES['imagen'])){
         '".$_POST['preparacion']."', 
         'prueba', 
         '1');";
+
+        $SeleccionarUltimaReceta = "SELECT last_insert_id();";
+        echo($SeleccionarUltimaReceta);
+        
+        $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
+        (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
+        VALUES 
+        ('".$SeleccionarUltimaReceta."', 
+        '".$_POST['ingredientes']."',
+        '".$_POST['cantidad']."',
+        '".$_POST['medida']."');";
+
         $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
     }
 
+    echo "Parametros por POST: ";
+    print_r($_POST);
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -210,6 +229,7 @@ if(isset($_FILES['imagen'])){
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title product__discount__title">
+                    <form method="post" action="subir_recetas.php">
                         <h2>Título: </h2><br><br>
                         <form action="#">
                             <div class="row">
@@ -218,14 +238,14 @@ if(isset($_FILES['imagen'])){
                         </form>
 
                         <form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">
-  <button type="button">
-    <img src="img/subetufoto.png" width="1150px" id="imagen"
-         onclick="document.getElementById('fileInput').click();">
-    <input type="file" name="imagen" id="fileInput" style="display: none;"
-           onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
-  </button>
-  <input type="submit" value="Guardar">
-</form><br><br>
+                        <button type="button">
+                        <img src="img/subetufoto.png" width="1150px" id="imagen"
+                        onclick="document.getElementById('fileInput').click();">
+                        <input type="file" name="imagen" id="fileInput" style="display: none;"
+                        onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
+                        </button>
+                        <input type="submit" value="Guardar">
+                        </form><br><br>
 
                         <div class="col-lg-12">
                             <nav class="header__menu">
@@ -323,45 +343,45 @@ if(isset($_FILES['imagen'])){
                                             <td class="shoping__cart__item">
                                                 <select id="ingredientes">
                                                     <option value="">Selecciona un ingrediente</option>
-                                                    <option value="Esencia de Vainilla">Esencia de Vainilla</option>
-                                                    <option value="Leche">Leche</option>
-                                                    <option value="Leche evaporada Carnation">Leche evaporada Carnation</option>
-                                                    <option value="Agua">Agua</option>
-                                                    <option value="Jugo de limon">Jugo de limon</option>
-                                                    <option value="Jugo de naranja">Jugo de naranja</option>
-                                                    <option value="Jugo de uva">Jugo de uva</option>
-                                                    <option value="Vinagre Blanco">Vinagre Blanco</option>
-                                                    <option value="Refresco">Refresco</option>
-                                                    <option value="Vinagre de Manzana">Vinagre de Manzana</option>
-                                                    <option value="Aceite de oliva">Aceite de oliva</option>
-                                                    <option value="Aceite de canola">Aceite de canola</option>
-                                                    <option value="Aceite de coco">Aceite de coco</option>
-                                                    <option value="Aceite de almendras">Aceite de almendras</option>
-                                                    <option value="Aceite de aguacate">Aceite de aguacate</option>
-                                                    <option value="Harina">Harina</option>
-                                                    <option value="Canela">Canela</option>
-                                                    <option value="Nueces">Nueces</option>
-                                                    <option value="Maizena">Maizena</option>
-                                                    <option value="Azucar">Azucar</option>
-                                                    <option value="Harina de trigo">Harina de trigo</option>
-                                                    <option value="Mantequilla">Mantequilla</option>
-                                                    <option value="Avena">Avena</option>
-                                                    <option value="Arroz">Arroz</option>
-                                                    <option value="Lentejas">Lentejas</option>
-                                                    <option value="Pasta">Pasta</option>
-                                                    <option value="Polvo para hornear">Polvo para hornear</option>
-                                                    <option value="Sal">Sal</option>
-                                                    <option value="Harina de arroz">Harina de arroz</option>
-                                                    <option value="Oregano">Oregano</option>
+                                                    <option value="1">Esencia de Vainilla</option>
+                                                    <option value="2">Leche</option>
+                                                    <option value="3">Leche evaporada Carnation</option>
+                                                    <option value="4">Agua</option>
+                                                    <option value="5">Jugo de limon</option>
+                                                    <option value="6">Jugo de naranja</option>
+                                                    <option value="7">Jugo de uva</option>
+                                                    <option value="8">Vinagre Blanco</option>
+                                                    <option value="9">Refresco</option>
+                                                    <option value="10">Vinagre de Manzana</option>
+                                                    <option value="11">Aceite de oliva</option>
+                                                    <option value="12">Aceite de canola</option>
+                                                    <option value="13">Aceite de coco</option>
+                                                    <option value="14">Aceite de almendras</option>
+                                                    <option value="15">Aceite de aguacate</option>
+                                                    <option value="16">Harina</option>
+                                                    <option value="17">Canela</option>
+                                                    <option value="18">Nueces</option>
+                                                    <option value="19">Maizena</option>
+                                                    <option value="20">Azucar</option>
+                                                    <option value="21">Harina de trigo</option>
+                                                    <option value="22">Mantequilla</option>
+                                                    <option value="23">Avena</option>
+                                                    <option value="24">Arroz</option>
+                                                    <option value="25">Lentejas</option>
+                                                    <option value="26">Pasta</option>
+                                                    <option value="27">Polvo para hornear</option>
+                                                    <option value="28">Sal</option>
+                                                    <option value="29">Harina de arroz</option>
+                                                    <option value="30">Oregano</option>
                                                   </select>
                                             </td>
                                             
                                             <td class="shoping__cart__quantity">
-                                                <input type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                                <input id="cantidad" type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
                                             </td>
                                             <!--asdasdas-->
                                             <td>
-                                                <select id="medidas" >
+                                                <select id="medida" >
                                                     <option value="">Selecciona una medida</option>
                                                     <option value="Gramos">gr</option>
                                                     <option value="Kilogramos">Kg</option>
@@ -389,12 +409,12 @@ if(isset($_FILES['imagen'])){
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
                                         <textarea placeholder="Escribe los pasos de preparación..."></textarea>
-                                        <button type="submit" class="site-btn">SUBIR RECETA</button>
+                                        <button type="submit" id="subir"  class="site-btn">SUBIR RECETA</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
-
+                    </form>
                     </div>
                 </div>
             </div>
