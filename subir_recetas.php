@@ -8,6 +8,19 @@
     }
 
     //Crear Receta
+    <?php
+if(isset($_FILES['imagen'])){
+  $imagen = $_FILES['imagen']['tmp_name'];
+  $nombre = $_FILES['imagen']['name'];
+  $tipo = $_FILES['imagen']['type'];
+  
+  // Aquí debes agregar código para conectarte a la base de datos MySQL
+  // y guardar la imagen en una tabla de la base de datos.
+  
+  // Ejemplo de código para guardar la imagen en una carpeta en el servidor:
+  $ruta = 'uploads/' . $nombre;
+  move_uploaded_file($imagen, $ruta);
+}
     if(isset($_POST['subir'])){
         $ConsultaAgregar = "INSERT INTO receta 
         (idreceta,  nombre_receta ,  porciones ,  tiempo_preparacion ,  tiempo_comida ,  tipo_comida ,  tipo_preferencia ,  dificultad ,  preparacion ,  fotos ,  usuario_idusuario ) 
@@ -204,12 +217,15 @@
                             </div>
                         </form>
 
-                        <button type="button">
-                            <img src="img/subetufoto.png" width="1150px" id="imagen"
-                                onclick="document.getElementById('fileInput').click();">
-                            <input type="file" id="fileInput" style="display: none;"
-                                onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
-                        </button><br><br>
+                        <form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">
+  <button type="button">
+    <img src="img/subetufoto.png" width="1150px" id="imagen"
+         onclick="document.getElementById('fileInput').click();">
+    <input type="file" name="imagen" id="fileInput" style="display: none;"
+           onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
+  </button>
+  <input type="submit" value="Guardar">
+</form><br><br>
 
                         <div class="col-lg-12">
                             <nav class="header__menu">
@@ -345,7 +361,7 @@
                                             </td>
                                             <!--asdasdas-->
                                             <td>
-                                                <select id="medidas">
+                                                <select id="medidas" >
                                                     <option value="">Selecciona una medida</option>
                                                     <option value="Gramos">gr</option>
                                                     <option value="Kilogramos">Kg</option>
