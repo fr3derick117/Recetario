@@ -231,13 +231,11 @@
                     <div class="section-title product__discount__title">
                     <form method="post" action="subir_recetas.php">
                         <h2>Título: </h2><br><br>
-                        <form action="#">
-                            <div class="row">
-                                <input type="text" placeholder="Título">
-                            </div>
-                        </form>
+                        <div class="row">
+                            <input id="titulo" name="titulo" type="text" placeholder="Título">
+                        </div>
 
-                        <form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">
+                        <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
                         <button type="button">
                         <img src="img/subetufoto.png" width="1150px" id="imagen"
                         onclick="document.getElementById('fileInput').click();">
@@ -245,7 +243,8 @@
                         onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
                         </button>
                         <input type="submit" value="Guardar">
-                        </form><br><br>
+                        <!--</form>-->
+                        <br><br>
 
                         <div class="col-lg-12">
                             <nav class="header__menu">
@@ -300,14 +299,13 @@
                                     </li>
                                     <li>
                                         <div class="row">
-                                            <input type="text" placeholder="Tiempo de Preparacion"
+                                            <input id="tiempo_preparacion" name="tiempo_preparacion" type="text" placeholder="Tiempo de Preparacion"
                                                 style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
-
                                         </div>
                                     </li>
                                     <li>
                                         <div class="row">
-                                            <input type="text" placeholder="Porciones"
+                                            <input id="porciones" name="porciones" type="text" placeholder="Porciones"
                                                 style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
                                         </div>
                                     </li>
@@ -341,7 +339,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="shoping__cart__item">
-                                                <select id="ingredientes">
+                                                <select id="ingredientes" name="ingredientes" >
                                                     <option value="">Selecciona un ingrediente</option>
                                                     <option value="1">Esencia de Vainilla</option>
                                                     <option value="2">Leche</option>
@@ -377,11 +375,11 @@
                                             </td>
                                             
                                             <td class="shoping__cart__quantity">
-                                                <input id="cantidad" type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                                <input id="cantidad" name="cantidad" type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
                                             </td>
                                             <!--asdasdas-->
                                             <td>
-                                                <select id="medida" >
+                                                <select id="medida" name="medida">
                                                     <option value="">Selecciona una medida</option>
                                                     <option value="Gramos">gr</option>
                                                     <option value="Kilogramos">Kg</option>
@@ -392,8 +390,8 @@
                                                   </select>
                                             </td>
                                             <td>
-                                                <button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                <button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>                                                
+                                                <button id="mas" name="mas" class="btn btn-success" style="width: 40px; height: 40px;">+</button>
+                                                <button id="menos" name="menos" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>                                                
                                             </td>
                                         </tr>
                                     </tbody>
@@ -405,14 +403,12 @@
 
                         <div class="section-title product__discount__title">
                             <h2>Pasos de Preparación: </h2><br><br><br>
-                            <form action="#">
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
-                                        <textarea placeholder="Escribe los pasos de preparación..."></textarea>
-                                        <button type="submit" id="subir"  class="site-btn">SUBIR RECETA</button>
+                                        <textarea id="preparacion" name="preparacion" placeholder="Escribe los pasos de preparación..."></textarea>
+                                        <button type="submit" id="subir" name="subir" class="site-btn">SUBIR RECETA</button>
                                     </div>
                                 </div>
-                            </form>
                         </div>
                     </form>
                     </div>
