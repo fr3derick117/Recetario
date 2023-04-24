@@ -36,67 +36,7 @@
 
 <body>
     <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
-    </div>
-
-    <!-- Humberger Begin -->
-    <div class="humberger__menu__overlay"></div>
-    <div class="humberger__menu__wrapper">
-        <div class="humberger__menu__logo">
-            <a href="#"><img src="img/logo.png" alt=""></a>
-        </div>
-        <div class="humberger__menu__cart">
-            <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
-            </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
-        </div>
-        <div class="humberger__menu__widget">
-            <div class="header__top__right__language">
-                <img src="img/language.png" alt="">
-                <div>English</div>
-                <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                </ul>
-            </div>
-            <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
-            </div>
-        </div>
-        <nav class="humberger__menu__nav mobile-menu">
-            <ul>
-                <li class="active"><a href="./index.html">Home</a></li>
-                <li><a href="./shop-grid.html">Shop</a></li>
-                <li><a href="#">Pages</a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="./checkout.html">Check Out</a></li>
-                        <li><a href="./blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
-                <li><a href="./blog.html">Blog</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-            </ul>
-        </nav>
-        <div id="mobile-menu-wrap"></div>
-        <div class="header__top__right__social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-        </div>
-        <div class="humberger__menu__contact">
-            <ul>
-                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                <li>Free Shipping for all Order of $99</li>
-            </ul>
-        </div>
-    </div>
+    
     <!-- Humberger End -->
 
     <!-- Header Section Begin -->
@@ -116,15 +56,13 @@
                         <a href="Home_Page.html"><img src="img/logo_blog_de_comdia.png" alt="" width="100px" height="100px" ></a>
                     </div>
                 </div>
-                <div class="col-lg-7">
+                <div class="col-lg-7"><br>
                     <nav class="header__menu">
-                        <ul>
                             <div class="blog__sidebar__search">
                                 <form action="#">
                                     <input type="text" placeholder="Search...">
                                 </form>
                             </div>     
-                        </ul>
                     </nav>
                 </div>
                 <div class="col-lg-2">
@@ -135,14 +73,14 @@
                                     <ul>
                                         <li><img src="img/foto_perfil.png" width="70px" height="70px"></img>
                                             <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="Perfil.html">Perfil</a></li>
-                                                <li><a class="text-center" href="Perfil.html">Mis Recetas</a></li>
+                                                <li><a class="text-center" href="perfil_misrecetas.html">Perfil</a></li>
+                                                <li><a class="text-center" href="perfil_misrecetas.html">Mis Recetas</a></li>
                                                 <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
-                                                <li><a class="text-center">Lista de Compras</a></li>
-                                                <li><a class="text-center">Colecciones</a></li>
+                                                <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
+                                                <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
                                                 <li><a class="text-center">Planeador de Menú</a></li>
                                                 <li><a class="text-center" href="subir_recetas.html">Subir Receta</a></li>
-                                                <li><a class="text-center">Cerrar Sesión</a></li>
+                                                <li><a class="text-center" href="login.html">Cerrar Sesión</a></li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -177,87 +115,59 @@
                             <span>Dessert</span>
                             <h2>Mighty Super <br>Cheesecake</h2>
                             <p>Look no further for a creamy and<br> ultra smooth classic cheesecake<br> recipe! no one can deny it's simple<br> decadence</p>
-                            <a href="#" class="primary-btn">Ver Receta</a>
+                            <a href="vista_receta.html" class="primary-btn">Ver Receta</a>
                         </div>
                     </div><br><br><br>
                     <div class="section-title product__discount__title">
-                        <h2>Categorías Populares: </h2><br><br>
-                        <div class="product__discount">
-                            <div class="row">
-                                <div class="product__discount__slider owl-carousel">
-                                    <div class="col-lg-4" wi>
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-1.jpg">
-                                            </div>
-                                            <div class="product__discount__item__text">
+                        <h2>Categorías Populares </h2><br><br>
+                        <section class="categories">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="categories__slider owl-carousel">
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
                                                 <h5><a href="#">Pasta</a></h5>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-2.jpg">
-                                            </div>
-                                            <div class="product__discount__item__text">
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-2.jpg">
                                                 <h5><a href="#">Pizza</a></h5>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-3.jpg">
-                                            </div>
-                                            <div class="product__discount__item__text">
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-3.jpg">
                                                 <h5><a href="#">Vegano</a></h5>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-4.jpg">
-                                            </div>
-                                            <div class="product__discount__item__text">
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-4.jpg">
                                                 <h5><a href="#">Postres</a></h5>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-5.jpg">
-                                            </div>
-                                            <div class="product__discount__item__text">
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
                                                 <h5><a href="#">Smoothies</a></h5>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-6.jpg">
-                                            </div>
-                                            <div class="product__discount__item__text">
-                                                <h5><a href="#">Desayunos</a></h5>
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
+                                                <h5><a href="#">Desayuno</a></h5>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="product__discount__item">
-                                            <div class="product__discount__item__pic set-bg"
-                                                data-setbg="img/product/discount/pd-6.jpg">
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
+                                                <h5><a href="#">Comida</a></h5>
                                             </div>
-                                            <div class="product__discount__item__text">
-                                                <h5><a href="#">Comidas</a></h5>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
+                                                <h5><a href="#">Cena</a></h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </section>
                     </div>
                     <div class="section-title product__discount__title">
                         <h2>Recetas Populares </h2><br><br><br>
