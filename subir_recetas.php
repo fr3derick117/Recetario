@@ -1,79 +1,81 @@
 <?php
+session_start();
 
-    //Establecer la conexion a la base de datos
-    $conexion=mysqli_connect('localhost','root','','ingsoft');
+//1. Establecer la conexion a la base de datos
+if ($_SESSION['login'] == '0') {
+    header('Location: logout.php');
+}
 
-    //Verificar que se pudo conectar a la base de datos
-    if(!$conexion){
-        die("Error al conectarse a la base de datos: ".mysqli_connect_error());
-    }
+//Establecer la conexion a la base de datos
+$conexion = mysqli_connect('localhost', 'root', '', 'ingsoft');
 
-    //Crear Receta
-    if(isset($_FILES['imagen'])){
+//Verificar que se pudo conectar a la base de datos
+if (!$conexion) {
+    die("Error al conectarse a la base de datos: " . mysqli_connect_error());
+}
+
+//Crear Receta
+if (isset($_FILES['imagen'])) {
     $imagen = $_FILES['imagen']['tmp_name'];
     $nombre = $_FILES['imagen']['name'];
     $tipo = $_FILES['imagen']['type'];
-  
-  // Aquí debes agregar código para conectarte a la base de datos MySQL
-  // y guardar la imagen en una tabla de la base de datos.
-  
+
+    // Aquí debes agregar código para conectarte a la base de datos MySQL
+    // y guardar la imagen en una tabla de la base de datos.
+
     // Ejemplo de código para guardar la imagen en una carpeta en el servidor:
     $ruta = 'uploads/' . $nombre;
     move_uploaded_file($imagen, $ruta);
-    }
+}
 
 
-    if(isset($_POST['subir'])){
-        $ConsultaAgregar = "INSERT INTO receta 
+if (isset($_POST['subir'])) {
+    $ConsultaAgregar = "INSERT INTO receta 
         (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario, idingredientes ) 
         VALUES 
         (NULL, 
-        '".$_POST['titulo']."', 
-        '".$_POST['porciones']."', 
-        '".$_POST['tiempo_preparacion']."', 
-        '".$_POST['tiempo_comida']."', 
-        '".$_POST['tipo_comida']."', 
-        '".$_POST['tipo_preferencia']."', 
-        '".$_POST['dificultad']."', 
-        '".$_POST['preparacion']."', 
+        '" . $_POST['titulo'] . "', 
+        '" . $_POST['porciones'] . "', 
+        '" . $_POST['tiempo_preparacion'] . "', 
+        '" . $_POST['tiempo_comida'] . "', 
+        '" . $_POST['tipo_comida'] . "', 
+        '" . $_POST['tipo_preferencia'] . "', 
+        '" . $_POST['dificultad'] . "', 
+        '" . $_POST['preparacion'] . "', 
         'prueba', 
         '1',
-        '".$_POST['ingredientes']."');";
+        '" . $_POST['ingredientes'] . "');";
 
-        $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
+    $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
 
-        /*$SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;";
-        echo($SeleccionarUltimaReceta);
+    /*$SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;";
+    echo($SeleccionarUltimaReceta);
+    $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
+    (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
+    VALUES 
+    ('".$SeleccionarUltimaReceta."', 
+    '".$_POST['ingredientes']."',
+    '".$_POST['cantidad']."',
+    '".$_POST['medida']."');";
+    $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);*/
 
-        $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
-        (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
-        VALUES 
-        ('".$SeleccionarUltimaReceta."', 
-        '".$_POST['ingredientes']."',
-        '".$_POST['cantidad']."',
-        '".$_POST['medida']."');";
+}
 
-        $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);*/
+/*if(isset($_POST['mas'])){
+$SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;"+1;
+echo($SeleccionarUltimaReceta);
+$ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
+(receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
+VALUES 
+('".$SeleccionarUltimaReceta."', 
+'".$_POST['ingredientes']."',
+'".$_POST['cantidad']."',
+'".$_POST['medida']."');";
+$ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
+}*/
 
-    }
-
-    /*if(isset($_POST['mas'])){
-        $SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;"+1;
-        echo($SeleccionarUltimaReceta);
-
-        $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta
-        (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
-        VALUES 
-        ('".$SeleccionarUltimaReceta."', 
-        '".$_POST['ingredientes']."',
-        '".$_POST['cantidad']."',
-        '".$_POST['medida']."');";
-
-        $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
-    }*/
-
-    //echo "Parametros por POST: ";
-    //print_r($_POST);
+//echo "Parametros por POST: ";
+//print_r($_POST);
 
 ?>
 
@@ -210,29 +212,30 @@
                         </nav>
                     </div>
                     <div class="col-lg-2">
-                    <div class="header__cart">
-                        <ul>
-                            <li>
-                                <nav class="header__menu">
-                                    <ul>
-                                        <li><img src="img/foto_perfil2.png" width="70px" height="70px">
-                                            <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="perfil.html">Perfil</a></li>
-                                                <li><a class="text-center" href="perfil.html">Mis Recetas</a></li>
-                                                <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
-                                                <li><a class="text-center">Lista de Compras</a></li>
-                                                <li><a class="text-center">Colecciones</a></li>
-                                                <li><a class="text-center">Planeador de Menú</a></li>
-                                                <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
-                                                <li><a class="text-center">Cerrar Sesión</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </li>
-                        </ul>
+                        <div class="header__cart">
+                            <ul>
+                                <li>
+                                    <nav class="header__menu">
+                                        <ul>
+                                            <li><img src="img/foto_perfil2.png" width="70px" height="70px">
+                                                <ul class="header__menu__dropdown" width="60px" height="60px">
+                                                    <li><a class="text-center" href="perfil.html">Perfil</a></li>
+                                                    <li><a class="text-center" href="perfil.html">Mis Recetas</a></li>
+                                                    <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
+                                                    <li><a class="text-center">Lista de Compras</a></li>
+                                                    <li><a class="text-center">Colecciones</a></li>
+                                                    <li><a class="text-center">Planeador de Menú</a></li>
+                                                    <li><a class="text-center" href="subir_recetas.php">Subir Receta</a>
+                                                    </li>
+                                                    <li><a class="text-center">Cerrar Sesión</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
                 </div>
                 <div class="humberger__open">
                     <i class="fa fa-bars"></i>
@@ -265,189 +268,199 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title product__discount__title">
-                    <form method="post" action="subir_recetas.php">
-                        <h2>Título: </h2><br><br>
-                        <div class="row">
-                            <input id="titulo" name="titulo" type="text" placeholder="Título">
-                        </div>
+                        <form method="post" action="subir_recetas.php">
+                            <h2>Título: </h2><br><br>
+                            <div class="row">
+                                <input id="titulo" name="titulo" type="text" placeholder="Título">
+                            </div>
 
-                        <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
-                        <button type="button">
-                        <img src="img/subetufoto.png" width="1150px" id="imagen"
-                        onclick="document.getElementById('fileInput').click();">
-                        <input type="file" name="imagen" id="fileInput" style="display: none;"
-                        onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
-                        </button>
-                        <input type="submit" value="Guardar">
-                        <!--</form>-->
-                        <br><br>
+                            <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
+                            <button type="button">
+                                <img src="img/subetufoto.png" width="1150px" id="imagen"
+                                    onclick="document.getElementById('fileInput').click();">
+                                <input type="file" name="imagen" id="fileInput" style="display: none;"
+                                    onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
+                            </button>
+                            <input type="submit" value="Guardar">
+                            <!--</form>-->
+                            <br><br>
 
-                        <div class="col-lg-12">
-                            <nav class="header__menu">
-                                <ul>
-                                    <li>
-                                        <select id="tipo_comida" name="tipo_comida" onchange="mostrarOpcionSeleccionadaTipoComida()">
-                                            <option value=""><strong>Tipo de Comida:</strong></option>
-                                            <option value="Entrada">Entrada</option>
-                                            <option value="Sopa">Sopa</option>
-                                            <option value="Plato Principa">Plato Principal</option>
-                                            <option value="Ensalada">Ensalada</option>
-                                            <option value="Bebida">Bebida</option>
-                                            <option value="Sopa">Sopa</option>
-                                            <option value="Pasta">Pasta</option>
-                                            <option value="Postre">Postre</option>
-                                        </select>
-                                        <p id="opcion-seleccionada"></p>
-                                    </li>
-                                    <li>
+                            <div class="col-lg-12">
+                                <nav class="header__menu">
+                                    <ul>
+                                        <li>
+                                            <select id="tipo_comida" name="tipo_comida"
+                                                onchange="mostrarOpcionSeleccionadaTipoComida()">
+                                                <option value=""><strong>Tipo de Comida:</strong></option>
+                                                <option value="Entrada">Entrada</option>
+                                                <option value="Sopa">Sopa</option>
+                                                <option value="Plato Principa">Plato Principal</option>
+                                                <option value="Ensalada">Ensalada</option>
+                                                <option value="Bebida">Bebida</option>
+                                                <option value="Sopa">Sopa</option>
+                                                <option value="Pasta">Pasta</option>
+                                                <option value="Postre">Postre</option>
+                                            </select>
+                                            <p id="opcion-seleccionada"></p>
+                                        </li>
+                                        <li>
 
-                                        <select id="tiempo_comida" name="tiempo_comida" onchange="mostrarOpcionSeleccionadaTiempoComida()">
-                                            <option value=""><strong>Tiempo de Comida:</strong></option>
-                                            <option value="Desayuno">Desayuno</option>
-                                            <option value="Almuerzo">Almuerzo</option>
-                                            <option value="Aperativo">Aperativo</option>
-                                            <option value="Comida">Comida</option>
-                                            <option value="Cena">Cena</option>
-                                        </select>
-                                        <p id="opcion-seleccionada"></p>
-                                    </li>
-                                    <li>
-                                        <select id="tipo_preferencia" name="tipo_preferencia" onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
-                                            <option value=""><strong>Preferencias</strong></option>
-                                            <option value="Mariscos">Mariscos</option>
-                                            <option value="Lácteos">Lácteos</option>
-                                            <option value="opcion3">Omnívoro</option>
-                                            <option value="Vegetariano">Vegetariano</option>
-                                            <option value="Nueces y Dátlies">Nueces y Dátlies</option>
-                                            <option value="Saludables">Saludables</option>
-                                            <option value="Vegano">Vegano</option>
-                                        </select>
-                                        <p id="opcion-seleccionada"></p>
-                                    </li>
-                                    <li>
-                                        <select id="dificultad" name="dificultad" onchange="mostrarOpcionSeleccionadaDificultad()">
-                                            <option value=""><strong>Dificultad:</strong></option>
-                                            <option value="Alta">Alta</option>
-                                            <option value="Media">Media</option>
-                                            <option value="Baja">Baja</option>
-                                        </select>
-                                        <p id="opcion-seleccionada"></p>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                            <input id="tiempo_preparacion" name="tiempo_preparacion" type="text" placeholder="Tiempo de Preparacion"
-                                                style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                            <input id="porciones" name="porciones" type="text" placeholder="Porciones"
-                                                style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </nav><br>
-                        </div>
-                    
-                        <div class="section-title product__discount__title">
-                            <h2>Ingredientes: </h2><br><br><br>
+                                            <select id="tiempo_comida" name="tiempo_comida"
+                                                onchange="mostrarOpcionSeleccionadaTiempoComida()">
+                                                <option value=""><strong>Tiempo de Comida:</strong></option>
+                                                <option value="Desayuno">Desayuno</option>
+                                                <option value="Almuerzo">Almuerzo</option>
+                                                <option value="Aperativo">Aperativo</option>
+                                                <option value="Comida">Comida</option>
+                                                <option value="Cena">Cena</option>
+                                            </select>
+                                            <p id="opcion-seleccionada"></p>
+                                        </li>
+                                        <li>
+                                            <select id="tipo_preferencia" name="tipo_preferencia"
+                                                onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
+                                                <option value=""><strong>Preferencias</strong></option>
+                                                <option value="Mariscos">Mariscos</option>
+                                                <option value="Lácteos">Lácteos</option>
+                                                <option value="opcion3">Omnívoro</option>
+                                                <option value="Vegetariano">Vegetariano</option>
+                                                <option value="Nueces y Dátlies">Nueces y Dátlies</option>
+                                                <option value="Saludables">Saludables</option>
+                                                <option value="Vegano">Vegano</option>
+                                            </select>
+                                            <p id="opcion-seleccionada"></p>
+                                        </li>
+                                        <li>
+                                            <select id="dificultad" name="dificultad"
+                                                onchange="mostrarOpcionSeleccionadaDificultad()">
+                                                <option value=""><strong>Dificultad:</strong></option>
+                                                <option value="Alta">Alta</option>
+                                                <option value="Media">Media</option>
+                                                <option value="Baja">Baja</option>
+                                            </select>
+                                            <p id="opcion-seleccionada"></p>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <input id="tiempo_preparacion" name="tiempo_preparacion" type="text"
+                                                    placeholder="Tiempo de Preparacion"
+                                                    style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <input id="porciones" name="porciones" type="text"
+                                                    placeholder="Porciones"
+                                                    style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </nav><br>
+                            </div>
 
-                            <div class="shoping__cart__table">
+                            <div class="section-title product__discount__title">
+                                <h2>Ingredientes: </h2><br><br><br>
 
-                                <table id="tablaDatos">
-                                    <thead>
-                                        <tr>
-                                            <th class="shoping__product">
-                                                Ingrediente
-                                            </th>
-                                            <th>Cantidad</th>
-                                            <th>Medida</th>
-                                            <th>
-                                                <!-- Boton de Buscar
+                                <div class="shoping__cart__table">
+
+                                    <table id="tablaDatos">
+                                        <thead>
+                                            <tr>
+                                                <th class="shoping__product">
+                                                    Ingrediente
+                                                </th>
+                                                <th>Cantidad</th>
+                                                <th>Medida</th>
+                                                <th>
+                                                    <!-- Boton de Buscar
                                                 <form class="hero__search__form">
                                                     <input type="text" id="buscarInput" placeholder="Buscar..."
                                                         onkeydown="if(event.keyCode==13) { buscarTabla(); return false; }">
                                                 </form>-->
-                                            </th>
+                                                </th>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!--ssssss-->
-                                        <tr>
-                                            <td class="shoping__cart__item">
-                                                <select id="ingredientes" name="ingredientes" >
-                                                    <option value="">Selecciona un ingrediente</option>
-                                                    <option value="1">Esencia de Vainilla</option>
-                                                    <option value="2">Leche</option>
-                                                    <option value="3">Leche evaporada Carnation</option>
-                                                    <option value="4">Agua</option>
-                                                    <option value="5">Jugo de limon</option>
-                                                    <option value="6">Jugo de naranja</option>
-                                                    <option value="7">Jugo de uva</option>
-                                                    <option value="8">Vinagre Blanco</option>
-                                                    <option value="9">Refresco</option>
-                                                    <option value="10">Vinagre de Manzana</option>
-                                                    <option value="11">Aceite de oliva</option>
-                                                    <option value="12">Aceite de canola</option>
-                                                    <option value="13">Aceite de coco</option>
-                                                    <option value="14">Aceite de almendras</option>
-                                                    <option value="15">Aceite de aguacate</option>
-                                                    <option value="16">Harina</option>
-                                                    <option value="17">Canela</option>
-                                                    <option value="18">Nueces</option>
-                                                    <option value="19">Maizena</option>
-                                                    <option value="20">Azucar</option>
-                                                    <option value="21">Harina de trigo</option>
-                                                    <option value="22">Mantequilla</option>
-                                                    <option value="23">Avena</option>
-                                                    <option value="24">Arroz</option>
-                                                    <option value="25">Lentejas</option>
-                                                    <option value="26">Pasta</option>
-                                                    <option value="27">Polvo para hornear</option>
-                                                    <option value="28">Sal</option>
-                                                    <option value="29">Harina de arroz</option>
-                                                    <option value="30">Oregano</option>
-                                                  </select>
-                                            </td>
-                                            
-                                            <td class="shoping__cart__quantity">
-                                                <input id="cantidad" name="cantidad" type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
-                                            </td>
-                                            <!--asdasdas-->
-                                            <td>
-                                                <select id="medida" name="medida">
-                                                    <option value="">Selecciona una medida</option>
-                                                    <option value="Gramos">gr</option>
-                                                    <option value="Kilogramos">Kg</option>
-                                                    <option value="Mililitros">ml</option>
-                                                    <option value="Litros">L</option>
-                                                    <option value="Pieza/Piezas">Pieza/piezas</option>
-                                                    
-                                                  </select>
-                                            </td>
-                                            <td><!--
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!--ssssss-->
+                                            <tr>
+                                                <td class="shoping__cart__item">
+                                                    <select id="ingredientes" name="ingredientes">
+                                                        <option value="">Selecciona un ingrediente</option>
+                                                        <option value="1">Esencia de Vainilla</option>
+                                                        <option value="2">Leche</option>
+                                                        <option value="3">Leche evaporada Carnation</option>
+                                                        <option value="4">Agua</option>
+                                                        <option value="5">Jugo de limon</option>
+                                                        <option value="6">Jugo de naranja</option>
+                                                        <option value="7">Jugo de uva</option>
+                                                        <option value="8">Vinagre Blanco</option>
+                                                        <option value="9">Refresco</option>
+                                                        <option value="10">Vinagre de Manzana</option>
+                                                        <option value="11">Aceite de oliva</option>
+                                                        <option value="12">Aceite de canola</option>
+                                                        <option value="13">Aceite de coco</option>
+                                                        <option value="14">Aceite de almendras</option>
+                                                        <option value="15">Aceite de aguacate</option>
+                                                        <option value="16">Harina</option>
+                                                        <option value="17">Canela</option>
+                                                        <option value="18">Nueces</option>
+                                                        <option value="19">Maizena</option>
+                                                        <option value="20">Azucar</option>
+                                                        <option value="21">Harina de trigo</option>
+                                                        <option value="22">Mantequilla</option>
+                                                        <option value="23">Avena</option>
+                                                        <option value="24">Arroz</option>
+                                                        <option value="25">Lentejas</option>
+                                                        <option value="26">Pasta</option>
+                                                        <option value="27">Polvo para hornear</option>
+                                                        <option value="28">Sal</option>
+                                                        <option value="29">Harina de arroz</option>
+                                                        <option value="30">Oregano</option>
+                                                    </select>
+                                                </td>
+
+                                                <td class="shoping__cart__quantity">
+                                                    <input id="cantidad" name="cantidad" type="text"
+                                                        placeholder="Tiempo de Preparacion"
+                                                        style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                                </td>
+                                                <!--asdasdas-->
+                                                <td>
+                                                    <select id="medida" name="medida">
+                                                        <option value="">Selecciona una medida</option>
+                                                        <option value="Gramos">gr</option>
+                                                        <option value="Kilogramos">Kg</option>
+                                                        <option value="Mililitros">ml</option>
+                                                        <option value="Litros">L</option>
+                                                        <option value="Pieza/Piezas">Pieza/piezas</option>
+
+                                                    </select>
+                                                </td>
+                                                <td><!--
                                                 <button id="mas" name="mas" class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                <button id="menos" name="menos" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>   -->                                             
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                <button id="menos" name="menos" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>   -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
 
 
+                                </div>
                             </div>
-                        </div>
-                  
-                        <div class="section-title product__discount__title">
-                            <h2>Pasos de Preparación: </h2><br><br><br>
+
+                            <div class="section-title product__discount__title">
+                                <h2>Pasos de Preparación: </h2><br><br><br>
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
-                                        <textarea id="preparacion" name="preparacion" placeholder="Escribe los pasos de preparación..."></textarea>
-                                        <button type="submit" id="subir" name="subir" class="site-btn">SUBIR RECETA</button>
+                                        <textarea id="preparacion" name="preparacion"
+                                            placeholder="Escribe los pasos de preparación..."></textarea>
+                                        <button type="submit" id="subir" name="subir" class="site-btn">SUBIR
+                                            RECETA</button>
                                     </div>
                                 </div>
-                        </div>
-                    </form>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -505,52 +518,52 @@ btnEliminarFila.addEventListener('click', eliminarFila);
 
 </script>    -->
 
-<script>
-// Obtener la tabla y el botón para agregar una fila
-const tabla = document.getElementById('tablaDatos');
-const btnAgregar = tabla.querySelector('button.btn-success');
+    <script>
+        // Obtener la tabla y el botón para agregar una fila
+        const tabla = document.getElementById('tablaDatos');
+        const btnAgregar = tabla.querySelector('button.btn-success');
 
 
-// Función para agregar una nueva fila
-function agregarFila(event) {
-  // Obtener la fila en la que se encuentra el botón
-  const filaActual = event.target.closest('tr');
-  
-  // Clonar la fila y limpiar los campos
-  const nuevaFila = filaActual.cloneNode(true);
-  const inputs = nuevaFila.querySelectorAll('input');
-  inputs.forEach(input => input.value = '');
-  
-  // Agregar el evento onclick al botón "+" de la nueva fila
-  const btnAgregarNuevaFila = nuevaFila.querySelector('button.btn-success');
-  btnAgregarNuevaFila.onclick = agregarFila;
-  
-  // Agregar el evento onclick al botón "-" de la nueva fila
-  const btnEliminar = nuevaFila.querySelector('button.btn-danger');
-  btnEliminar.onclick = eliminarFila;
-  
-  // Insertar la nueva fila después de la fila actual
-  tabla.querySelector('tbody').insertBefore(nuevaFila, filaActual.nextSibling);
-}
+        // Función para agregar una nueva fila
+        function agregarFila(event) {
+            // Obtener la fila en la que se encuentra el botón
+            const filaActual = event.target.closest('tr');
 
-// Función para eliminar una fila
-function eliminarFila(event) {
-  // Obtener la fila en la que se encuentra el botón
-  const filaActual = event.target.closest('tr');
-  
-  // Eliminar la fila de la tabla
-  tabla.querySelector('tbody').removeChild(filaActual);
-}
+            // Clonar la fila y limpiar los campos
+            const nuevaFila = filaActual.cloneNode(true);
+            const inputs = nuevaFila.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
 
-// Agregar el evento onclick al botón "+"
-btnAgregar.onclick = agregarFila;
+            // Agregar el evento onclick al botón "+" de la nueva fila
+            const btnAgregarNuevaFila = nuevaFila.querySelector('button.btn-success');
+            btnAgregarNuevaFila.onclick = agregarFila;
 
-var numeroDeFilas = tabla.rows.length;
-for (let index = 0; index < numeroDeFilas; index++) {
-    const element = array[index];
-}
+            // Agregar el evento onclick al botón "-" de la nueva fila
+            const btnEliminar = nuevaFila.querySelector('button.btn-danger');
+            btnEliminar.onclick = eliminarFila;
 
-</script>
+            // Insertar la nueva fila después de la fila actual
+            tabla.querySelector('tbody').insertBefore(nuevaFila, filaActual.nextSibling);
+        }
+
+        // Función para eliminar una fila
+        function eliminarFila(event) {
+            // Obtener la fila en la que se encuentra el botón
+            const filaActual = event.target.closest('tr');
+
+            // Eliminar la fila de la tabla
+            tabla.querySelector('tbody').removeChild(filaActual);
+        }
+
+        // Agregar el evento onclick al botón "+"
+        btnAgregar.onclick = agregarFila;
+
+        var numeroDeFilas = tabla.rows.length;
+        for (let index = 0; index < numeroDeFilas; index++) {
+            const element = array[index];
+        }
+
+    </script>
     <script>
         /*function mostrarOpcionSeleccionada() {
             var seleccion = document.getElementById("opciones").value;
@@ -561,12 +574,12 @@ for (let index = 0; index < numeroDeFilas; index++) {
             var seleccion = document.getElementById("opciones").value;
         }
 
-        
-        function mostrarOpcionSeleccionadaTipoComida () {
+
+        function mostrarOpcionSeleccionadaTipoComida() {
             var seleccion = document.getElementById("tipo_comida").value;
         }
 
-        function mostrarOpcionSeleccionadaTipoPreferencia () {
+        function mostrarOpcionSeleccionadaTipoPreferencia() {
             var seleccion = document.getElementById("tipo_preferencia").value;
         }
 
@@ -608,7 +621,7 @@ for (let index = 0; index < numeroDeFilas; index++) {
         }
 
     </script>
-     
+
 
     <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
