@@ -22,7 +22,7 @@ if (!$conexion) {
 }
 
 //Crear Receta
-print_r($_FILES['imagen']);
+//print_r($_FILES['imagen']);
 
 if (isset($_FILES['imagen'])) {
     $imagen = $_FILES['imagen']['tmp_name'];
@@ -33,12 +33,12 @@ if (isset($_FILES['imagen'])) {
     //mover la imagen a la carpeta creada
     //crear una ruta que guarde la imagen en una carpeta con el nombre de la receta dentro de la carpeta receta
     $receta = $_POST['titulo'];
-    mkdir("../recetas/" . $receta);
-    $ruta = "../recetas/" . $receta . "/" . $nombre;
+    mkdir("recetas/" . $receta);
+    $ruta = "recetas/" . $receta . "/" . $nombre;
+    echo $ruta;
     
-    move_uploaded_file($imagen, $ruta);
-
-    
+    if(move_uploaded_file($imagen, $ruta)){
+        echo "Se movio la imagen";}
     // Aquí debes agregar código para conectarte a la base de datos MySQL
     // y guardar la imagen en una tabla de la base de datos.
     $AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
@@ -125,6 +125,7 @@ print_r($_POST);
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    
 
     <style>
         button {
@@ -298,10 +299,8 @@ print_r($_POST);
 
                             <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
                             <button type="button">
-                                <img src="img/subetufoto.png" width="1150px" id="imagen"
-                                    onclick="document.getElementById('fileInput').click();">
-                                <input type="file" name="imagen" id="fileInput" style="display: none;"
-                                    onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
+                                <img src="img/subetufoto.png" width="1150px" id="imagen" onclick="document.getElementById('fileInput').click();">
+                                <input type="file" name="imagen" id="fileInput" style="display: none;" onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
                             </button>
                             <input type="submit" value="Guardar">
                             <!--</form>-->
