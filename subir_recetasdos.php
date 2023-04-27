@@ -277,7 +277,7 @@
                             <h2>Ingredientes: </h2><br><br><br>
 
                             <div class="shoping__cart__table">
-                                <table id="tablaDatos">
+                            <table id="tablaDatos">
                                     <thead>
                                         <tr>
                                             <th class="shoping__product">
@@ -300,33 +300,7 @@
                                                     <option value="Esencia de Vainilla">Esencia de Vainilla</option>
                                                     <option value="Leche">Leche</option>
                                                     <option value="Leche evaporada Carnation">Leche evaporada Carnation</option>
-                                                    <option value="Agua">Agua</option>
-                                                    <option value="Jugo de limon">Jugo de limon</option>
-                                                    <option value="Jugo de naranja">Jugo de naranja</option>
-                                                    <option value="Jugo de uva">Jugo de uva</option>
-                                                    <option value="Vinagre Blanco">Vinagre Blanco</option>
-                                                    <option value="Refresco">Refresco</option>
-                                                    <option value="Vinagre de Manzana">Vinagre de Manzana</option>
-                                                    <option value="Aceite de oliva">Aceite de oliva</option>
-                                                    <option value="Aceite de canola">Aceite de canola</option>
-                                                    <option value="Aceite de coco">Aceite de coco</option>
-                                                    <option value="Aceite de almendras">Aceite de almendras</option>
-                                                    <option value="Aceite de aguacate">Aceite de aguacate</option>
-                                                    <option value="Harina">Harina</option>
-                                                    <option value="Canela">Canela</option>
-                                                    <option value="Nueces">Nueces</option>
-                                                    <option value="Maizena">Maizena</option>
-                                                    <option value="Azucar">Azucar</option>
-                                                    <option value="Harina de trigo">Harina de trigo</option>
-                                                    <option value="Mantequilla">Mantequilla</option>
-                                                    <option value="Avena">Avena</option>
-                                                    <option value="Arroz">Arroz</option>
-                                                    <option value="Lentejas">Lentejas</option>
-                                                    <option value="Pasta">Pasta</option>
-                                                    <option value="Polvo para hornear">Polvo para hornear</option>
-                                                    <option value="Sal">Sal</option>
-                                                    <option value="Harina de arroz">Harina de arroz</option>
-                                                    <option value="Oregano">Oregano</option>
+                                                    
                                                   </select>
                                             </td>
                                             
@@ -356,8 +330,8 @@
                                                 </nav>
                                             </td>
                                             <td>
-                                                <button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                <button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>
+                                                <button type=button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
+                                                <button  type= button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>
                                                
                                             </td>
 
@@ -366,6 +340,35 @@
                                       
                                     </tbody>
                                 </table>
+                                <script>
+  // Obtener la tabla y el botón de agregar
+  var tabla = document.getElementById("tablaDatos");
+  var btnAgregar = document.querySelector("#tablaDatos button.btn-success");
+
+  // Agregar evento al botón de agregar
+  btnAgregar.onclick = function() {
+    // Crear nueva fila
+    var fila = tabla.insertRow(-1);
+    // Copiar la primera celda de la fila anterior
+    var celda1 = fila.insertCell(0);
+    celda1.innerHTML = tabla.rows[tabla.rows.length - 2].cells[0].innerHTML;
+    // Crear nuevas celdas
+    var celda2 = fila.insertCell(1);
+    celda2.innerHTML = '<div class="quantity"><div class="pro-qty"><input type="text" value="1"></div></div>';
+    var celda3 = fila.insertCell(2);
+    celda3.innerHTML = '<nav class="header__menu"><ul><li><a href="#">Selecciona</a><ul class="header__menu__dropdown"><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li></ul></li></ul></nav>';
+    var celda4 = fila.insertCell(3);
+    celda4.innerHTML = '<button type="button" class="btn btn-success" style="width: 40px; height: 40px;">+</button><button type="button" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>';
+  };
+
+  // Agregar evento a los botones "-" (eliminar fila)
+  tabla.addEventListener("click", function(event) {
+    if (event.target && event.target.nodeName === "BUTTON" && event.target.classList.contains("btn-danger")) {
+      event.target.closest("tr").remove();
+    }
+  });
+</script>
+
                             </div>
                         </div>
 
