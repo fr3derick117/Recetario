@@ -320,8 +320,8 @@ function cargarImagen(input) {
       // Crear un canvas con las dimensiones deseadas
       var canvas = document.createElement('canvas');
       var ctx = canvas.getContext('2d');
-      canvas.width = 500;
-      canvas.height = 500;
+      canvas.width = 1150;
+      canvas.height = 646.88;
 
       // Copiar la imagen original en el canvas con las dimensiones deseadas
       var ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
