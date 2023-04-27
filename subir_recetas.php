@@ -21,6 +21,18 @@ if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 
+//id de receta
+$sql = "SELECT MAX(idreceta) as last_id FROM receta";
+$result = mysqli_query($conexion, $sql);
+// Comprobar si se encontró algún resultado
+if ($result->num_rows > 0) {
+    // Obtener el resultado como un arreglo asociativo
+    $row = $result->fetch_assoc();
+    // Obtener el último ID
+    $last_id = $row["last_id"] + 1;
+    // Imprimir el último ID
+} 
+
 //Crear Receta
 //print_r($_FILES['imagen']);
 
@@ -42,7 +54,7 @@ if (isset($_FILES['imagen'])) {
     // Aquí debes agregar código para conectarte a la base de datos MySQL
     // y guardar la imagen en una tabla de la base de datos.
     $AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
-        VALUES (NULL, NULL, 29, '$nombre')";
+        VALUES (NULL, NULL, '$last_id', '$nombre')";
     
 
 // Ejecutar la consulta
@@ -53,9 +65,9 @@ if (isset($_FILES['imagen'])) {
 
 if (isset($_POST['subir'])) {
     $ConsultaAgregar = "INSERT INTO receta 
-        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario, idingredientes ) 
+        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario ) 
         VALUES 
-        (NULL, 
+        ('" . $last_id . "', 
         '" . $_POST['titulo'] . "', 
         '" . $_POST['porciones'] . "', 
         '" . $_POST['tiempo_preparacion'] . "', 
@@ -65,10 +77,21 @@ if (isset($_POST['subir'])) {
         '" . $_POST['dificultad'] . "', 
         '" . $_POST['preparacion'] . "', 
         'prueba', 
-        '1',
-        '" . $_POST['ingredientes'] . "');";
+        '".$_SESSION['idusuario']."');";
 
     $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
+    
+
+    //crear una consulta con php a la tabla ingredientes_de_receta en la base de datos de ingsoft para insertar un nuevo registro
+    $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
+        (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
+        VALUES
+        ('".$last_id."', 
+        '".$_POST['ingredientes']."',
+        '".$_POST['cantidad']."',
+        '".$_POST['medida']."');";
+
+    $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
 
     /*$SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;";
     echo($SeleccionarUltimaReceta);
@@ -82,6 +105,8 @@ if (isset($_POST['subir'])) {
     $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);*/
 
 }
+
+    
 
 /*if(isset($_POST['mas'])){
 $SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;"+1;
@@ -107,7 +132,7 @@ $ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
 //imprimir la consulta de ingredientes
 //print_r($ResultadoIngredientes);
 
-//print_r($_POST);
+print_r($_POST);
 
 ?>
 
@@ -252,15 +277,14 @@ $ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
                                         <ul>
                                             <li><img src="img/foto_perfil2.png" width="70px" height="70px">
                                                 <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                    <li><a class="text-center" href="perfil.html">Perfil</a></li>
-                                                    <li><a class="text-center" href="perfil.html">Mis Recetas</a></li>
+                                                    <li><a class="text-center" href="perfil_misrecetas.php">Perfil</a></li>
+                                                    <li><a class="text-center" href="perfil_misrecetas.php">Mis Recetas</a></li>
                                                     <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
-                                                    <li><a class="text-center">Lista de Compras</a></li>
-                                                    <li><a class="text-center">Colecciones</a></li>
+                                                    <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
+                                                    <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
                                                     <li><a class="text-center">Planeador de Menú</a></li>
-                                                    <li><a class="text-center" href="subir_recetas.php">Subir Receta</a>
-                                                    </li>
-                                                    <li><a class="text-center" href="?logout=true">Cerrar Sesión</a></li>
+                                                    <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
+                                                    <li><a class="text-center" href="login.php">Cerrar Sesión</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -309,51 +333,51 @@ $ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
 
                             <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
                             <button type="button">
-  <img src="img/subetufoto.png" width="1150px" id="imagen"
-       onclick="document.getElementById('fileInput').click();">
-  <input type="file" name="imagen" id="fileInput" style="display: none;"
-         onchange="cargarImagen(this);">
-</button>
+                              <img src="img/subetufoto.png" width="1150px" id="imagen"
+                                   onclick="document.getElementById('fileInput').click();">
+                              <input type="file" name="imagen" id="fileInput" style="display: none;"
+                                     onchange="cargarImagen(this);">
+                            </button>
 
-<script>
-function cargarImagen(input) {
-  // Obtener la imagen seleccionada
-  var imagen = input.files[0];
+                            <script>
+                            function cargarImagen(input) {
+                              // Obtener la imagen seleccionada
+                              var imagen = input.files[0];
+                            
+                              // Crear un objeto de tipo FileReader para leer la imagen
+                              var reader = new FileReader();
+                            
+                              // Cuando se haya cargado la imagen, crear una imagen con el tamaño deseado
+                              reader.onload = function(e) {
+                                var img = new Image();
+                                img.onload = function() {
+                                  // Crear un canvas con las dimensiones deseadas
+                                  var canvas = document.createElement('canvas');
+                                  var ctx = canvas.getContext('2d');
+                                  canvas.width = 1150;
+                                  canvas.height = 646.88;
+                                
+                                  // Copiar la imagen original en el canvas con las dimensiones deseadas
+                                  var ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+                                  var width = img.width * ratio;
+                                  var height = img.height * ratio;
+                                  var x = (canvas.width - width) / 2;
+                                  var y = (canvas.height - height) / 2;
+                                  ctx.drawImage(img, x, y, width, height);
+                                
+                                  // Obtener la URL del canvas y asignarla a la imagen
+                                  var dataURL = canvas.toDataURL();
+                                  document.getElementById('imagen').src = dataURL;
+                                };
+                                img.src = e.target.result;
+                              };
+                          
+                              // Leer la imagen seleccionada como una URL de datos
+                              reader.readAsDataURL(imagen);
+                            }
+                            </script>
 
-  // Crear un objeto de tipo FileReader para leer la imagen
-  var reader = new FileReader();
-
-  // Cuando se haya cargado la imagen, crear una imagen con el tamaño deseado
-  reader.onload = function(e) {
-    var img = new Image();
-    img.onload = function() {
-      // Crear un canvas con las dimensiones deseadas
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-      canvas.width = 1150;
-      canvas.height = 646.88;
-
-      // Copiar la imagen original en el canvas con las dimensiones deseadas
-      var ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
-      var width = img.width * ratio;
-      var height = img.height * ratio;
-      var x = (canvas.width - width) / 2;
-      var y = (canvas.height - height) / 2;
-      ctx.drawImage(img, x, y, width, height);
-
-      // Obtener la URL del canvas y asignarla a la imagen
-      var dataURL = canvas.toDataURL();
-      document.getElementById('imagen').src = dataURL;
-    };
-    img.src = e.target.result;
-  };
-
-  // Leer la imagen seleccionada como una URL de datos
-  reader.readAsDataURL(imagen);
-}
-</script>
-
-                            <input type="submit" value="Guardar">
+                            <!--<input type="submit" value="Guardar">-->
                             <!--</form>-->
                             <br><br>
 
@@ -503,26 +527,33 @@ function cargarImagen(input) {
                                     </table>
                                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                     <script>
-                                    $(document).ready(function() {
-                                      // Handler para agregar una nueva fila
-                                      $(document).on('click', '#tablaDatos .btn-success', function() {
+                                        var contador = 0;
+                                        $(document).ready(function() {
+                                            // Handler para agregar una nueva fila
+                                            $(document).on('click', '#tablaDatos .btn-success', function() {
                                         // Clona la última fila de la tabla
                                         var $clone = $('#tablaDatos tbody tr:last').clone();
                                         // Resetea los valores de los campos de la nueva fila
-                                        $clone.find('select').val('');
-                                        $clone.find('input [type="text]');
+                                        $clone.find('#ingredientes, #medida').val("");
+                                        $clone.find('input [type="text"]').val('');
+                                        $clone.find('img').attr('id', 'imagen-ingrediente-' + ($('#tablaDatos tbody tr').length + 1));
+                                        $clone.find('#ingredientes').on('change', function() {
+                                          var nombreIngrediente = $(this).val();
+                                          var imagenId = $(this).closest('tr').find('img').attr('id');
+                                          $('#' + imagenId).attr('src', 'img/Ingredientes/' + nombreIngrediente);
+                                        });
                                         // Agrega la nueva fila a la tabla
                                         $('#tablaDatos tbody').append($clone);
                                       });
-
-                                      // Handler para eliminar una fila
-                                      $(document).on('click', '#tablaDatos .btn-danger', function() {
-                                        // Elimina la fila que contiene el botón presionado
-                                        $(this).closest('tr').remove();
-                                      });
-                                    });
-
+                                        
+                                            // Handler para eliminar una fila
+                                            $(document).on('click', '#tablaDatos .btn-danger', function() {
+                                                // Elimina la fila que contiene el botón presionado
+                                                $(this).closest('tr').remove();
+                                            });
+                                        });
                                     </script>
+
 
                                 </div>
                             </div>
@@ -533,11 +564,10 @@ function cargarImagen(input) {
                                     <div class="col-lg-12 text-center">
                                         <textarea id="preparacion" name="preparacion"
                                             placeholder="Escribe los pasos de preparación..."></textarea>
-                                        <button type="submit" id="subir" name="subir" class="site-btn">SUBIR
-                                            RECETA</button>
                                     </div>
                                 </div>
                             </div>
+                            <button type="submit" id="subir" name="subir" class="site-btn">SUBIR RECETA</button>
                         </form>
                     </div>
                 </div>

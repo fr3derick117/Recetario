@@ -89,14 +89,14 @@ if (isset($_GET['logout'])) {
                                     <ul>
                                         <li><img src="img/foto_perfil.png" width="70px" height="70px"></img>
                                             <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="perfil_misrecetas.html">Perfil</a></li>
-                                                <li><a class="text-center" href="perfil_misrecetas.html">Mis Recetas</a></li>
+                                                <li><a class="text-center" href="perfil_misrecetas.php">Perfil</a></li>
+                                                <li><a class="text-center" href="perfil_misrecetas.php">Mis Recetas</a></li>
                                                 <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
                                                 <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
                                                 <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
                                                 <li><a class="text-center">Planeador de Menú</a></li>
                                                 <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
-                                                <li><a class="text-center" href="?logout=true">Cerrar Sesión</a></li>
+                                                <li><a class="text-center" href="login.php">Cerrar Sesión</a></li>
                                             </ul>
                                         </li>
                                     </ul>
