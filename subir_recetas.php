@@ -299,9 +299,50 @@ print_r($_POST);
 
                             <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
                             <button type="button">
-                                <img src="img/subetufoto.png" width="1150px" id="imagen" onclick="document.getElementById('fileInput').click();">
-                                <input type="file" name="imagen" id="fileInput" style="display: none;" onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
-                            </button>
+  <img src="img/subetufoto.png" width="1150px" id="imagen"
+       onclick="document.getElementById('fileInput').click();">
+  <input type="file" name="imagen" id="fileInput" style="display: none;"
+         onchange="cargarImagen(this);">
+</button>
+
+<script>
+function cargarImagen(input) {
+  // Obtener la imagen seleccionada
+  var imagen = input.files[0];
+
+  // Crear un objeto de tipo FileReader para leer la imagen
+  var reader = new FileReader();
+
+  // Cuando se haya cargado la imagen, crear una imagen con el tamaño deseado
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      // Crear un canvas con las dimensiones deseadas
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = 500;
+      canvas.height = 500;
+
+      // Copiar la imagen original en el canvas con las dimensiones deseadas
+      var ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+      var width = img.width * ratio;
+      var height = img.height * ratio;
+      var x = (canvas.width - width) / 2;
+      var y = (canvas.height - height) / 2;
+      ctx.drawImage(img, x, y, width, height);
+
+      // Obtener la URL del canvas y asignarla a la imagen
+      var dataURL = canvas.toDataURL();
+      document.getElementById('imagen').src = dataURL;
+    };
+    img.src = e.target.result;
+  };
+
+  // Leer la imagen seleccionada como una URL de datos
+  reader.readAsDataURL(imagen);
+}
+</script>
+
                             <input type="submit" value="Guardar">
                             <!--</form>-->
                             <br><br>
