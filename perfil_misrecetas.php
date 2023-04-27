@@ -32,8 +32,8 @@ $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
 //echo "<br> Resultado de la consulta: ";
 //print_r($ResultadoReceta);
 
-echo "<br> Datos de la sesion: ";
-print_r($_SESSION);
+//echo "<br> Datos de la sesion: ";
+//print_r($_SESSION);
 
 
 ?>
@@ -219,8 +219,8 @@ print_r($_SESSION);
                                         <img src="img/blog/details/details-author.jpg" alt="">
                                     </div>
                                     <div class="blog__details__author__text">
-                                        <h6>Michael Scofield</h6>
-                                        <span>Admin</span>
+                                        <h6><?php echo $_SESSION['nombre_usuario'] ?></h6>
+                                        <span>Usuario</span>
                                     </div>
                                 </div>
                             </div>
