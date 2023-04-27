@@ -457,32 +457,25 @@ function cargarImagen(input) {
                                         <tbody>
                                             <!--ssssss-->
                                             <tr>
-                                                <td>
-                                                    <select id="ingredientes" name="ingredientes" >
-                                                        <option value="" disabled selected>Selecciona un ingrediente</option>
-                                                        <?php
-                                                        //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
-                                                        while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
-                                                            echo "<option value='" . $fila['nombre_ingrediente'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </td>
-                                                <td><img  id="img-ingrediente" src="img/Ingredientes/agua.png" width="80" height="80"></td>
-                                                <script>
-                                                    // Obtenemos el select y la imagen
-                                                    const select = document.getElementById('ingredientes');
-                                                    const imgIngrediente = document.getElementById('img-ingrediente');
-                                                                                                    
-                                                    // Escuchamos el evento change del select
-                                                    select.addEventListener('change', function() {
-                                                        // Obtenemos el valor del select
-                                                        const idIngrediente = this.value;
-                                                    
-                                                        // Actualizamos el src de la imagen con el nombre del ingrediente seleccionado
-                                                        imgIngrediente.src = `img/Ingredientes/${idIngrediente}.png`;
-                                                    });
-                                                </script>
+                                            <td>
+                                                <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
+                                                    <option value="" disabled selected>Selecciona un ingrediente</option>
+                                                    <?php
+                                                    //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+                                                    while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
+                                                        echo "<option value='" . $fila['imagen'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                            <td><img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80"></td>
+                                                
+                                            <script>
+                                            function cambiarImagen() {
+                                                var nombreIngrediente = document.getElementById("ingredientes").value;
+                                                document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
+                                            }
+                                            </script>
                                                 <td class="shoping__cart__quantity" style="text-align: center;">
                                                     <input id="cantidad" name="cantidad" type="text"
                                                         placeholder="Cantidad"
