@@ -35,10 +35,10 @@ if (isset($_FILES['imagen'])) {
     $receta = $_POST['titulo'];
     mkdir("recetas/" . $receta);
     $ruta = "recetas/" . $receta . "/" . $nombre;
-    echo $ruta;
+    //echo $ruta;
     
-    if(move_uploaded_file($imagen, $ruta)){
-        echo "Se movio la imagen";}
+    //if(move_uploaded_file($imagen, $ruta)){
+    //    echo "Se movio la imagen";}
     // Aquí debes agregar código para conectarte a la base de datos MySQL
     // y guardar la imagen en una tabla de la base de datos.
     $AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
@@ -46,7 +46,7 @@ if (isset($_FILES['imagen'])) {
     
 
 // Ejecutar la consulta
-    mysqli_query($conexion, $AgregarImagen);
+    $ConsultaImagen = mysqli_query($conexion, $AgregarImagen);
 
 }
 
@@ -97,7 +97,17 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
 }*/
 
 //echo "Parametros por POST: ";
-print_r($_POST);
+
+//una consulta para ver todos los registros de la tabla ingredientes
+$ConsultaIngredientes = "SELECT * FROM ingredientes;";
+$ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
+
+$ConsultaMedidas = "SELECT * FROM medidas;";
+$ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
+//imprimir la consulta de ingredientes
+//print_r($ResultadoIngredientes);
+
+//print_r($_POST);
 
 ?>
 
@@ -353,7 +363,7 @@ function cargarImagen(input) {
                                         <li>
                                             <select id="tipo_comida" name="tipo_comida"
                                                 onchange="mostrarOpcionSeleccionadaTipoComida()">
-                                                <option value=""><strong>Tipo de Comida:</strong></option>
+                                                <option value="" disabled selected><strong>Tipo de Comida:</strong></option>
                                                 <option value="Entrada">Entrada</option>
                                                 <option value="Sopa">Sopa</option>
                                                 <option value="Plato Principa">Plato Principal</option>
@@ -369,7 +379,7 @@ function cargarImagen(input) {
 
                                             <select id="tiempo_comida" name="tiempo_comida"
                                                 onchange="mostrarOpcionSeleccionadaTiempoComida()">
-                                                <option value=""><strong>Tiempo de Comida:</strong></option>
+                                                <option value="" disabled selected><strong>Tiempo de Comida:</strong></option>
                                                 <option value="Desayuno">Desayuno</option>
                                                 <option value="Almuerzo">Almuerzo</option>
                                                 <option value="Aperativo">Aperativo</option>
@@ -381,10 +391,10 @@ function cargarImagen(input) {
                                         <li>
                                             <select id="tipo_preferencia" name="tipo_preferencia"
                                                 onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
-                                                <option value=""><strong>Preferencias</strong></option>
+                                                <option value="" disabled selected><strong>Preferencias</strong></option>
                                                 <option value="Mariscos">Mariscos</option>
                                                 <option value="Lácteos">Lácteos</option>
-                                                <option value="opcion3">Omnívoro</option>
+                                                <option value="Omnívoro">Omnívoro</option>
                                                 <option value="Vegetariano">Vegetariano</option>
                                                 <option value="Nueces y Dátlies">Nueces y Dátlies</option>
                                                 <option value="Saludables">Saludables</option>
@@ -395,7 +405,7 @@ function cargarImagen(input) {
                                         <li>
                                             <select id="dificultad" name="dificultad"
                                                 onchange="mostrarOpcionSeleccionadaDificultad()">
-                                                <option value=""><strong>Dificultad:</strong></option>
+                                                <option value="" disabled selected><strong>Dificultad:</strong></option>
                                                 <option value="Alta">Alta</option>
                                                 <option value="Media">Media</option>
                                                 <option value="Baja">Baja</option>
@@ -428,6 +438,7 @@ function cargarImagen(input) {
                                     <table id="tablaDatos">
                                         <thead>
                                             <tr>
+                                                <th>Foto</th>
                                                 <th class="shoping__product">
                                                     Ingrediente
                                                 </th>
@@ -446,67 +457,79 @@ function cargarImagen(input) {
                                         <tbody>
                                             <!--ssssss-->
                                             <tr>
-                                                <td class="shoping__cart__item">
-                                                    <select id="ingredientes" name="ingredientes">
-                                                        <option value="">Selecciona un ingrediente</option>
-                                                        <option value="1">Esencia de Vainilla</option>
-                                                        <option value="2">Leche</option>
-                                                        <option value="3">Leche evaporada Carnation</option>
-                                                        <option value="4">Agua</option>
-                                                        <option value="5">Jugo de limon</option>
-                                                        <option value="6">Jugo de naranja</option>
-                                                        <option value="7">Jugo de uva</option>
-                                                        <option value="8">Vinagre Blanco</option>
-                                                        <option value="9">Refresco</option>
-                                                        <option value="10">Vinagre de Manzana</option>
-                                                        <option value="11">Aceite de oliva</option>
-                                                        <option value="12">Aceite de canola</option>
-                                                        <option value="13">Aceite de coco</option>
-                                                        <option value="14">Aceite de almendras</option>
-                                                        <option value="15">Aceite de aguacate</option>
-                                                        <option value="16">Harina</option>
-                                                        <option value="17">Canela</option>
-                                                        <option value="18">Nueces</option>
-                                                        <option value="19">Maizena</option>
-                                                        <option value="20">Azucar</option>
-                                                        <option value="21">Harina de trigo</option>
-                                                        <option value="22">Mantequilla</option>
-                                                        <option value="23">Avena</option>
-                                                        <option value="24">Arroz</option>
-                                                        <option value="25">Lentejas</option>
-                                                        <option value="26">Pasta</option>
-                                                        <option value="27">Polvo para hornear</option>
-                                                        <option value="28">Sal</option>
-                                                        <option value="29">Harina de arroz</option>
-                                                        <option value="30">Oregano</option>
+                                                <td>
+                                                    <select id="ingredientes" name="ingredientes" >
+                                                        <option value="" disabled selected>Selecciona un ingrediente</option>
+                                                        <?php
+                                                        //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+                                                        while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
+                                                            echo "<option value='" . $fila['nombre_ingrediente'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
+                                                        }
+                                                        ?>
                                                     </select>
                                                 </td>
-
-                                                <td class="shoping__cart__quantity">
+                                                <td><img  id="img-ingrediente" src="img/Ingredientes/agua.png" width="80" height="80"></td>
+                                                <script>
+                                                    // Obtenemos el select y la imagen
+                                                    const select = document.getElementById('ingredientes');
+                                                    const imgIngrediente = document.getElementById('img-ingrediente');
+                                                                                                    
+                                                    // Escuchamos el evento change del select
+                                                    select.addEventListener('change', function() {
+                                                        // Obtenemos el valor del select
+                                                        const idIngrediente = this.value;
+                                                    
+                                                        // Actualizamos el src de la imagen con el nombre del ingrediente seleccionado
+                                                        imgIngrediente.src = `img/Ingredientes/${idIngrediente}.png`;
+                                                    });
+                                                </script>
+                                                <td class="shoping__cart__quantity" style="text-align: center;">
                                                     <input id="cantidad" name="cantidad" type="text"
-                                                        placeholder="Tiempo de Preparacion"
-                                                        style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                                        placeholder="Cantidad"
+                                                        style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;" >
                                                 </td>
                                                 <!--asdasdas-->
                                                 <td>
-                                                    <select id="medida" name="medida">
-                                                        <option value="">Selecciona una medida</option>
-                                                        <option value="Gramos">gr</option>
-                                                        <option value="Kilogramos">Kg</option>
-                                                        <option value="Mililitros">ml</option>
-                                                        <option value="Litros">L</option>
-                                                        <option value="Pieza/Piezas">Pieza/piezas</option>
+                                                    <select id="medida" name="medida" placeholder="Selecciona una medida">
+                                                        <option value="" disabled selected >Selecciona una medida</option>
+                                                        <?php
+                                                        //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+                                                        while ($fila = mysqli_fetch_array($ResultadoMedidas)) {
+                                                            echo "<option value='" . $fila['idmedidas'] . "'>" . $fila['nombre_medida'] . "</option>";
+                                                        }
+                                                        ?>
 
                                                     </select>
                                                 </td>
-                                                <td><!--
-                                                <button id="mas" name="mas" class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                <button id="menos" name="menos" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>   -->
-                                                </td>
+                                                <td>
+                                                    <button type=button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
+                                                    <button  type= button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>
+                                               </td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                    <script>
+                                    $(document).ready(function() {
+                                      // Handler para agregar una nueva fila
+                                      $(document).on('click', '#tablaDatos .btn-success', function() {
+                                        // Clona la última fila de la tabla
+                                        var $clone = $('#tablaDatos tbody tr:last').clone();
+                                        // Resetea los valores de los campos de la nueva fila
+                                        $clone.find('select').val('');
+                                        $clone.find('input [type="text]');
+                                        // Agrega la nueva fila a la tabla
+                                        $('#tablaDatos tbody').append($clone);
+                                      });
 
+                                      // Handler para eliminar una fila
+                                      $(document).on('click', '#tablaDatos .btn-danger', function() {
+                                        // Elimina la fila que contiene el botón presionado
+                                        $(this).closest('tr').remove();
+                                      });
+                                    });
+
+                                    </script>
 
                                 </div>
                             </div>

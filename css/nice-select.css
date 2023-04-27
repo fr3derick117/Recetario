@@ -25,7 +25,7 @@
       -ms-user-select: none;
           user-select: none;
   white-space: nowrap;
-  width: auto; }
+  width: 250px; }
   .nice-select:hover {
     border-color: #dbdbdb; }
   .nice-select:active, .nice-select.open, .nice-select:focus {
@@ -99,6 +99,8 @@
     position: absolute;
     top: 100%;
     left: 0;
+    max-height: 200px; /* cambiar a la altura deseada */
+    overflow-y: auto; 
     -webkit-transform-origin: 50% 0;
         -ms-transform-origin: 50% 0;
             transform-origin: 50% 0;
