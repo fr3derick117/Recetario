@@ -1,9 +1,16 @@
 <?php
 session_start();
 
-//1. Establecer la conexion a la base de datos
-if ($_SESSION['login'] == '0') {
+//Cerrar sesion
+if($_SESSION['login']=='' || $_SESSION['login']==null || $_SESSION['login']=='0' ){
     header('Location: logout.php');
+}
+if (isset($_GET['logout'])) {
+  // Destruye la sesión actual
+  session_unset();
+  session_destroy();
+  // Redirecciona al usuario a la página de inicio de sesión
+  header("Location: login.php");
 }
 
 //Establecer la conexion a la base de datos
@@ -15,17 +22,32 @@ if (!$conexion) {
 }
 
 //Crear Receta
+print_r($_FILES['imagen']);
+
 if (isset($_FILES['imagen'])) {
     $imagen = $_FILES['imagen']['tmp_name'];
     $nombre = $_FILES['imagen']['name'];
     $tipo = $_FILES['imagen']['type'];
 
+    //crear una carpeta con el nombre de la receta
+    //mover la imagen a la carpeta creada
+    //crear una ruta que guarde la imagen en una carpeta con el nombre de la receta dentro de la carpeta receta
+    $receta = $_POST['titulo'];
+    mkdir("../recetas/" . $receta);
+    $ruta = "../recetas/" . $receta . "/" . $nombre;
+    
+    move_uploaded_file($imagen, $ruta);
+
+    
     // Aquí debes agregar código para conectarte a la base de datos MySQL
     // y guardar la imagen en una tabla de la base de datos.
+    $AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
+        VALUES (NULL, NULL, 29, '$nombre')";
+    
 
-    // Ejemplo de código para guardar la imagen en una carpeta en el servidor:
-    $ruta = 'uploads/' . $nombre;
-    move_uploaded_file($imagen, $ruta);
+// Ejecutar la consulta
+    mysqli_query($conexion, $AgregarImagen);
+
 }
 
 
@@ -75,7 +97,7 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
 }*/
 
 //echo "Parametros por POST: ";
-//print_r($_POST);
+print_r($_POST);
 
 ?>
 
@@ -141,7 +163,7 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
                 <div>English</div>
                 <span class="arrow_carrot-down"></span>
                 <ul>
-                    <li><a href="#">Spanis</a></li>
+                    <li><a href="#">Spanish</a></li>
                     <li><a href="#">English</a></li>
                 </ul>
             </div>
@@ -227,7 +249,7 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
                                                     <li><a class="text-center">Planeador de Menú</a></li>
                                                     <li><a class="text-center" href="subir_recetas.php">Subir Receta</a>
                                                     </li>
-                                                    <li><a class="text-center">Cerrar Sesión</a></li>
+                                                    <li><a class="text-center" href="?logout=true">Cerrar Sesión</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -268,7 +290,7 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title product__discount__title">
-                        <form method="post" action="subir_recetas.php">
+                        <form method="post" action="subir_recetas.php" enctype="multipart/form-data">
                             <h2>Título: </h2><br><br>
                             <div class="row">
                                 <input id="titulo" name="titulo" type="text" placeholder="Título">

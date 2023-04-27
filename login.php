@@ -36,7 +36,7 @@
         $_SESSION['contrasena']=$contrasena;
         $_SESSION['idusuario']=$Resgitro['idusuario'];
         $_SESSION['login']=1;
-        header('Location: Home_Page.html');
+        header('Location: Home_Page.php');
       }else{
         //alert( "Usuario y/o  contrasena Incorrectos");
         $_SESSION['login']=0;
@@ -53,16 +53,16 @@
     }
 
     //crea una alerta que aparezca como modal
-    if (isset($_SESSION['login'])) {
-        if ($_SESSION['login']==0) {
-            echo "<script>alert('Usuario y/o contraseña incorrectos.')</script>";
-            unset($_SESSION['login']);
-        }
-    }
+    //if (isset($_SESSION['login'])) {
+    //    if ($_SESSION['login']==0) {
+    //        echo "<script>alert('Usuario y/o contraseña incorrectos.')</script>";
+    //        unset($_SESSION['login']);
+    //    }
+    //}
 
     //echo "Parametros por POST: ";
     //print_r($_POST);
-    //print_r($_SESSION);
+    print_r($_SESSION);
 
 ?>
 
