@@ -560,12 +560,83 @@ print_r($_POST);
 
                             <div class="section-title product__discount__title">
                                 <h2>Pasos de Preparación: </h2><br><br><br>
-                                <div class="row">
-                                    <div class="col-lg-12 text-center">
-                                        <textarea id="preparacion" name="preparacion"
-                                            placeholder="Escribe los pasos de preparación..."></textarea>
-                                    </div>
-                                </div>
+                                <table id="tabla-pasos">
+  <thead>
+    <tr>
+      <th>Numero de paso</th>
+      <th>Instrucciones</th>
+      <th>Foto del paso</th>
+      <th>Imagen</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><input type="text" name="instrucciones"></td>
+      <td>
+        <input type="file" name="foto" accept="image/*">
+      </td>
+      <td>
+        <img src="" style="display:none;" width="100" height="100">
+      </td>
+      <td>
+        <button type="button" class="eliminar-fila">Eliminar</button>
+        <button type="button" class="agregar-fila">Agregar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  // Agregar fila
+  const tablaPasos = document.querySelector('#tabla-pasos');
+  const tbody = tablaPasos.querySelector('tbody');
+  const agregarFilaBtn = tablaPasos.querySelector('.agregar-fila');
+  agregarFilaBtn.addEventListener('click', () => {
+    const ultimaFila = tbody.lastElementChild;
+    const ultimoNumeroDePaso = parseInt(ultimaFila.firstElementChild.textContent);
+    const nuevaFila = `
+      <tr>
+        <td>${ultimoNumeroDePaso + 1}</td>
+        <td><input type="text" name="instrucciones"></td>
+        <td>
+          <input type="file" name="foto" accept="image/*">
+        </td>
+        <td>
+          <img src="" style="display:none;" width="100" height="100">
+        </td>
+        <td>
+          <button type="button" class="eliminar-fila">Eliminar</button>
+          <button type="button" class="agregar-fila">Agregar</button>
+        </td>
+      </tr>
+    `;
+    ultimaFila.insertAdjacentHTML('afterend', nuevaFila);
+  });
+
+  // Eliminar fila
+  tbody.addEventListener('click', (event) => {
+    if (event.target.classList.contains('eliminar-fila')) {
+      event.target.closest('tr').remove();
+    }
+  });
+
+  // Mostrar imagen
+  tbody.addEventListener('change', (event) => {
+    if (event.target.type === 'file') {
+      const input = event.target;
+      const img = input.closest('td').nextElementSibling.querySelector('img');
+      const reader = new FileReader();
+      reader.onload = () => {
+        img.src = reader.result;
+        img.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  });
+</script
+
                             </div>
                             <button type="submit" id="subir" name="subir" class="site-btn">SUBIR RECETA</button>
                         </form>
