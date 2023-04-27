@@ -3,7 +3,7 @@ session_start();
 
 //Cerrar sesion
 if($_SESSION['login']=='' || $_SESSION['login']==null || $_SESSION['login']=='0' ){
-    header('Location: logout.php');
+    header('Location: login.php');
 }
 if (isset($_GET['logout'])) {
   // Destruye la sesión actual
