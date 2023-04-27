@@ -559,7 +559,16 @@ print_r($_POST);
                             </div>
 
                             <div class="section-title product__discount__title">
-                                <h2>Pasos de Preparación: </h2><br><br><br>
+                            <style>
+		.eliminar-fila,
+		.agregar-fila {
+			padding: 8px;
+			width: 150px;
+			height: 50px;
+			font-size: 16px;
+		}
+	</style>   
+                            <h2>Pasos de Preparación: </h2><br><br><br>
                                 <table id="tabla-pasos">
   <thead>
     <tr>
