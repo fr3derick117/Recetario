@@ -340,34 +340,30 @@
                                       
                                     </tbody>
                                 </table>
-                                <script>
-  // Obtener la tabla y el botón de agregar
-  var tabla = document.getElementById("tablaDatos");
-  var btnAgregar = document.querySelector("#tablaDatos button.btn-success");
-
-  // Agregar evento al botón de agregar
-  btnAgregar.onclick = function() {
-    // Crear nueva fila
-    var fila = tabla.insertRow(-1);
-    // Copiar la primera celda de la fila anterior
-    var celda1 = fila.insertCell(0);
-    celda1.innerHTML = tabla.rows[tabla.rows.length - 2].cells[0].innerHTML;
-    // Crear nuevas celdas
-    var celda2 = fila.insertCell(1);
-    celda2.innerHTML = '<div class="quantity"><div class="pro-qty"><input type="text" value="1"></div></div>';
-    var celda3 = fila.insertCell(2);
-    celda3.innerHTML = '<nav class="header__menu"><ul><li><a href="#">Selecciona</a><ul class="header__menu__dropdown"><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li></ul></li></ul></nav>';
-    var celda4 = fila.insertCell(3);
-    celda4.innerHTML = '<button type="button" class="btn btn-success" style="width: 40px; height: 40px;">+</button><button type="button" class="btn btn-danger" style="width: 40px; height: 40px;">-</button>';
-  };
-
-  // Agregar evento a los botones "-" (eliminar fila)
-  tabla.addEventListener("click", function(event) {
-    if (event.target && event.target.nodeName === "BUTTON" && event.target.classList.contains("btn-danger")) {
-      event.target.closest("tr").remove();
-    }
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Handler para agregar una nueva fila
+  $(document).on('click', '#tablaDatos .btn-success', function() {
+    // Clona la última fila de la tabla
+    var $clone = $('#tablaDatos tbody tr:last').clone();
+    // Resetea los valores de los campos de la nueva fila
+    $clone.find('select').val('');
+    $clone.find('input[type="text"]').val('1');
+    // Agrega la nueva fila a la tabla
+    $('#tablaDatos tbody').append($clone);
   });
+  
+  // Handler para eliminar una fila
+  $(document).on('click', '#tablaDatos .btn-danger', function() {
+    // Elimina la fila que contiene el botón presionado
+    $(this).closest('tr').remove();
+  });
+});
+
 </script>
+
+
 
                             </div>
                         </div>
