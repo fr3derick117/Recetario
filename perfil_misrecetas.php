@@ -22,9 +22,19 @@ if (!$conexion) {
 }
 
 //consulta para ver todos los registros de la tabla receta
-$ConsultaReceta = "SELECT * FROM receta WHERE usuario_idusuario = '".$_SESSION['idusuario']."' ";
+$ConsultaReceta = "SELECT * FROM receta WHERE usuario_idusuario = '".$_SESSION['id_usuario']."' ";
 //echo $ConsultaReceta;
 $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
+
+//imprime el numero de filas de la consulta
+//echo "<br> Numero de filas: ";
+//print_r(mysqli_num_rows($ResultadoReceta));
+//echo "<br> Resultado de la consulta: ";
+//print_r($ResultadoReceta);
+
+echo "<br> Datos de la sesion: ";
+print_r($_SESSION);
+
 
 ?>
 
@@ -233,18 +243,17 @@ $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
                     <div class="container">
                         <div class="row">
                             <?php
-                                $id_usuario = $_SESSION['id_usuario'];
-                                $query = "SELECT * FROM recetas WHERE usuario_idusuario = '$id_usuario'";
-                                $resultado = $conexion->query($query);
-                                while($row = $resultado->fetch_assoc()){
+                                while($row = mysqli_fetch_array($ResultadoReceta)){
                                     echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
                                         echo "<div class='blog__item'>";
                                             echo "<div class='blog__item__pic'>";
-                                                echo "<img src='img/blog/blog-1.jpg'>";
+                                                echo "<img src='img/" . $row['foto_principal'] . "' width='100' >";
                                             echo "</div>";
                                             echo "<div class='blog__item__text'>";
-                                                echo "<h5><a href=''> Receta</a></h5>";
-                                                echo "<p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>";
+                                                echo "<h5><a href=''> " . $row['nombre_receta'] . "</a></h5>";
+                                                echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
+                                                echo "Preferencia: ".$row['tipo_preferencia']."</br>";
+                                                echo "Resumen: ".$row['preparacion']."</p>";
                                             echo "</div>";
                                         echo "</div>";
                                     echo "</div>";

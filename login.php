@@ -29,20 +29,22 @@
     $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
     //echo $ResultadoUsuario;
     //echo mysqli_num_rows($ResultadoUsuario);
-    
+
+    //guardame en una variable el parametro idusuario de la tabla usuario
     if(mysqli_num_rows($ResultadoUsuario)){
-        $Registro = mysqli_fetch_assoc($ResultadoUsuario);            
-        $_SESSION['nombre_usuario']=$nombre_usuario;
-        $_SESSION['contrasena']=$contrasena;
-        $_SESSION['idusuario']=$Resgitro['idusuario'];
+        $Registro = mysqli_fetch_assoc($ResultadoUsuario);  
+        $_SESSION['id_usuario'] = $Registro['idusuario'];
+        $_SESSION['nombre_usuario'] = $Registro['nombre_usuario'];
+        $_SESSION['contrasena'] = $Registro['contrasena'];
         $_SESSION['login']=1;
         header('Location: Home_Page.php');
-      }else{
+    }else{
         //alert( "Usuario y/o  contrasena Incorrectos");
         $_SESSION['login']=0;
+        $_SESSION['id_usuario']='';
         $_SESSION['nombre_usuario']='';
         $_SESSION['contrasena']='';
-        $_SESSION['id_usuario']='';
+        
       }
       
 

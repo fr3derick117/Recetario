@@ -12,6 +12,8 @@ if (isset($_GET['logout'])) {
   // Redirecciona al usuario a la página de inicio de sesión
   header("Location: login.php");
 }
+
+//print_r($_SESSION);
 ?>
 
 <!DOCTYPE html>

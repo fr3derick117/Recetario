@@ -77,7 +77,7 @@ if (isset($_POST['subir'])) {
         '" . $_POST['dificultad'] . "', 
         '" . $_POST['preparacion'] . "', 
         'prueba', 
-        '".$_SESSION['idusuario']."');";
+        '".$_SESSION['id_usuario']."');";
 
     $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
     
