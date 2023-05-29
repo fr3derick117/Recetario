@@ -1696,11 +1696,17 @@ Fácil
 .product__details__text .product__details__rating {
 	font-size: 14px;
 	margin-bottom: 12px;
+	color: #ffc107;
+}
+
+.product__details__rating {
+	margin-right: -2px;
+	color: #ffc107;
 }
 
 .product__details__text .product__details__rating i {
 	margin-right: -2px;
-	color: #EDBB0E;
+	color: #ffc107;
 }
 
 .product__details__text .product__details__rating span {
@@ -1732,6 +1738,36 @@ Fácil
 	padding: 13px 16px 13px;
 	background: #f5f5f5;
 }
+
+.btn-heart {
+	background-color: transparent;
+	border: none;
+	color: #fe1e35;
+	font-size: 12px;
+	cursor: pointer;
+	padding: 10px 20px;
+	display: inline-block;
+	margin: 2px 1px;
+  }
+  
+.btn-heart i {
+	font-size: 16px;
+}
+
+.btn-heart-small {
+	background-color: transparent;
+	border: none;
+	color: #fe1e35;
+	font-size: 2px;
+	padding: 2px;
+	width: 50px;
+	cursor: pointer;
+}
+  
+.btn-heart-small i {
+	font-size: 14px;
+}
+  
 
 .product__details__text ul {
 	border-top: 1px solid #ebebeb;

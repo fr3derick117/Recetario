@@ -98,9 +98,9 @@ if (!$conexion) {
                                     <ul>
                                         <li><img src="img/foto_perfil.png" width="70px" height="70px"></img>
                                             <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="perfil_misrecetas.html">Perfil</a></li>
-                                                <li><a class="text-center" href="perfil_misrecetas.html">Mis Recetas</a></li>
-                                                <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
+                                                <li><a class="text-center" href="perfil_misrecetas.php">Perfil</a></li>
+                                                <li><a class="text-center" href="perfil_misrecetas.php">Mis Recetas</a></li>
+                                                <li><a class="text-center" href="Home_Page.php">Home Page</a></li>
                                                 <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
                                                 <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
                                                 <li><a class="text-center">Planeador de Menú</a></li>
@@ -145,9 +145,16 @@ if (!$conexion) {
 
                         <table>
                             <tr  class="product__details__text">
-                                <th align="center" width="190px"><img src="img/reloj.png" width="17px" height="17px">Tiempo de preparación </th>
-                                <th align="center" width="100px"><img src="img/porciones.png" width="20px" height="17px">Porciones </th>
-                                <th align="center" width="110px"><img src="img/dificultad.png" width="20px" height="17px">Dificultad </th>
+                                <th align="center" width="190px"><img src="img/reloj.png" width="17px" height="17px">   Tiempo de preparación </th>
+                                <th align="center" width="100px"><img src="img/porciones.png" width="20px" height="17px">   Porciones </th>
+                                <th align="center" width="110px"><img src="img/dificultad.png" width="20px" height="17px">   Dificultad </th>
+                                <td> Rating: 3 <i class="fa fa-star"></i>  </td>
+                                <td><button class="btn btn-heart-small"><i class="fa fa-heart"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td align="center" width="190px">120 mins</td>
+                                <td align="center" width="100px">4 personas</td>
+                                <td align="center" width="110px">Baja</td>
                                 <td class="product__details__rating"> 
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
@@ -155,11 +162,6 @@ if (!$conexion) {
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star-half-o"></i>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td align="center" width="190px">120 mins</td>
-                                <td align="center" width="100px">4 personas</td>
-                                <td align="center" width="110px">Baja</td>
                             </tr>
                         </table><br>
 

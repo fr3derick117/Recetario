@@ -253,7 +253,7 @@ $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
                                                 echo "<h5><a href=''> " . $row['nombre_receta'] . "</a></h5>";
                                                 echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
                                                 echo "Preferencia: ".$row['tipo_preferencia']."</br>";
-                                                echo "Resumen: ".$row['preparacion']."</p>";
+                                                echo "Descripción: ".$row['descripcion']."</p>";
                                             echo "</div>";
                                         echo "</div>";
                                     echo "</div>";
