@@ -24,11 +24,63 @@
 
     <style>
         button{
-            padding:0;
-            border:0;
-            margin:0;
-            width: 1150px;
+            display: inline-block;
+            font-size: 10px;
+            padding: 10px 10px 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #7fad39;
+            letter-spacing: 2px;
         }
+
+        #form {
+        width: 250px;
+        margin: 0 auto;
+        height: 50px;
+        }
+
+        #form p {
+        text-align: center;
+        }
+
+        #form label {
+        font-size: 30px;
+        }
+
+        input[type="radio"] {
+        display: none;
+        }
+
+        label {
+        color: grey;
+        }
+
+        .clasificacion {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+        font-size: 25px;
+        }
+
+        label:hover,
+        label:hover ~ label {
+        color: orange;
+        }
+
+        input[type="radio"]:checked ~ label {
+        color: orange;
+        }
+
+        .button-favoritos{
+            color: rgb(194, 23, 23);
+            font-size: 30px;
+        }
+
+        .button-compra{
+            color: rgb(101, 163, 88);
+            font-size: 30px;
+        }
+        
     </style>
 </head>
 
@@ -113,32 +165,58 @@
                 <div class="col-lg-12">  
                     <div class="section-title product__discount__title">
                         <h2> Strawberry Cream Cheesecake</h2>
+                        <a href="perfil_favoritos.html" class="col-12 col-md-12">
+                            <i class="button-favoritos fa fa-heart"></i>
+                        </a>
+                        <a href="perfil_lista_compra.html" class="col-12 col-md-12">
+                            <i class="button-compra fa fa-shopping-bag"></i>
+                        </a>
                     </div>
 
                     <div>
                         <img class="col-lg-12 col-md-6 col-sm-6" src="img/cheesecake_photo.png" width="100px" height="540px">
                     </div><br><br>
 
-                        <table>
+                        <table class="text-center">
                             <tr  class="product__details__text">
                                 <th align="center" width="190px"><img src="img/reloj.png" width="17px" height="17px">Tiempo de preparación </th>
                                 <th align="center" width="100px"><img src="img/porciones.png" width="20px" height="17px">Porciones </th>
                                 <th align="center" width="110px"><img src="img/dificultad.png" width="20px" height="17px">Dificultad </th>
-                                <td class="product__details__rating"> 
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                </td>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th rowspan="2"><div width="110px">
+                                    <button type="submit" class="site.btn" href="vista_creación_grupo.html">COMPARTIR CON GRUPO</button>
+                                </div></th> 
                             </tr>
                             <tr>
                                 <td align="center" width="190px">120 mins</td>
                                 <td align="center" width="100px">4 personas</td>
                                 <td align="center" width="110px">Baja</td>
-                            </tr>
+                                <td align="center">
+                                    <form>
+                                        <p class="clasificacion">
+                                          <input id="radio1" type="radio" name="estrellas" value="5"><!--
+                                          --><label for="radio1">★</label><!--
+                                          --><input id="radio2" type="radio" name="estrellas" value="4"><!--
+                                          --><label for="radio2">★</label><!--
+                                          --><input id="radio3" type="radio" name="estrellas" value="3"><!--
+                                          --><label for="radio3">★</label><!--
+                                          --><input id="radio4" type="radio" name="estrellas" value="2"><!--
+                                          --><label for="radio4">★</label><!--
+                                          --><input id="radio5" type="radio" name="estrellas" value="1"><!--
+                                          --><label for="radio5">★</label>
+                                        </p>
+                                    </form>
+                                </td>
+                                <td align="center" width="110px"></td>   
+                                <td align="center" width="110px"></td>   
+                                <td align="center" width="110px"></td>   
+                                <td align="center" width="110px"></td>      
+                            </tr>  
                         </table><br>
-
                 </div>
             </div>
         </div><br>
