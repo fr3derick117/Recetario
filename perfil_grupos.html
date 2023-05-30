@@ -24,10 +24,37 @@
 
     <style>
         button{
-            padding:0;
-            border:0;
-            margin:0;
-            width: 1150px;
+            display: inline-block;
+            font-size: 17px;
+            padding: 10px 28px 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #7fad39;
+            letter-spacing: 2px;
+        }
+
+        button.button_close{
+            display: inline-block;
+            font-size: 17px;
+            padding: 10px 28px 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #6f6f6f;
+            letter-spacing: 2px;
+        }
+
+        .text_cool{
+            font-size: 17px;
+            color: #030303;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .imagen_perfil{
+            background-color: #ffffff;
         }
     </style>
 </head>
@@ -199,6 +226,40 @@
                             </nav>
                         </center>
                     </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="site.btn" onclick="window.modal.showModal();">CREAR GRUPO</button>
+
+                        <dialog id="modal" class="col-lg-4 text-center">
+                            <div class="section-title product__discount__title text-center"><br>
+                                <h2>Nuevo grupo</h2><br><br><br>
+                                <div class="col-lg-12 col-1">
+                                        <img src="img/grupo_perfil.png" width="100px" id="imagen"
+                                        onclick="document.getElementById('fileInput').click();">
+                                        <input type="file" name="imagen" id="fileInput" style="display: none;"
+                                        onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
+                                        <input id="nom_grupo" name="nom_grupo" type="text" placeholder="Nombre del grupo" style="border-style: outset;" class="col-lg-9">
+                                </div>
+                                <div class="col-lg-12"><br>
+                                    <a class="text_cool">Escribe la descripción del grupo</a>
+                                    <input id="nom_grupo" name="descrip_grupo" type="text" placeholder="Descripción del grupo" style="border-style: outset;" class="col-lg-12">
+                                </div>
+                                <div class="col-lg-12 shoping__discount">
+                                    <a class="text_cool">Agregar integrantes </a>
+                                    <form action="#">
+                                        <input type="text" placeholder="Nombre de usuario">
+                                        <button type="submit" class="site-btn">Agregar</button>
+                                    </form>
+                                </div>
+                                <div class="text-center">
+                                    <br><br><br>
+                                    <button onclick="window.modal.click();">Crear</button>
+                                    <button onclick="window.modal.close();" class="button_close">Cerrar</button>
+                                </div>
+                            </div>
+                        </dialog>
+
+                        
+                    </div><br>
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-6">
