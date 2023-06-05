@@ -111,6 +111,54 @@ if (isset($_POST['registrar'])) {
                     <div class="col-lg-6">
                         <div class="checkout__order">
                             <h4>Registrarse</h4>
+                           <style>
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #profile-pic-upload {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <label for="profile-pic-upload">
+        <div class="circle">
+            <img id="profile-pic" src="default-profile-pic.png" alt="Profile Picture">
+        </div>
+    </label>
+
+    <input type="file" id="profile-pic-upload" accept="image/*">
+
+    <script>
+        // Obtén referencia al elemento de carga de archivo
+        var fileUpload = document.getElementById('profile-pic-upload');
+
+        // Escucha el evento de cambio de archivo
+        fileUpload.addEventListener('change', function (e) {
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                // Actualiza la imagen de perfil con la imagen cargada
+                document.getElementById('profile-pic').src = event.target.result;
+            }
+
+            // Lee el archivo como una URL de datos
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    </script> 
                             <ul>
                                 <div class="checkout__form">
                                     <form id="formAuthentication" action="registrar_usuario.php" method="POST">
@@ -130,6 +178,69 @@ if (isset($_POST['registrar'])) {
                                                             <h5>Contraseña:</h5>
                                                             <input type="text" id="contrasena" name="contrasena">
                                                         </div>
+                                                        <style>
+        .column {
+            float: left;
+            width: 50%;
+        }
+        .checkbox {
+            margin-bottom: 10px;
+        }
+    </style>
+    <div class="column">
+        <h3>Alergias:</h3>
+        <div class="checkbox">
+            <input type="checkbox" id="lacteos" name="alergia" value="lacteos">
+            <label for="lacteos">Lácteos</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="huevo" name="alergia" value="huevo">
+            <label for="huevo">Huevo</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="mariscos" name="alergia" value="mariscos">
+            <label for="mariscos">Mariscos</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="mani" name="alergia" value="mani">
+            <label for="mani">Maní</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="frutos-secos" name="alergia" value="frutos-secos">
+            <label for="frutos-secos">Frutos secos</label>
+        </div>
+    </div>
+    <div class="column">
+        <h3>Preferencias:</h3>
+        <div class="Preferencias">
+            <input type="checkbox" id="vegetariano" name="preferencia" value="vegetariano">
+            <label for="vegetariano">Vegetariano</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="vegano" name="preferencia" value="vegano">
+            <label for="vegano">Vegano</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="keto" name="preferencia" value="keto">
+            <label for="keto">Keto</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="sin-alcohol" name="preferencia" value="sin-alcohol">
+            <label for="sin-alcohol">Sin alcohol</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="diabetico" name="preferencia" value="diabetico">
+            <label for="diabetico">Diabético</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="carnivoro" name="preferencia" value="carnivoro">
+            <label for="carnivoro">Carnívoro</label>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="fitness" name="preferencia" value="fitness">
+            <label for="fitness">Fitness</label>
+        </div>
+    </div>
                                                     </div>
                                                 </div>
                                             </div>
