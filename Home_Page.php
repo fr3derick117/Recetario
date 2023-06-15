@@ -13,7 +13,21 @@ if (isset($_GET['logout'])) {
   header("Location: login.php");
 }
 
+//Establecer la conexion a la base de datos
+$conexion = mysqli_connect('localhost', 'root', '', 'ingsoft');
+
+//Verificar que se pudo conectar a la base de datos
+if (!$conexion) {
+    die("Error al conectarse a la base de datos: " . mysqli_connect_error());
+}
+
+//consulta para ver todos los registros de la tabla receta
+$ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
+//print_r($ConsultaUsuario);
+$ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
+//print_r($ResultadoUsuario);
 //print_r($_SESSION);
+
 ?>
 
 <!DOCTYPE html>
@@ -89,18 +103,25 @@ if (isset($_GET['logout'])) {
                             <li>
                                 <nav class="header__menu">
                                     <ul>
-                                        <li><img src="img/foto_perfil.png" width="70px" height="70px"></img>
-                                            <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="perfil_misrecetas.php">Perfil</a></li>
-                                                <li><a class="text-center" href="perfil_misrecetas.php">Mis Recetas</a></li>
-                                                <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
-                                                <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
-                                                <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
-                                                <li><a class="text-center">Planeador de Menú</a></li>
-                                                <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
-                                                <li><a class="text-center" href="login.php">Cerrar Sesión</a></li>
-                                            </ul>
-                                        </li>
+                                        <?php  
+                                            if($usuario = mysqli_fetch_array($ResultadoUsuario)){
+                                                echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px'></img>";
+                                                //echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px></img>";
+                                                    echo "<ul class='header__menu__dropdown' width='60px' height='60px'>";
+                                                        echo "<li><a class='text-center' >".$usuario['nombre_usuario']."</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
+                                                        echo "<li><a class='text-center' href='Home_Page.html'>Home Page</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_lista_compra.html'>Lista de Compras</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_grupos.html'>Grupos</a></li>";
+                                                        echo "<li><a class='text-center'>Planeador de Menú</a></li>";
+                                                        echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
+                                                        echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";
+                                                    echo"</ul>";
+                                                echo"</li>";
+                                            }
+                                        ?>
+                                        
                                     </ul>
                                 </nav>
                             </li>

@@ -127,8 +127,8 @@ if (isset($_POST['registrar']) && ($_POST['nombre_usuario']!=NULL) && ($_POST['c
 
     // Indicar que el registro fue exitoso
     $_SESSION['registro_exitoso'] = true;
-    //header("Location: registrar_usuario.php");
-    //exit();
+    header("Location: registrar_usuario.php");
+    exit();
 }
 
 //print_r($ConsultaAgregar);

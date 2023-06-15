@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2023 a las 22:16:09
+-- Tiempo de generación: 15-06-2023 a las 17:48:24
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.12
 
@@ -24,16 +24,51 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `alergias`
+--
+
+CREATE TABLE `alergias` (
+  `idalergia` int(11) NOT NULL,
+  `nombre_alergia` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `alergias`
+--
+
+INSERT INTO `alergias` (`idalergia`, `nombre_alergia`) VALUES
+(1, 'Lácteos'),
+(2, 'Huevo'),
+(3, 'Mariscos'),
+(4, 'Maní'),
+(5, 'Frutos secos'),
+(6, 'Trigo'),
+(7, 'Gluten'),
+(8, 'Chocolate'),
+(9, 'Maíz'),
+(10, 'Fresas');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `grupos`
 --
 
 CREATE TABLE `grupos` (
   `idgrupo` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
+  `descripcion` varchar(45) NOT NULL,
   `receta_preferida` int(11) NOT NULL,
   `receta_mas_preparada` int(11) NOT NULL,
   `receta_menos_preparada` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `grupos`
+--
+
+INSERT INTO `grupos` (`idgrupo`, `nombre`, `descripcion`, `receta_preferida`, `receta_mas_preparada`, `receta_menos_preparada`) VALUES
+(1, 'Equipo1', 'Equipo de Ingeniería de Software', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -163,6 +198,30 @@ INSERT INTO `medidas` (`idmedidas`, `nombre_medida`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `preferencias`
+--
+
+CREATE TABLE `preferencias` (
+  `idpreferencia` int(11) NOT NULL,
+  `nombre_preferencia` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `preferencias`
+--
+
+INSERT INTO `preferencias` (`idpreferencia`, `nombre_preferencia`) VALUES
+(1, 'Vegetariano'),
+(2, 'Vegano'),
+(3, 'Keto'),
+(4, 'Sin alcohol'),
+(5, 'Diabetico'),
+(6, 'Carnivoro'),
+(7, 'Fitness');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `preparaciones`
 --
 
@@ -241,8 +300,30 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`idusuario`, `nombre_usuario`, `correo_electronico`, `contrasena`, `imagen`, `receta_favorita`, `receta_mas_preparada`, `receta_menos_preparada`) VALUES
 (1, 'admin', NULL, 'admin', NULL, NULL, NULL, NULL),
-(7, 'vania', 'vania@correo.com', 'vania', NULL, NULL, NULL, NULL),
-(8, 'nora', 'nora@gmail.com', 'nora', NULL, NULL, NULL, NULL);
+(7, 'vania', 'vania@correo.com', 'vania', 'foto_perfil2.png', NULL, NULL, NULL),
+(8, 'nora', 'nora@gmail.com', 'nora', 'foto_perfil4.png', NULL, NULL, NULL),
+(10, 'maria', 'maria@correo.com', 'maria', 'foto_perfil.png', NULL, NULL, NULL),
+(11, 'axel', 'axel@correo.com', 'axel', 'foto_perfil3.png', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios_alergias`
+--
+
+CREATE TABLE `usuarios_alergias` (
+  `id_usuario` int(11) NOT NULL,
+  `alergia` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuarios_alergias`
+--
+
+INSERT INTO `usuarios_alergias` (`id_usuario`, `alergia`) VALUES
+(9, 'mariscos'),
+(10, 'mani'),
+(11, 'mariscos');
 
 -- --------------------------------------------------------
 
@@ -254,6 +335,35 @@ CREATE TABLE `usuarios_grupos` (
   `id_usuario` int(11) NOT NULL,
   `id_grupo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuarios_grupos`
+--
+
+INSERT INTO `usuarios_grupos` (`id_usuario`, `id_grupo`) VALUES
+(7, 1),
+(8, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios_preferencias`
+--
+
+CREATE TABLE `usuarios_preferencias` (
+  `id_usuario` int(11) NOT NULL,
+  `preferencia` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuarios_preferencias`
+--
+
+INSERT INTO `usuarios_preferencias` (`id_usuario`, `preferencia`) VALUES
+(9, 'sin-alcohol'),
+(9, 'carnivoro'),
+(10, 'diabetico'),
+(11, 'carnivoro');
 
 -- --------------------------------------------------------
 
@@ -269,6 +379,12 @@ CREATE TABLE `usuarios_recetas_favoritas` (
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `alergias`
+--
+ALTER TABLE `alergias`
+  ADD PRIMARY KEY (`idalergia`);
 
 --
 -- Indices de la tabla `grupos`
@@ -293,7 +409,7 @@ ALTER TABLE `ingredientes`
 -- Indices de la tabla `ingredientes_de_receta`
 --
 ALTER TABLE `ingredientes_de_receta`
-  ADD PRIMARY KEY (`receta_idreceta`,`ingredientes_idingrediente`,`medidas_idmedida`),
+  ADD PRIMARY KEY (`receta_idreceta`) USING BTREE,
   ADD KEY `fk_receta_has_ingredientes_ingredientes1_idx` (`ingredientes_idingrediente`),
   ADD KEY `fk_receta_has_ingredientes_receta1_idx` (`receta_idreceta`),
   ADD KEY `fk_receta_has_ingredientes_medidas1_idx` (`medidas_idmedida`);
@@ -303,6 +419,12 @@ ALTER TABLE `ingredientes_de_receta`
 --
 ALTER TABLE `medidas`
   ADD PRIMARY KEY (`idmedidas`);
+
+--
+-- Indices de la tabla `preferencias`
+--
+ALTER TABLE `preferencias`
+  ADD PRIMARY KEY (`idpreferencia`);
 
 --
 -- Indices de la tabla `preparaciones`
@@ -343,10 +465,16 @@ ALTER TABLE `usuarios_recetas_favoritas`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `alergias`
+--
+ALTER TABLE `alergias`
+  MODIFY `idalergia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT de la tabla `grupos`
 --
 ALTER TABLE `grupos`
-  MODIFY `idgrupo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idgrupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
@@ -355,10 +483,16 @@ ALTER TABLE `medidas`
   MODIFY `idmedidas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
+-- AUTO_INCREMENT de la tabla `preferencias`
+--
+ALTER TABLE `preferencias`
+  MODIFY `idpreferencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT de la tabla `preparaciones`
 --
 ALTER TABLE `preparaciones`
-  MODIFY `idpreparacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `idpreparacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `receta`
@@ -370,7 +504,7 @@ ALTER TABLE `receta`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Restricciones para tablas volcadas
