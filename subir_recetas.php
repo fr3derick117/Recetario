@@ -457,105 +457,143 @@ print_r($_POST);
                             <div class="section-title product__discount__title">
                                 <h2>Ingredientes: </h2><br><br><br>
 
-                                <div class="shoping__cart__table">
+<?php
+// Configuración de la conexión a la base de datos
+$host = 'localhost';
+$usuario = 'root';
+$contrasena = '';
+$base_de_datos = 'ingsoft';
 
-                                    <table id="tablaDatos">
-                                        <thead>
-                                            <tr>
-                                                <th>Foto</th>
-                                                <th class="shoping__product">
-                                                    Ingrediente
-                                                </th>
-                                                <th>Cantidad</th>
-                                                <th>Medida</th>
-                                                <th>
-                                                    <!-- Boton de Buscar
-                                                <form class="hero__search__form">
-                                                    <input type="text" id="buscarInput" placeholder="Buscar..."
-                                                        onkeydown="if(event.keyCode==13) { buscarTabla(); return false; }">
-                                                </form>-->
-                                                </th>
+// Conexión a la base de datos
+$conexion = new mysqli($host, $usuario, $contrasena, $base_de_datos);
+if ($conexion->connect_error) {
+  die('Error de conexión: ' . $conexion->connect_error);
+}
 
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!--ssssss-->
-                                            <tr>
-                                            <td>
-                                                <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
-                                                    <option value="" disabled selected>Selecciona un ingrediente</option>
-                                                    <?php
-                                                    //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
-                                                    while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
-                                                        echo "<option value='" . $fila['imagen'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                            <td><img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80"></td>
-                                                
-                                            <script>
-                                            function cambiarImagen() {
-                                                var nombreIngrediente = document.getElementById("ingredientes").value;
-                                                document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
-                                            }
-                                            </script>
-                                                <td class="shoping__cart__quantity" style="text-align: center;">
-                                                    <input id="cantidad" name="cantidad" type="text"
-                                                        placeholder="Cantidad"
-                                                        style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;" >
-                                                </td>
-                                                <!--asdasdas-->
-                                                <td>
-                                                    <select id="medida" name="medida" placeholder="Selecciona una medida">
-                                                        <option value="" disabled selected >Selecciona una medida</option>
-                                                        <?php
-                                                        //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
-                                                        while ($fila = mysqli_fetch_array($ResultadoMedidas)) {
-                                                            echo "<option value='" . $fila['idmedidas'] . "'>" . $fila['nombre_medida'] . "</option>";
-                                                        }
-                                                        ?>
+//id de receta
+$sql = "SELECT MAX(idreceta) as last_id FROM receta";
+$result = mysqli_query($conexion, $sql);
+// Comprobar si se encontró algún resultado
+if ($result->num_rows > 0) {
+  // Obtener el resultado como un arreglo asociativo
+  $row = $result->fetch_assoc();
+  // Obtener el último ID
+  $last_id = $row["last_id"] + 1;
+  // Imprimir el último ID
+}
 
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <button type=button class="btn btn-success" style="width: 40px; height: 40px;">+</button>
-                                                    <button  type= button class="btn btn-danger" style="width: 40px; height: 40px;">-</button>
-                                               </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                    <script>
-                                        var contador = 0;
-                                        $(document).ready(function() {
-                                            // Handler para agregar una nueva fila
-                                            $(document).on('click', '#tablaDatos .btn-success', function() {
-                                        // Clona la última fila de la tabla
-                                        var $clone = $('#tablaDatos tbody tr:last').clone();
-                                        // Resetea los valores de los campos de la nueva fila
-                                        $clone.find('#ingredientes, #medida').val("");
-                                        $clone.find('input [type="text"]').val('');
-                                        $clone.find('img').attr('id', 'imagen-ingrediente-' + ($('#tablaDatos tbody tr').length + 1));
-                                        $clone.find('#ingredientes').on('change', function() {
-                                          var nombreIngrediente = $(this).val();
-                                          var imagenId = $(this).closest('tr').find('img').attr('id');
-                                          $('#' + imagenId).attr('src', 'img/Ingredientes/' + nombreIngrediente);
-                                        });
-                                        // Agrega la nueva fila a la tabla
-                                        $('#tablaDatos tbody').append($clone);
-                                      });
-                                        
-                                            // Handler para eliminar una fila
-                                            $(document).on('click', '#tablaDatos .btn-danger', function() {
-                                                // Elimina la fila que contiene el botón presionado
-                                                $(this).closest('tr').remove();
-                                            });
-                                        });
-                                    </script>
+$ConsultaIngredientes = "SELECT * FROM ingredientes;";
+$ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
+
+$ConsultaMedidas = "SELECT * FROM medidas;";
+$ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
+
+$ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
+(receta_idreceta, ingrediente, cantidad, medidas_idmedida) 
+VALUES
+('".$last_id."', 
+'".$_POST['ingredientes']."',
+'".$_POST['cantidad']."',
+'".$_POST['medida']."');";
+
+$ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
 
 
-                                </div>
+
+// Verificar si se ha enviado el formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Obtener los datos del formulario
+  $ingrediente = isset($_POST['ingrediente']) ? $_POST['ingrediente'] : '';
+  $cantidad = isset($_POST['cantidad']) ? $_POST['cantidad'] : '';
+  $medida = isset($_POST['medida']) ? $_POST['medida'] : '';
+
+  // Procesar la imagen subida
+  $foto = isset($_FILES['foto']) ? $_FILES['foto'] : null;
+  $nombreArchivo = '';
+  $rutaArchivo = '';
+
+  if ($foto !== null && $foto['error'] === UPLOAD_ERR_OK) {
+    $nombreArchivo = $ingrediente . '.' . pathinfo($foto['name'], PATHINFO_EXTENSION);
+    $rutaArchivo = 'imagenes/' . $nombreArchivo;
+
+    // Mover la imagen a la carpeta de imágenes
+    move_uploaded_file($foto['tmp_name'], $rutaArchivo);
+
+    // Insertar los datos en la base de datos
+    $query = "INSERT INTO ingredientes (foto, ingrediente, cantidad, medida) VALUES ('$rutaArchivo', '$ingrediente', '$cantidad', '$medida')";
+
+    if ($conexion->query($query) === true) {
+      echo '<p>Receta subida correctamente.</p>';
+      // Actualizar la página para reflejar los cambios
+      echo '<script>window.location.href = "index.php";</script>';
+    } else {
+      echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
+    }
+  }
+}
+?>
+
+
+<form method="POST" enctype="multipart/form-data">
+  <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
+    <option value="" disabled selected>Selecciona un ingrediente</option>
+    <?php
+    //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+    while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
+      echo "<option value='" . $fila['imagen'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
+    }
+    ?>
+  </select>
+  <img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80">
+  <script>
+  function cambiarImagen() {
+    var nombreIngrediente = document.getElementById("ingredientes").value;
+    document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
+  }
+  </script>
+
+  <label for="cantidad">Cantidad:</label>
+  <input id="cantidad" name="cantidad" type="text" placeholder="Cantidad" >
+
+  <label for="medida">Medida:</label>
+  <select id="medida" name="medida" placeholder="Selecciona una medida">
+    <option value="" disabled selected>Selecciona una medida</option>
+    <?php
+    //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+    while ($fila = mysqli_fetch_array($ResultadoMedidas)) {
+      echo "<option value='" . $fila['idmedidas'] . "'>" . $fila['nombre_medida'] . "</option>";
+    }
+    ?>
+  </select>
+
+  <input type="submit" value="Subir Receta">
+</form>
+
+
+</body>
+</html>
+
+
+<table>
+  <tr>
+    <th>Ingrediente</th>
+    <th>Cantidad</th>
+    <th>Medida</th>
+  </tr>
+  <?php
+  $ConsultaReceta = "SELECT * FROM ingredientes_de_receta WHERE receta_idreceta = '$last_id'";
+  $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
+
+  while ($filaReceta = mysqli_fetch_array($ResultadoReceta)) {
+    echo "<tr>";
+    echo "<td>" . $filaReceta['ingrediente'] . "</td>";
+    echo "<td>" . $filaReceta['cantidad'] . "</td>";
+    echo "<td>" . $filaReceta['medidas_idmedida'] . "</td>";
+    echo "</tr>";
+  }
+  ?>
+</table>
+
                             </div>
 
                             <div class="section-title product__discount__title">
@@ -569,83 +607,110 @@ print_r($_POST);
 		}
 	</style>   
                             <h2>Pasos de Preparación: </h2><br><br><br>
-                                <table id="tabla-pasos">
-  <thead>
-    <tr>
-      <th>Numero de paso</th>
-      <th>Instrucciones</th>
-      <th>Foto del paso</th>
-      <th>Imagen</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td><input type="text" name="instrucciones"></td>
-      <td>
-        <input type="file" name="foto" accept="image/*">
-      </td>
-      <td>
-        <img src="" style="display:none;" width="100" height="100">
-      </td>
-      <td>
-        <button type="button" class="eliminar-fila">Eliminar</button>
-        <button type="button" class="agregar-fila">Agregar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
-<script>
-  // Agregar fila
-  const tablaPasos = document.querySelector('#tabla-pasos');
-  const tbody = tablaPasos.querySelector('tbody');
-  const agregarFilaBtn = tablaPasos.querySelector('.agregar-fila');
-  agregarFilaBtn.addEventListener('click', () => {
-    const ultimaFila = tbody.lastElementChild;
-    const ultimoNumeroDePaso = parseInt(ultimaFila.firstElementChild.textContent);
-    const nuevaFila = `
-      <tr>
-        <td>${ultimoNumeroDePaso + 1}</td>
-        <td><input type="text" name="instrucciones"></td>
-        <td>
-          <input type="file" name="foto" accept="image/*">
-        </td>
-        <td>
-          <img src="" style="display:none;" width="100" height="100">
-        </td>
-        <td>
-          <button type="button" class="eliminar-fila">Eliminar</button>
-          <button type="button" class="agregar-fila">Agregar</button>
-        </td>
-      </tr>
-    `;
-    ultimaFila.insertAdjacentHTML('afterend', nuevaFila);
-  });
+                            <?php
+  // Configuración de la conexión a la base de datos
+  $host = 'localhost';
+  $usuario = 'root';
+  $contrasena = '';
+  $base_de_datos = 'ingsoft';
 
-  // Eliminar fila
-  tbody.addEventListener('click', (event) => {
-    if (event.target.classList.contains('eliminar-fila')) {
-      event.target.closest('tr').remove();
+  // Conexión a la base de datos
+  $conexion = new mysqli($host, $usuario, $contrasena, $base_de_datos);
+  if ($conexion->connect_error) {
+    die('Error de conexión: ' . $conexion->connect_error);
+  }
+
+  // Verificar si se ha enviado el formulario
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtener los datos del formulario
+    $ingrediente = isset($_POST['ingrediente']) ? $_POST['ingrediente'] : '';
+
+    // Procesar la imagen subida
+    $foto = isset($_FILES['foto']) ? $_FILES['foto'] : null;
+    $nombreArchivo = '';
+    $rutaArchivo = '';
+
+    if ($foto !== null && $foto['error'] === UPLOAD_ERR_OK) {
+      $nombreArchivo = $ingrediente . '.' . pathinfo($foto['name'], PATHINFO_EXTENSION);
+      $rutaArchivo = 'imagenes/' . $nombreArchivo;
+
+      // Mover la imagen a la carpeta de imágenes
+      move_uploaded_file($foto['tmp_name'], $rutaArchivo);
+
+      // Insertar los datos en la base de datos
+      $query = "INSERT INTO ins (foto, ingrediente) VALUES ('$rutaArchivo', '$ingrediente')";
+
+      if ($conexion->query($query) === true) {
+        echo '<p>Receta subida correctamente.</p>';
+        // Actualizar la página para reflejar los cambios
+        echo '<script>window.location.href = "index.php";</script>';
+        exit; // Agregar exit para evitar la ejecución adicional del código
+      } else {
+        echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
+      }
     }
-  });
+  }
+  ?>
 
-  // Mostrar imagen
-  tbody.addEventListener('change', (event) => {
-    if (event.target.type === 'file') {
-      const input = event.target;
-      const img = input.closest('td').nextElementSibling.querySelector('img');
-      const reader = new FileReader();
-      reader.onload = () => {
-        img.src = reader.result;
-        img.style.display = 'block';
-      };
-      reader.readAsDataURL(input.files[0]);
+
+  <form method="POST" enctype="multipart/form-data">
+    <label for="ingrediente">Instrucción:</label> <!-- Corregir el nombre del campo -->
+    <input type="text" name="ingrediente" required><br>
+
+    <label for="foto">Foto:</label>
+    <input type="file" name="foto" accept="image/*" required><br>
+
+    <input type="submit" value="Subir Receta">
+  </form>
+
+  <?php
+  // Obtener todas las recetas de la base de datos
+  $queryRecetas = "SELECT * FROM ins";
+  $resultadoRecetas = $conexion->query($queryRecetas);
+
+  if ($resultadoRecetas->num_rows > 0) {
+    echo '<h2>Recetas agregadas:<br></h2>';
+
+    echo '<table>';
+    echo '<tr><th>Instruccion</th><th>Foto</th><th>Eliminar</th></tr>'; // Corregir el nombre de la columna
+
+    while ($filaReceta = $resultadoRecetas->fetch_assoc()) {
+      echo '<tr>';
+      echo '<td>' . $filaReceta['ingrediente'] . '</td>';
+      echo '<td><img src="' . $filaReceta['foto'] . '" alt="Imagen" style="width: 100px;"></td>';
+      echo '<td>';
+      echo '<form method="POST" style="display: inline-block;">';
+      echo '<input type="hidden" name="id_receta" value="' . $filaReceta['id'] . '">';
+      echo '<input type="submit" name="eliminar" value="Eliminar">';
+      echo '</form>';
+      echo '</td>';
+      echo '</tr>';
     }
-  });
-</script
 
+    echo '</table>';
+  }
+
+  // Verificar si se ha enviado el formulario de eliminación
+  if (isset($_POST['id_receta'])) {
+    // Obtener el ID de la receta a eliminar
+    $idReceta = $_POST['id_receta'];
+
+    // Eliminar la receta de la base de datos
+    $queryEliminar = "DELETE FROM ins WHERE id='$idReceta'";
+
+    if ($conexion->query($queryEliminar) === true) {
+      echo '<p>Receta eliminada correctamente.</p>';
+      // Actualizar la página para reflejar los cambios
+      echo '<script>window.location.href = "index.php";</script>';
+      exit; // Agregar exit para evitar la ejecución adicional del código
+    } else {
+      echo '<p>Error al eliminar la receta: ' . $conexion->error . '</p>';
+    }
+  }
+
+  $conexion->close();
+  ?>
                             </div>
                             <button type="submit" id="subir" name="subir" class="site-btn">SUBIR RECETA</button>
                         </form>

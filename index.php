@@ -11,13 +11,46 @@
   $host = 'localhost';
   $usuario = 'root';
   $contrasena = '';
-  $base_de_datos = 'recetas';
+  $base_de_datos = 'ingsoft';
 
   // Conexión a la base de datos
   $conexion = new mysqli($host, $usuario, $contrasena, $base_de_datos);
   if ($conexion->connect_error) {
     die('Error de conexión: ' . $conexion->connect_error);
   }
+
+  //id de receta
+  $sql = "SELECT MAX(idreceta) as last_id FROM receta";
+  $result = mysqli_query($conexion, $sql);
+  // Comprobar si se encontró algún resultado
+  if ($result->num_rows > 0) {
+    // Obtener el resultado como un arreglo asociativo
+    $row = $result->fetch_assoc();
+    // Obtener el último ID
+    $last_id = $row["last_id"];
+    // Imprimir el último ID
+  }
+
+  $ConsultaIngredientes = "SELECT * FROM ingredientes;";
+  $ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
+
+  $ConsultaMedidas = "SELECT * FROM medidas;";
+  $ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
+
+  $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
+  (receta_idreceta, ingrediente, cantidad, medidas_idmedida) 
+  VALUES
+  ('".$last_id."', 
+  '".$_POST['ingredientes']."',
+  '".$_POST['cantidad']."',
+  '".$_POST['medida']."');";
+
+  $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
+
+  print_r($_POST);
+  print_r($last_id);
+  print_r($ResultadoAgregarIngredientes);
+  print_r($ConsultaAgregarIngredientesReceta);
 
   // Verificar si se ha enviado el formulario
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -54,67 +87,40 @@
 
 
   <form method="POST" enctype="multipart/form-data">
-    <label for="ingrediente">Ingrediente:</label>
-    <input type="text" name="ingrediente" required><br>
+    <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
+      <option value="" disabled selected>Selecciona un ingrediente</option>
+      <?php
+      //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+      while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
+        echo "<option value='" . $fila['imagen'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
+      }
+      ?>
+    </select>
+    <img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80">
+    <script>
+    function cambiarImagen() {
+      var nombreIngrediente = document.getElementById("ingredientes").value;
+      document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
+    }
+    </script>
 
     <label for="cantidad">Cantidad:</label>
-    <input type="number" name="cantidad" required><br>
+    <input id="cantidad" name="cantidad" type="text" placeholder="Cantidad" >
 
     <label for="medida">Medida:</label>
-    <input type="text" name="medida" required><br>
-
-    <label for="foto">Foto:</label>
-    <input type="file" name="foto" accept="image/*" required><br>
+    <select id="medida" name="medida" placeholder="Selecciona una medida">
+      <option value="" disabled selected>Selecciona una medida</option>
+      <?php
+      //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+      while ($fila = mysqli_fetch_array($ResultadoMedidas)) {
+        echo "<option value='" . $fila['idmedidas'] . "'>" . $fila['nombre_medida'] . "</option>";
+      }
+      ?>
+    </select>
 
     <input type="submit" value="Subir Receta">
   </form>
 
-  <?php
-  // Obtener todas las recetas de la base de datos
-  $queryRecetas = "SELECT * FROM ingredientes";
-  $resultadoRecetas = $conexion->query($queryRecetas);
 
-  if ($resultadoRecetas->num_rows > 0) {
-    echo '<h2>Recetas agregadas:</h2>';
-    echo '<table>';
-    echo '<tr><th>Foto</th><th>Ingrediente</th><th>Cantidad</th><th>Medida</th><th>Eliminar</th></tr>';
-
-    while ($filaReceta = $resultadoRecetas->fetch_assoc()) {
-      echo '<tr>';
-      echo '<td><img src="' . $filaReceta['foto'] . '" alt="Imagen" style="width: 100px;"></td>';
-      echo '<td>' . $filaReceta['ingrediente'] . '</td>';
-      echo '<td>' . $filaReceta['cantidad'] . '</td>';
-      echo '<td>' . $filaReceta['medida'] . '</td>';
-      echo '<td>';
-      echo '<form method="POST" style="display: inline-block;">';
-      echo '<input type="hidden" name="id_receta" value="' . $filaReceta['id'] . '">';
-      echo '<input type="submit" name="eliminar" value="Eliminar">';
-      echo '</form>';
-      echo '</td>';
-      echo '</tr>';
-    }
-
-    echo '</table>';
-  }
-
-  // Verificar si se ha enviado el formulario de eliminación
-  if (isset($_POST['id_receta'])) {
-    // Obtener el ID de la receta a eliminar
-    $idReceta = $_POST['id_receta'];
-
-    // Eliminar la receta de la base de datos
-    $queryEliminar = "DELETE FROM ingredientes WHERE id='$idReceta'";
-
-    if ($conexion->query($queryEliminar) === true) {
-      echo '<p>Receta eliminada correctamente.</p>';
-      // Actualizar la página para reflejar los cambios
-      echo '<script>window.location.href = "index.php";</script>';
-    } else {
-      echo '<p>Error al eliminar la receta: ' . $conexion->error . '</p>';
-    }
-  }
-
-  $conexion->close();
-  ?>
 </body>
 </html>

@@ -15,7 +15,7 @@ if ($conexion->connect_error) {
 $id = $_GET['id'];
 
 // Eliminar el ingrediente de la base de datos
-$query = "DELETE FROM ingredientes WHERE id = $id";
+$query = "DELETE FROM instrucciones WHERE id = $id";
 if ($conexion->query($query) === TRUE) {
   echo '<p>Ingrediente eliminado exitosamente.</p>';
 } else {
