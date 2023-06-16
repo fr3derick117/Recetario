@@ -83,15 +83,15 @@ if (isset($_POST['subir'])) {
     
 
     //crear una consulta con php a la tabla ingredientes_de_receta en la base de datos de ingsoft para insertar un nuevo registro
-    $ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
-        (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
-        VALUES
-        ('".$last_id."', 
-        '".$_POST['ingredientes']."',
-        '".$_POST['cantidad']."',
-        '".$_POST['medida']."');";
+    //$ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
+    //    (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
+    //    VALUES
+    //    ('".$last_id."', 
+    //    '".$_POST['ingredientes']."',
+    //    '".$_POST['cantidad']."',
+    //    '".$_POST['medida']."');";
 
-    $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
+    //$ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
 
     /*$SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;";
     echo($SeleccionarUltimaReceta);
@@ -525,7 +525,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($conexion->query($query) === true) {
       echo '<p>Receta subida correctamente.</p>';
       // Actualizar la página para reflejar los cambios
-      echo '<script>window.location.href = "index.php";</script>';
+      echo '<script>window.location.href = "subir_recetas.php";</script>';
     } else {
       echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
     }
@@ -535,6 +535,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 <form method="POST" enctype="multipart/form-data">
+<style>
+  .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .form-row > * {
+    margin-right: 10px;
+  }
+
+  #cantidad {
+    width: 50px;
+  }
+
+  #medida {
+    width: 150px;
+  }
+</style>
+
+<div class="form-row">
   <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
     <option value="" disabled selected>Selecciona un ingrediente</option>
     <?php
@@ -545,16 +566,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
   </select>
   <img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80">
-  <script>
-  function cambiarImagen() {
-    var nombreIngrediente = document.getElementById("ingredientes").value;
-    document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
-  }
-  </script>
-
   <label for="cantidad">Cantidad:</label>
-  <input id="cantidad" name="cantidad" type="text" placeholder="Cantidad" >
-
+  <input id="cantidad" name="cantidad" type="text" placeholder="Cantidad"  style="width: 200px;">
   <label for="medida">Medida:</label>
   <select id="medida" name="medida" placeholder="Selecciona una medida">
     <option value="" disabled selected>Selecciona una medida</option>
@@ -565,6 +578,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     ?>
   </select>
+</div>
+
+<script>
+function cambiarImagen() {
+  var nombreIngrediente = document.getElementById("ingredientes").value;
+  document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
+}
+</script>
+
 
   <input type="submit" value="Subir Receta">
 </form>
@@ -644,7 +666,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($conexion->query($query) === true) {
         echo '<p>Receta subida correctamente.</p>';
         // Actualizar la página para reflejar los cambios
-        echo '<script>window.location.href = "index.php";</script>';
+        echo '<script>window.location.href = "subir_recetas.php";</script>';
         exit; // Agregar exit para evitar la ejecución adicional del código
       } else {
         echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
@@ -654,15 +676,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   ?>
 
 
+<style>
+  .center-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+  }
+</style>
+
+<div class="center-form">
   <form method="POST" enctype="multipart/form-data">
-    <label for="ingrediente">Instrucción:</label> <!-- Corregir el nombre del campo -->
-    <input type="text" name="ingrediente" required><br>
+    <label for="ingrediente">Instrucción:</label>
+    <input type="text" name="ingrediente" required style="width: 200px;"><br>
 
     <label for="foto">Foto:</label>
-    <input type="file" name="foto" accept="image/*" required><br>
+    <input type="file" name="foto" accept="image/*" required style="width: 200px;"><br>
 
-    <input type="submit" value="Subir Receta">
+    <input type="submit" value="Subir Instrucción o Paso" style="width: 200px;">
   </form>
+</div>
+
 
   <?php
   // Obtener todas las recetas de la base de datos
@@ -670,7 +705,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $resultadoRecetas = $conexion->query($queryRecetas);
 
   if ($resultadoRecetas->num_rows > 0) {
-    echo '<h2>Recetas agregadas:<br></h2>';
+    echo '<h2></h2>';
 
     echo '<table>';
     echo '<tr><th>Instruccion</th><th>Foto</th><th>Eliminar</th></tr>'; // Corregir el nombre de la columna
@@ -702,7 +737,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($conexion->query($queryEliminar) === true) {
       echo '<p>Receta eliminada correctamente.</p>';
       // Actualizar la página para reflejar los cambios
-      echo '<script>window.location.href = "index.php";</script>';
+      echo '<script>window.location.href = "subir_recetas.php";</script>';
       exit; // Agregar exit para evitar la ejecución adicional del código
     } else {
       echo '<p>Error al eliminar la receta: ' . $conexion->error . '</p>';
