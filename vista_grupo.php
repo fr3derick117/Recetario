@@ -21,11 +21,6 @@ if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 
-//consulta para ver todos los registros de la tabla receta
-$ConsultaReceta = "SELECT * FROM receta WHERE usuario_idusuario = '".$_SESSION['id_usuario']."' ";
-//echo $ConsultaReceta;
-$ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
-
 //consulta para ver todos los registros de la tabla usuarios
 $ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
 //print_r($ConsultaUsuario);
@@ -33,15 +28,13 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
 //print_r($ResultadoUsuario);
 //print_r($_SESSION);
 
-//imprime el numero de filas de la consulta
-//echo "<br> Numero de filas: ";
-//print_r(mysqli_num_rows($ResultadoReceta));
-//echo "<br> Resultado de la consulta: ";
-//print_r($ResultadoReceta);
+$idgrupo = $_GET["grupo"];
 
 //echo "<br> Datos de la sesion: ";
 //print_r($_SESSION);
 
+$ConsultaGrupo = "SELECT * FROM grupo WHERE idgrupo = '".$idgrupo."' ";
+$ResultadoGrupo = mysqli_query($conexion, $ConsultaGrupo);
 
 ?>
 
@@ -71,10 +64,37 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
 
     <style>
         button{
-            padding:0;
-            border:0;
-            margin:0;
-            width: 1150px;
+            display: inline-block;
+            font-size: 17px;
+            padding: 10px 28px 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #7fad39;
+            letter-spacing: 2px;
+        }
+
+        button.button_close{
+            display: inline-block;
+            font-size: 17px;
+            padding: 10px 28px 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #6f6f6f;
+            letter-spacing: 2px;
+        }
+
+        .text_cool{
+            font-size: 17px;
+            color: #030303;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .imagen_perfil{
+            background-color: #ffffff;
         }
     </style>
 </head>
@@ -227,13 +247,10 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                             <div class="col-lg-12">
                                 <div class="blog__details__author">
                                     <div class="blog__details__author__pic">
-                                        <?php  
-                                            echo "<img src='img/usuarios/".$usuario['imagen']."' alt=''>";
-                                        ?>
+                                        <img src="img/blog/details/details-author.jpg" alt="">
                                     </div>
                                     <div class="blog__details__author__text">
-                                        <h6><?php echo $usuario['nombre_usuario'] ?></h6>
-                                        <span>Usuario</span>
+                                        <h2>Grupo 1</h2>
                                     </div>
                                 </div>
                             </div>
@@ -245,38 +262,95 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                         <center> 
                             <nav class="header__menu">
                                 <ul>
-                                    <li><a href="perfil_grupos.php">Grupos</a></li>
-                                    <li><a href="perfil_favoritos.php">Favoritos</a></li>
-                                    <li><a href="perfil_misrecetas.php" class="active">Mis Recetas</a></li>
-                                    <li><a href="perfil_lista_compra.html">Lista de Compra</a></li>
+                                    <?php
+                                    echo "<li><a href='vista_grupo.php?grupo=".$idgrupo."'>Recetas</a></li>";
+                                    echo "<li><a href='integrantes_grupo.html?grupo=".$idgrupo."'>Integrantes</a></li>";
+                                    ?>
                                 </ul>
                             </nav>
                         </center>
                     </div>
+
                     <div class="container">
                         <div class="row">
-                            <?php
-                                while($row = mysqli_fetch_array($ResultadoReceta)){
-                                    echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
-                                        echo "<div class='blog__item'>";
-                                            echo "<div class='blog__item__pic'>";
-                                                echo "<img src='img/recetas/" . $row['foto_principal'] . "' width='100' >";
-                                            echo "</div>";
-                                            echo "<div class='blog__item__text'>";
-                                                echo "<h5><a href='vista_receta.php'> " . $row['nombre_receta'] . "</a></h5>";
-                                                echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
-                                                echo "Preferencia: ".$row['tipo_preferencia']."</br>";
-                                                echo "Descripción: ".$row['descripcion']."</p>";
-                                            echo "</div>";
-                                        echo "</div>";
-                                    echo "</div>";
-                                }
-                            ?>
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="blog__item">
+                                    <div class="blog__item__pic">
+                                        <img src="img/blog/blog-1.jpg" alt="">
+                                    </div>
+                                    <div class="blog__item__text">
+                                        
+                                        <h5><a href="#"> Receta 1</a></h5>
+                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="blog__item">
+                                    <div class="blog__item__pic">
+                                        <img src="img/blog/blog-2.jpg" alt="">
+                                    </div>
+                                    <div class="blog__item__text">
+                                        
+                                        <h5><a href="#">Receta 2</a></h5>
+                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="blog__item">
+                                    <div class="blog__item__pic">
+                                        <img src="img/blog/blog-3.jpg" alt="">
+                                    </div>
+                                    <div class="blog__item__text">
+                                        
+                                        <h5><a href="#">Receta 3</a></h5>
+                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="blog__item">
+                                    <div class="blog__item__pic">
+                                        <img src="img/blog/blog-1.jpg" alt="">
+                                    </div>
+                                    <div class="blog__item__text">
+                                        
+                                        <h5><a href="#"> Receta 4</a></h5>
+                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="blog__item">
+                                    <div class="blog__item__pic">
+                                        <img src="img/blog/blog-2.jpg" alt="">
+                                    </div>
+                                    <div class="blog__item__text">
+                                        
+                                        <h5><a href="#">Receta 5</a></h5>
+                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6">
+                                <div class="blog__item">
+                                    <div class="blog__item__pic">
+                                        <img src="img/blog/blog-3.jpg" alt="">
+                                    </div>
+                                    <div class="blog__item__text">
+                                        
+                                        <h5><a href="#">Receta 6</a></h5>
+                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="container">
-                        
-                    </div>
+                    
+                    
                 </div>
             </div>
         </div>

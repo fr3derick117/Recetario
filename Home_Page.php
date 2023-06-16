@@ -106,14 +106,13 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                                         <?php  
                                             if($usuario = mysqli_fetch_array($ResultadoUsuario)){
                                                 echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px'></img>";
-                                                //echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px></img>";
                                                     echo "<ul class='header__menu__dropdown' width='60px' height='60px'>";
                                                         echo "<li><a class='text-center' >".$usuario['nombre_usuario']."</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
-                                                        echo "<li><a class='text-center' href='Home_Page.html'>Home Page</a></li>";
+                                                        echo "<li><a class='text-center' href='Home_Page.php'>Home Page</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_lista_compra.html'>Lista de Compras</a></li>";
-                                                        echo "<li><a class='text-center' href='perfil_grupos.html'>Grupos</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_grupos.php'>Grupos</a></li>";
                                                         echo "<li><a class='text-center'>Planeador de Menú</a></li>";
                                                         echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
                                                         echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";
@@ -121,7 +120,6 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                                                 echo"</li>";
                                             }
                                         ?>
-                                        
                                     </ul>
                                 </nav>
                             </li>

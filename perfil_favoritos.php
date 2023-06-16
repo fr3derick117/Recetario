@@ -21,27 +21,21 @@ if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 
-//consulta para ver todos los registros de la tabla receta
-$ConsultaReceta = "SELECT * FROM receta WHERE usuario_idusuario = '".$_SESSION['id_usuario']."' ";
-//echo $ConsultaReceta;
-$ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
-
-//consulta para ver todos los registros de la tabla usuarios
 $ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
-//print_r($ConsultaUsuario);
 $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
-//print_r($ResultadoUsuario);
-//print_r($_SESSION);
 
-//imprime el numero de filas de la consulta
-//echo "<br> Numero de filas: ";
-//print_r(mysqli_num_rows($ResultadoReceta));
-//echo "<br> Resultado de la consulta: ";
-//print_r($ResultadoReceta);
+$ConsultaRecetaFavoritos="SELECT * FROM usuarios_recetas_favoritas WHERE id_usuario = '".$_SESSION['id_usuario']."' ";
+$ResultadoRecetaFavoritos=mysqli_query($conexion, $ConsultaRecetaFavoritos);
 
-//echo "<br> Datos de la sesion: ";
-//print_r($_SESSION);
+$ConsultaRecetasFav = "SELECT receta.*, usuarios_recetas_favoritas.*
+FROM receta 
+	LEFT JOIN usuarios_recetas_favoritas ON usuarios_recetas_favoritas.id_receta = receta.idreceta
+WHERE usuarios_recetas_favoritas.id_usuario = '".$_SESSION['id_usuario']."' ";
+$ResultadoRecetaFav = mysqli_query($conexion, $ConsultaRecetasFav);
 
+//print_r($ConsultaRecetaFavoritos);
+//print_r($ResultadoRecetaFavoritos);
+//print_r($ResultadoRecetaFav);
 
 ?>
 
@@ -248,7 +242,7 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                                     <li><a href="perfil_grupos.php">Grupos</a></li>
                                     <li><a href="perfil_favoritos.php">Favoritos</a></li>
                                     <li><a href="perfil_misrecetas.php" class="active">Mis Recetas</a></li>
-                                    <li><a href="perfil_lista_compra.html">Lista de Compra</a></li>
+                                    <li><a href="contact.html">Lista de Compra</a></li>
                                 </ul>
                             </nav>
                         </center>
@@ -256,27 +250,23 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                     <div class="container">
                         <div class="row">
                             <?php
-                                while($row = mysqli_fetch_array($ResultadoReceta)){
+                               while($row = mysqli_fetch_array($ResultadoRecetaFav)){
                                     echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
                                         echo "<div class='blog__item'>";
                                             echo "<div class='blog__item__pic'>";
-                                                echo "<img src='img/recetas/" . $row['foto_principal'] . "' width='100' >";
+                                                echo "<img src='img/recetas/". $row['foto_principal']. "' alt=''>";
                                             echo "</div>";
                                             echo "<div class='blog__item__text'>";
-                                                echo "<h5><a href='vista_receta.php'> " . $row['nombre_receta'] . "</a></h5>";
-                                                echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
-                                                echo "Preferencia: ".$row['tipo_preferencia']."</br>";
-                                                echo "Descripción: ".$row['descripcion']."</p>";
+                                                echo "<h5><a href='vista_receta.php'> ". $row['nombre_receta']. "</a></h5>";
+                                                echo "<p>". $row['descripcion']."</p>";
                                             echo "</div>";
                                         echo "</div>";
                                     echo "</div>";
-                                }
+                                } 
                             ?>
                         </div>
                     </div>
-                    <div class="container">
-                        
-                    </div>
+                    
                 </div>
             </div>
         </div>

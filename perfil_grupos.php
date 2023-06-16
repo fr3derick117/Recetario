@@ -21,64 +21,73 @@ if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 
-//consulta para ver todos los registros de la tabla receta
-$ConsultaGrupos = "SELECT grupos.*, usuarios_grupos.*, grupos_recetas.*
+$nombre = '';
+
+//consulta para ver todos los registros de la tabla usuarios
+$ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
+//print_r($ConsultaUsuario);
+$ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
+
+$ConsultaUsuarios = "SELECT * FROM usuario";
+$ResultadoUsuarios = mysqli_query($conexion, $ConsultaUsuarios);
+
+//consulta para ver todos los registros de los grupos 
+$ConsultaGrupos = "SELECT grupos.*, usuarios_grupos.*
 FROM grupos 
-	LEFT JOIN usuarios_grupos ON usuarios_grupos.id_grupo = grupos.idgrupo 
-	LEFT JOIN grupos_recetas ON grupos_recetas.id_grupo = grupos.idgrupo";
-//echo $ConsultaReceta;
+    LEFT JOIN usuarios_grupos ON usuarios_grupos.id_grupo = grupos.idgrupo
+WHERE usuarios_grupos.id_usuario = '".$_SESSION['id_usuario']."' ";
 $ResultadoGrupos = mysqli_query($conexion, $ConsultaGrupos);
 
-if (isset($_FILES['imagen'])) {
-    $imagen = $_FILES['imagen']['tmp_name'];
-    $nombre = $_FILES['imagen']['name'];
-    $tipo = $_FILES['imagen']['type'];
 
-    //crear una carpeta con el nombre de la receta
-    //mover la imagen a la carpeta creada
-    //crear una ruta que guarde la imagen en una carpeta con el nombre de la receta dentro de la carpeta receta
-    $receta = $_POST['titulo'];
-    mkdir("recetas/" . $receta);
-    $ruta = "recetas/" . $receta . "/" . $nombre;
+
+if (isset($_FILES['imagen-upload'])) {
+    $imagen = $_FILES['imagen-upload']['tmp_name'];
+    $nombre = $_FILES['imagen-upload']['name'];
+    $tipo = $_FILES['imagen-upload']['type'];
+    $ruta = "img/grupos/" . $nombre;
+    if (move_uploaded_file($imagen, $ruta)) {
+        echo "El archivo se subió correctamente";
+    } else {
+        echo "Ocurrió un error al subir el archivo";
+    }
     //echo $ruta;
-    
-    //if(move_uploaded_file($imagen, $ruta)){
-    //    echo "Se movio la imagen";}
-    // Aquí debes agregar código para conectarte a la base de datos MySQL
-    // y guardar la imagen en una tabla de la base de datos.
-    $AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
-        VALUES (NULL, NULL, '$last_id', '$nombre')";
-    
-
-// Ejecutar la consulta
-    $ConsultaImagen = mysqli_query($conexion, $AgregarImagen);
-
 }
 
+$MaxID = "SELECT MAX(idgrupo) as last_id FROM grupos";
+$ConsultaMaxID = mysqli_query($conexion, $MaxID);
+if ($ConsultaMaxID -> num_rows > 0) {
+    $row = $ConsultaMaxID -> fetch_assoc();
+    // Obtener el último ID
+    $last_id = $row["last_id"] + 1;
+} 
 
-if (isset($_POST['subir'])) {
+if (isset($_POST['agregar_grupo'])) {
     $ConsultaAgregarGrupo = "INSERT INTO grupos
-        (idgrupo, nombre, descripcion, receta_preferida, receta_mas_preparada, receta_menos_preparada)
+        (idgrupo, nombre, descripcion, imagen_grupo, receta_preferida, receta_mas_preparada, receta_menos_preparada)
         VALUES 
-        (NULL, 
-        '" . $_POST['nombre'] . "', 
-        '" . $_POST['descripcion'] . "', 
+        ($last_id, 
+        '" . $_POST['nom_grupo'] . "', 
+        '" . $_POST['descrip_grupo'] . "', 
+        '" . $nombre . "',
         NULL, 
         NULL, 
         NULL);";
-
     $ResultadoAgregarGrupo = mysqli_query($conexion, $ConsultaAgregarGrupo);
 
-    //crear una consulta con php a la tabla ingredientes_de_receta en la base de datos de ingsoft para insertar un nuevo registro
-    $ConsultaAgregarIntegrantes = "INSERT INTO usuarios_grupos 
-        (id_usuario, id_grupo) 
+    $ConsultaAgregarIntegranteCreador = "INSERT INTO usuarios_grupos (id_usuario, id_grupo) 
         VALUES
-        ('".$last_id."', 
-        '".$_SESSION['id_usuario']."');";
-
-    $ResultadoAgregarIntegrantes = mysqli_query($conexion, $ConsultaAgregarIntegrantes);
+        ('".$_SESSION['id_usuario']."', 
+        '".$last_id."');";
+    $ResultadoAgregarIntegrantes = mysqli_query($conexion, $ConsultaAgregarIntegranteCreador);
 
 }
+
+//print_r($_POST);
+//print_r($_FILES);
+//print_r($ConsultaAgregarGrupo);
+//print_r($ResultadoAgregarGrupo);
+//print_r($ConsultaAgregarIntegranteCreador);
+//print_r($ResultadoAgregarIntegrantes);
 
 ?>
 
@@ -224,7 +233,7 @@ if (isset($_POST['subir'])) {
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="Home_Page.html"><img src="img/logo_blog_de_comdia.png" alt="" width="100px" height="100px" ></a>
+                        <a href="Home_Page.php"><img src="img/logo_blog_de_comdia.png" alt="" width="100px" height="100px" ></a>
                     </div>
                 </div>
                 <div class="col-lg-7"><br>
@@ -242,18 +251,22 @@ if (isset($_POST['subir'])) {
                             <li>
                                 <nav class="header__menu">
                                     <ul>
-                                        <li><img src="img/foto_perfil.png" width="70px" height="70px"></img>
-                                            <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="perfil_misrecetas.html">Perfil</a></li>
-                                                <li><a class="text-center" href="perfil_misrecetas.html ">Mis Recetas</a></li>
-                                                <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
-                                                <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
-                                                <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
-                                                <li><a class="text-center">Planeador de Menú</a></li>
-                                                <li><a class="text-center" href="subir_recetas.html">Subir Receta</a></li>
-                                                <li><a class="text-center" href="login.html">Cerrar Sesión</a></li>
-                                            </ul>
-                                        </li>
+                                        <?php  
+                                            if($usuario = mysqli_fetch_array($ResultadoUsuario)){
+                                                echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px'></img>";
+                                                    echo "<ul class='header__menu__dropdown' width='60px' height='60px'>";
+                                                        echo "<li><a class='text-center' >".$usuario['nombre_usuario']."</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
+                                                        echo "<li><a class='text-center' href='Home_Page.php'>Home Page</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_lista_compra.html'>Lista de Compras</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_grupos.php'>Grupos</a></li>";
+                                                        echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
+                                                        echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";
+                                                    echo"</ul>";
+                                                echo"</li>";
+                                            }
+                                        ?>
                                     </ul>
                                 </nav>
                             </li>
@@ -287,11 +300,13 @@ if (isset($_POST['subir'])) {
                             <div class="col-lg-12">
                                 <div class="blog__details__author">
                                     <div class="blog__details__author__pic">
-                                        <img src="img/blog/details/details-author.jpg" alt="">
+                                        <?php  
+                                            echo "<img src='img/usuarios/".$usuario['imagen']."' alt=''>";
+                                        ?>
                                     </div>
                                     <div class="blog__details__author__text">
-                                        <h6>Michael Scofield</h6>
-                                        <span>Admin</span>
+                                        <h6><?php echo $usuario['nombre_usuario'] ?></h6>
+                                        <span>Usuario</span>
                                     </div>
                                 </div>
                             </div>
@@ -302,10 +317,10 @@ if (isset($_POST['subir'])) {
                         <center> 
                             <nav class="header__menu">
                                 <ul>
-                                    <li><a href="perfil_grupos.html">Grupos</a></li>
-                                    <li><a href="perfil_favoritos.html">Favoritos</a></li>
-                                    <li><a href="perfil_misrecetas.html" class="active">Mis Recetas</a></li>
-                                    <li><a href="perfil_lista_compra.html" >Lista de Compra</a></li>
+                                    <li><a href="perfil_grupos.php" class="active">Grupos</a></li>
+                                    <li><a href="perfil_favoritos.php">Favoritos</a></li>
+                                    <li><a href="perfil_misrecetas.php">Mis Recetas</a></li>
+                                    <li><a href="perfil_lista_compra.html">Lista de Compra</a></li>
                                 </ul>
                             </nav>
                         </center>
@@ -316,29 +331,61 @@ if (isset($_POST['subir'])) {
                         <dialog id="modal" class="col-lg-4 text-center">
                             <div class="section-title product__discount__title text-center"><br>
                                 <h2>Nuevo grupo</h2><br><br><br>
-                                <div class="col-lg-12 col-1">
-                                        <img src="img/grupo_perfil.png" width="100px" id="imagen"
-                                        onclick="document.getElementById('fileInput').click();">
-                                        <input type="file" name="imagen" id="fileInput" style="display: none;"
-                                        onchange="document.getElementById('imagen').src = window.URL.createObjectURL(this.files[0]);">
+                                <form id="formAuthentication" action="perfil_grupos.php" method="POST" enctype="multipart/form-data">
+                                    <div class="col-lg-12 col-1">
+                                        <label for="imagen">
+                                            <img src="img/grupo_perfil.png" width="100px" id="imagen">
+                                        </label>
+                                        <input type="file" name="imagen-upload" id="imagen-upload" accept="image/*">
+                                        <script>
+                                            // Obtén referencia al elemento de carga de archivo
+                                            var fileUpload = document.getElementById('imagen-upload');
+                                            // Escucha el evento de cambio de archivo
+                                            fileUpload.addEventListener('change', function (e) {
+                                                var reader = new FileReader();
+                                                reader.onload = function (event) {
+                                                    // Actualiza la imagen de perfil con la imagen cargada
+                                                    document.getElementById('imagen').src = event.target.result;
+                                                }
+                                                // Lee el archivo como una URL de datos
+                                                reader.readAsDataURL(e.target.files[0]);
+                                            });
+                                        </script> 
                                         <input id="nom_grupo" name="nom_grupo" type="text" placeholder="Nombre del grupo" style="border-style: outset;" class="col-lg-9">
-                                </div>
-                                <div class="col-lg-12"><br>
-                                    <a class="text_cool">Escribe la descripción del grupo</a>
-                                    <input id="nom_grupo" name="descrip_grupo" type="text" placeholder="Descripción del grupo" style="border-style: outset;" class="col-lg-12">
-                                </div>
-                                <div class="col-lg-12 shoping__discount">
-                                    <a class="text_cool">Agregar integrantes </a>
-                                    <form action="#">
-                                        <input type="text" placeholder="Nombre de usuario">
-                                        <button type="submit" class="site-btn">Agregar</button>
-                                    </form>
-                                </div>
-                                <div class="text-center">
-                                    <br><br><br>
-                                    <button onclick="window.modal.click();">Crear</button>
-                                    <button onclick="window.modal.close();" class="button_close">Cerrar</button>
-                                </div>
+                                    </div>
+                                    <div class="col-lg-12"><br>
+                                        <a class="text_cool">Escribe la descripción del grupo</a>
+                                        <input id="descrip_grupo" name="descrip_grupo" type="text" placeholder="Descripción del grupo" style="border-style: outset;" class="col-lg-12">
+                                    </div>
+                                
+                                    <!--<div class="col-lg-12 shoping__discount">
+                                        <a class="text_cool">Agregar integrantes </a>
+                                        <br>
+                                            <input type="search" id="busqueda_usuarios" name="busqueda_usuarios" placeholder="Nombre de usuario" list="usuarios">
+                                            <input type="button" onclick="agregar_usuarios();" value="Agregar Usuarios">
+                                            <input type="button" onclick="imprimir_lista();" value="Imprimir Lista">                                            
+                                            <br>
+
+                                        <br>
+                                        <a class="text_cool">Lista de usuarios</a>
+                                        <ul id="lista_usuarios">
+                                        </ul>
+
+                                            
+                                    </div>-->
+                                
+                                    <div class="text-center">
+                                        <br><br><br>
+                                        <button class="primary-btn" type="submit" width="90px" id="agregar_grupo" name="agregar_grupo">Agregar Grupo</button>
+                                        <button type="button" onclick="window.modal.close();" class="button_close" data-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </form>
+                                <!--<datalist id="usuarios">
+                                    <?php
+                                    while($usuario = mysqli_fetch_array($ResultadoUsuarios))
+                                        echo "<option value='".$usuario['nombre_usuario']."'>"; 
+                                    ?>
+                                </datalist>-->
                             </div>
                         </dialog>
 
@@ -346,39 +393,21 @@ if (isset($_POST['subir'])) {
                     </div><br>
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="img/blog/blog-1.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        
-                                        <h5><a href="vista_grupo.html"> Grupo 1</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="img/blog/blog-2.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        
-                                        <h5><a href="#">Grupo 2</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="img/blog/blog-3.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        
-                                        <h5><a href="#">Grupo 3</a></h5>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php
+                            while($grupos = mysqli_fetch_array($ResultadoGrupos)){
+                                echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
+                                    echo "<div class='blog__item'>";
+                                        echo "<div class='blog__item__pic'>";
+                                            echo "<img src='img/grupos/".$grupos['imagen_grupo']."'>";
+                                        echo "</div>";
+                                        echo "<div class='blog__item__text'>";
+                                            echo "<h5><a href='vista_grupo.php?grupo=".$grupos['idgrupo']."'> ".$grupos['nombre']."</a></h5>";
+                                            echo "<p>".$grupos['descripcion']."</p>";
+                                        echo "</div>";
+                                    echo "</div>";
+                                echo "</div>";
+                            }
+                            ?>
                         </div>
                     </div>
                     
@@ -429,6 +458,28 @@ if (isset($_POST['subir'])) {
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
 
+    <script src="propios/agregar_grupos.js"></script>
+
+    <!--
+    <script>
+        function agregarUsuarios() {
+          // Obtén el valor del campo de búsqueda de usuarios
+          var usuarioSeleccionado = document.getElementById('busqueda_usuarios').value;
+        
+          // Realiza una petición AJAX para insertar el usuario en la tabla 'usuarios_grupos'
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', 'insertar_usuario_grupo.php', true);
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+              // Aquí puedes realizar alguna acción si la petición se ha realizado con éxito
+              console.log(xhr.responseText);
+            }
+          };
+          xhr.send('usuarioSeleccionado=' + usuarioSeleccionado);
+        }
+    </script>
+-->
 
 
 </body>
