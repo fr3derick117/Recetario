@@ -1734,9 +1734,9 @@ Fácil
 
 .product__details__text .heart-icon {
 	display: inline-block;
-	font-size: 16px;
+	font-size: 1px;
 	color: #6f6f6f;
-	padding: 13px 16px 13px;
+	padding: 1px 1px 1px;
 	background: #f5f5f5;
 }
 
@@ -1744,9 +1744,9 @@ Fácil
 	background-color: transparent;
 	border: none;
 	color: #fe1e35;
-	font-size: 12px;
+	font-size: 1px;
 	cursor: pointer;
-	padding: 10px 20px;
+	padding: 1px 2px;
 	display: inline-block;
 	margin: 2px 1px;
   }
@@ -1761,12 +1761,12 @@ Fácil
 	color: #fe1e35;
 	font-size: 2px;
 	padding: 2px;
-	width: 50px;
+	width: 2px;
 	cursor: pointer;
 }
   
 .btn-heart-small i {
-	font-size: 14px;
+	font-size: 1px;
 }
   
 

@@ -1,30 +1,20 @@
 <?php
 session_start();
-
-//Cerrar sesion
 if($_SESSION['login']=='' || $_SESSION['login']==null || $_SESSION['login']=='0' ){
     header('Location: login.php');
 }
 if (isset($_GET['logout'])) {
-  // Destruye la sesión actual
   session_unset();
   session_destroy();
-  // Redirecciona al usuario a la página de inicio de sesión
   header("Location: login.php");
 }
-
-//Establecer la conexion a la base de datos
 $conexion = mysqli_connect('localhost', 'root', '', 'ingsoft');
-
-//Verificar que se pudo conectar a la base de datos
 if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="zxx">
-
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Ogani Template">
@@ -32,11 +22,7 @@ if (!$conexion) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ogani | Template</title>
-
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
-
-    <!-- Css Styles -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
@@ -45,7 +31,6 @@ if (!$conexion) {
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
-
     <style>
         button{
             padding:0;
@@ -55,22 +40,12 @@ if (!$conexion) {
         }
     </style>
 </head>
-
-
-
 <body>
-    <!-- Page Preloder -->
-   
-    <!-- Humberger Begin -->
-    <!-- Humberger End -->
-
-    <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
-                      
                 </div>
             </div>
         </div>
@@ -120,17 +95,6 @@ if (!$conexion) {
             </div>
         </div>
     </header>
-    <!-- Header Section End -->
-   
-    <!-- Hero Section Begin -->
-  
-    <!-- Hero Section End -->
-
-    <!-- Breadcrumb Section Begin -->
-    
-    <!-- Breadcrumb Section End -->
-    
-    <!-- Contact Form Begin -->
     <br>
         <div class="container">
             <div class="row">
@@ -138,39 +102,84 @@ if (!$conexion) {
                     <div class="section-title product__discount__title">
                         <h2> Strawberry Cream Cheesecake</h2>
                     </div>
-
                     <div>
                         <img class="col-lg-12 col-md-6 col-sm-6" src="img/cheesecake_photo.png" width="100px" height="540px">
                     </div><br><br>
-
                         <table>
                             <tr  class="product__details__text">
                                 <th align="center" width="190px"><img src="img/reloj.png" width="17px" height="17px">   Tiempo de preparación </th>
                                 <th align="center" width="100px"><img src="img/porciones.png" width="20px" height="17px">   Porciones </th>
-                                <th align="center" width="110px"><img src="img/dificultad.png" width="20px" height="17px">   Dificultad </th>
-                                <td> Rating: 3 <i class="fa fa-star"></i>  </td>
-                                <td><button class="btn btn-heart-small"><i class="fa fa-heart"></i></button></td>
+                                <th></th>
+                                <td>
+  <form method="post" action="compartir.php">
+    <input type="hidden" name="id_grupo" value="ID_DEL_GRUPO_A_AGREGAR">
+    <input type="hidden" name="id_receta" value="ID_DE_LA_RECETA_ACTUAL">
+<button type="submit" class="btn btn-success style" style="width: 100px;">Compartir</button>
+
+  </form>
+</td>
+<!-- Backend de favoritos -->
+<td>
+  <button class="btn btn-heart-small" data-receta="ID_RECETA_AQUI">
+    <i class="fa fa-heart"></i>
+  </button>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.btn-heart-small').click(function() {
+      var recetaID = $(this).data('receta');
+      var userID = // Obtener el ID de usuario del usuario actual
+
+      $.ajax({
+        url: 'ruta_del_backend',
+        method: 'POST',
+        data: { recetaID: recetaID, userID: userID },
+        success: function(response) {
+          // Manejar la respuesta del backend si es necesario
+        },
+        error: function(xhr, status, error) {
+          // Manejar errores si es necesario
+        }
+      });
+    });
+  });
+</script>
+<?php
+// Obtener los datos de la solicitud AJAX
+$recetaID = $_POST['recetaID'];
+$userID = $_POST['userID'];
+
+// Realizar las operaciones de validación y sanitización de datos si es necesario
+
+// Realizar la inserción en la tabla usuarios_recetas_favoritas
+$conexion = new mysqli('localhost', 'usuario', 'contraseña', 'basededatos');
+$query = "INSERT INTO usuarios_recetas_favoritas (id_usuario, id_receta) VALUES ('$userID', '$recetaID')";
+
+if ($conexion->query($query) === TRUE) {
+  // La inserción fue exitosa
+  echo json_encode(['status' => 'success']);
+} else {
+  // Ocurrió un error durante la inserción
+  echo json_encode(['status' => 'error', 'message' => $conexion->error]);
+}
+
+$conexion->close();
+?>
+
+  <!-- Backend de favoritos -->
+</td>
+
                             </tr>
                             <tr>
                                 <td align="center" width="190px">120 mins</td>
-                                <td align="center" width="100px">4 personas</td>
-                                <td align="center" width="110px">Baja</td>
-                                <td class="product__details__rating"> 
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                </td>
+                                <td ></td>
+                                <td></td>
+                                <td>  </td>
                             </tr>
                         </table><br>
-
                 </div>
             </div>
         </div><br>
-
-        
-
             <div class="container">
                 <div class="row">
                     <div class="col-lg-5 col-md-6">
@@ -220,7 +229,6 @@ if (!$conexion) {
                             </tr>
                         </table>
                     </div>
-
                     <div class="col-lg-6 col-md-6">
                         <div class="section-title product__discount__title">
                             <h2>Instrucciones</h2>
@@ -235,9 +243,6 @@ if (!$conexion) {
                     </div>
                 </div>
             </div>
-    <!-- Contact Form End -->
-    
-    <!-- Footer Section Begin -->
     <footer class="footer spad">
         <div class="container">
             <div class="row">
@@ -267,9 +272,6 @@ if (!$conexion) {
             </div>
         </div>
     </footer>
-    <!-- Footer Section End -->
-
-    <!-- Js Plugins -->
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.nice-select.min.js"></script>
@@ -278,9 +280,5 @@ if (!$conexion) {
     <script src="js/mixitup.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
-
-
-
 </body>
-
 </html>
