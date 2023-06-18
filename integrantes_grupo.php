@@ -38,13 +38,35 @@ $ResultadoGrupo = mysqli_query($conexion, $ConsultaGrupo);
 //print_r($ResultadoGrupo);
 //print_r($ConsultaGrupo);
 
-$ConsultaGrupoRecetas = "SELECT grupos_recetas.*, receta.*
-FROM grupos_recetas 
-	LEFT JOIN receta ON grupos_recetas.id_recetas = receta.idreceta
-WHERE grupos_recetas.id_grupo = '".$idgrupo."' ";
-$ResultadoGrupoRecetas = mysqli_query($conexion, $ConsultaGrupoRecetas);
-//print_r($ResultadoGrupoRecetas);
-//print_r($ConsultaGrupoRecetas);
+$ConsultaUsuarios = "SELECT * FROM usuario";
+$ResultadoUsuarios = mysqli_query($conexion, $ConsultaUsuarios);
+
+$ConsultaUsuariosGrupo = "SELECT usuarios_grupos.*, usuario.*
+    FROM usuarios_grupos 
+	    LEFT JOIN usuario ON usuarios_grupos.id_usuario = usuario.idusuario
+    WHERE usuarios_grupos.id_grupo = '".$idgrupo."' ";
+$ResultadoUsuariosGrupo = mysqli_query($conexion, $ConsultaUsuariosGrupo);
+//print_r($ConsultaUsuariosGrupo);
+//print_r($ResultadoUsuariosGrupo);
+
+//print_r($_POST);
+
+if (isset($_POST['agregar_usuario'])) {
+    $ConsultaUsuarioEspecifico = "SELECT idusuario FROM usuario WHERE nombre_usuario = '".$_POST['busqueda_usuarios']."' ";
+    $ResultadoUsuarioEspecifico = mysqli_query($conexion, $ConsultaUsuarioEspecifico);
+    if($usuario_especifico = mysqli_fetch_array($ResultadoUsuarioEspecifico)){
+        $id_usuario_especifico = $usuario_especifico['idusuario'];
+    }
+    $ConsultaAgregarUsuario = "INSERT INTO usuarios_grupos (id_usuario, id_grupo) 
+    VALUES 
+    ( '".$id_usuario_especifico."', 
+    '".$idgrupo."')";
+    $ResultadoAgregarUsuario = mysqli_query($conexion, $ConsultaAgregarUsuario);
+    //echo("Funciona");
+}
+//print_r($ResultadoAgregarUsuario);
+//print_r($ConsultaAgregarUsuario);
+
 
 ?>
 
@@ -190,7 +212,7 @@ $ResultadoGrupoRecetas = mysqli_query($conexion, $ConsultaGrupoRecetas);
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="Home_Page.php"><img src="img/logo_blog_de_comdia.png" alt="" width="100px" height="100px" ></a>
+                        <a href="Home_Page.html"><img src="img/logo_blog_de_comdia.png" alt="" width="100px" height="100px" ></a>
                     </div>
                 </div>
                 <div class="col-lg-7"><br>
@@ -256,15 +278,16 @@ $ResultadoGrupoRecetas = mysqli_query($conexion, $ConsultaGrupoRecetas);
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="blog__details__author">
-                                    <div class="blog__details__author__pic">
-                                        <img src="img/blog/details/details-author.jpg" alt="">
-                                    </div>
-                                    <div class="blog__details__author__text">
-                                        <?php
-                                            if($grupo = mysqli_fetch_array($ResultadoGrupo))
-                                                echo "<h2>".$grupo['nombre']."</h2>";
-                                        ?>
-                                    </div>
+                                    <?php
+                                        if($grupo = mysqli_fetch_array($ResultadoGrupo)){
+                                            echo "<div class='blog__details__author__pic'>";
+                                                echo "<img src='img/grupos/".$grupo['imagen_grupo']."' alt=''>";
+                                            echo "</div>";
+                                            echo "<div class='blog__details__author__text'>";
+                                                    echo "<h2>".$grupo['nombre']."</h2>";
+                                            echo "</div>";
+                                        }
+                                    ?>
                                 </div>
                             </div>
                             
@@ -276,40 +299,145 @@ $ResultadoGrupoRecetas = mysqli_query($conexion, $ConsultaGrupoRecetas);
                             <nav class="header__menu">
                                 <ul>
                                     <?php
-                                    echo "<li><a href='vista_grupo.php?grupo=".$idgrupo."'>Recetas</a></li>";
-                                    echo "<li><a href='integrantes_grupo.php?grupo=".$idgrupo."'>Integrantes</a></li>";
+                                        echo "<li><a href='vista_grupo.php?grupo=".$idgrupo."'>Recetas</a></li>";
+                                        echo "<li><a href='integrantes_grupo.php?grupo=".$idgrupo."'>Integrantes</a></li>";
                                     ?>
                                 </ul>
                             </nav>
                         </center>
                     </div>
 
-                    <div class="container">
-                        <div class="row">
-                            <?php
-                            while($recetas = mysqli_fetch_array($ResultadoGrupoRecetas)){
-                                echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
-                                    echo "<div class='blog__item'>";
-                                        echo "<div class='blog__item__pic'>";
-                                            echo "<img src='img/recetas/" . $recetas['foto_principal'] . "' width='100' >";
-                                        echo "</div>";
-                                        echo "<div class='blog__item__text'>";
-                                            echo "<h5><a href='vista_receta.php'> " . $recetas['nombre_receta'] . "</a></h5>";
-                                            echo "<p> Tiempo de comida: ".$recetas['tiempo_comida']."</br>";
-                                            echo "Preferencia: ".$recetas['tipo_preferencia']."</br>";
-                                            echo "Descripción: ".$recetas['descripcion']."</p>";
-                                        echo "</div>";
-                                    echo "</div>";
-                                echo "</div>";
-                            }
-                            ?>
-                        </div>
-                    </div>
-                    
-                    
+                    <div class="col-lg-12">
+                        <button type="submit" class="site.btn" onclick="window.modal.showModal();">Agregar Integrante</button>
+
+                        <dialog id="modal" class="col-lg-4 text-center">
+                            <div class="section-title product__discount__title text-center"><br>
+                                <h2>Nuevo grupo</h2><br><br><br>
+                                <?php 
+                                    echo "<form id='formAuthentication' action='integrantes_grupo.php?grupo=".$idgrupo."' method='POST'>";
+                                ?>
+                                    <div class="col-lg-12 shoping__discount">
+                                        <a class="text_cool">Agregar integrantes </a>
+                                        <br>
+                                            <input type="search" id="busqueda_usuarios" name="busqueda_usuarios" placeholder="Nombre de usuario" list="usuarios">
+                                            <input type="button" onclick="agregar_usuarios();" value="Agregar Usuarios">
+                                            <!--<input type="button" onclick="imprimir_lista();" value="Imprimir Lista">-->                         
+                                            <br>
+                                        <br>
+                                        <a class="text_cool">Lista de usuarios</a>
+                                        <ul id="lista_usuarios">
+                                        </ul>
+                                    </div>
+                                    <script type="text/javascript">
+                                        function agregar_usuarios(){
+                                            var usuario = document.getElementById("busqueda_usuarios").value;
+                                            var lista = document.getElementById("lista_usuarios");
+                                            var item = document.createElement("li");
+                                            item.innerHTML = usuario;
+                                            lista.appendChild(item);
+                                        }
+                                        /*function imprimir_lista(){
+                                            var lista = document.getElementById("lista_usuarios");
+                                            var items = lista.getElementsByTagName("li");
+                                            for (var i = 0; i < items.length; ++i) {
+                                                alert(items[i].innerHTML);
+                                            }
+                                        }*/
+                                    </script>
+                                    <div class="text-center">
+                                        <br><br><br>
+                                        <button class="primary-btn" type="submit" width="90px" id="agregar_usuario" name="agregar_usuario">Confirmar</button>
+                                        <button type="button" onclick="window.modal.close();" class="button_close" data-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </form>
+                                <datalist id="usuarios">
+                                    <?php
+                                    while($usuario = mysqli_fetch_array($ResultadoUsuarios))
+                                        echo "<option value='".$usuario['nombre_usuario']."'>"; 
+                                    ?>
+                                </datalist>
+                            </div>
+                        </dialog>
+
+                        
+                    </div><br>
+
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="row">
+                <?php
+                while($usuarios_grupos = mysqli_fetch_array($ResultadoUsuariosGrupo)){
+                    echo "<br>";
+                    echo "<div class='col-lg-6  col-md-6'>";
+                        echo "<div class='blog__details__content'>";
+                            echo "<div class='col-lg-6 col-md-6'>";
+                                echo "<div class='blog__details__author'>";
+                                    echo "<div class='blog__details__author__pic'>";
+                                        echo "<img src='img/usuarios/".$usuarios_grupos['imagen']."' alt=''>";
+                                    echo "</div>";
+                                    echo "<div class='blog__details__author__text'>";
+                                        echo "<h6>".$usuarios_grupos['nombre_usuario']."</h6>";
+                                        echo "<span>Usuario del grupo</span>";
+                                    echo "</div>";
+                                echo "</div>";
+                            echo "</div><br>";
+                            /*echo "<div>";
+                                echo "<table class='shoping__cart__table'>";
+                                    echo "<tr>";
+                                        echo "<th class='text-center'>Comida Preferida</th>";
+                                        echo "<th class='text-center'>Comida Más Preparada</th>";
+                                        echo "<th class='text-center'>Comida Menos Preparada</th>";
+                                    echo "</tr>";
+                                    echo "<tr>";
+                                        echo "<td>";
+                                            echo "<div class='blog__item'>";
+                                                echo "<div class='blog__item__pic'>";
+                                                    echo "<img src='img/blog/blog-1.jpg' alt=''>";
+                                                echo "</div>";
+                                                echo "<div class='blog__item__text'>";
+                                                    echo "<h5><a href='#'> Receta 1</a></h5>";
+                                                    echo "<p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>";
+                                                echo "</div>";
+                                            echo "</div>";
+                                        echo "</td>";
+                                        echo "<td>";
+                                            echo "<div class='blog__item'>";
+                                                echo "<div class='blog__item__pic'>";
+                                                    echo "<img src='img/blog/blog-1.jpg' alt=''>";
+                                                echo "</div>";
+                                                echo "<div class='blog__item__text'>";
+                                                    echo "<h5><a href='#'> Receta 1</a></h5>";
+                                                    echo "<p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>";
+                                                echo "</div>";
+                                            echo "</div>";
+                                        echo "</td>";
+                                        echo "<td>";
+                                            echo "<div class='blog__item'>";
+                                                echo "<div class='blog__item__pic'>";
+                                                    echo "<img src='img/blog/blog-1.jpg' alt=''>";
+                                                echo "</div>";
+                                                echo "<div class='blog__item__text'>";
+                                                    echo "<h5><a href='#'> Receta 1</a></h5>";
+                                                    echo "<p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>";
+                                                echo "</div>";
+                                            echo "</div>";
+                                        echo "</td>";
+                                    echo "</tr>";
+                                echo "</table>";
+                            echo "</div>";*/
+                        echo "</div>";
+                    echo "</div>";
+                }
+                ?>
+                <div>
+                    <p>  .  </p>
+                </div>
+            </div>
+        </div>
+
+
     <!-- Contact Form End -->
     
     <!-- Footer Section Begin -->

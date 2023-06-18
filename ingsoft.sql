@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-06-2023 a las 17:48:24
+-- Tiempo de generación: 18-06-2023 a las 07:20:59
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.12
 
@@ -58,17 +58,26 @@ CREATE TABLE `grupos` (
   `idgrupo` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
-  `receta_preferida` int(11) NOT NULL,
-  `receta_mas_preparada` int(11) NOT NULL,
-  `receta_menos_preparada` int(11) NOT NULL
+  `imagen_grupo` varchar(45) NOT NULL,
+  `receta_preferida` int(11) DEFAULT NULL,
+  `receta_mas_preparada` int(11) DEFAULT NULL,
+  `receta_menos_preparada` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `grupos`
 --
 
-INSERT INTO `grupos` (`idgrupo`, `nombre`, `descripcion`, `receta_preferida`, `receta_mas_preparada`, `receta_menos_preparada`) VALUES
-(1, 'Equipo1', 'Equipo de Ingeniería de Software', 0, 0, 0);
+INSERT INTO `grupos` (`idgrupo`, `nombre`, `descripcion`, `imagen_grupo`, `receta_preferida`, `receta_mas_preparada`, `receta_menos_preparada`) VALUES
+(1, 'Equipo1', 'Equipo de Ingeniería de Software', 'grupo.png', 0, 0, 0),
+(2, 'Equipo2', 'Grupo del equipo 2', 'grupo.png', 0, 0, 0),
+(3, 'Equipo 3', 'Equipo 3', 'multitud.png', NULL, NULL, NULL),
+(4, 'Grupo 2', 'Segundo grupo creado', 'multitud.png', NULL, NULL, NULL),
+(19, 'Grupo Vania', 'Grupo creado por Vania', 'grupo1.png', NULL, NULL, NULL),
+(20, 'Grupo Vania', 'Grupo creado por Vania', 'grupo1.png', NULL, NULL, NULL),
+(21, 'Grupo Vania y Axel', 'Grupo de Vania y Axel', 'mesa.png', NULL, NULL, NULL),
+(22, 'Grupo Vania', 'Grupo creado por Vania', 'grupo1.png', NULL, NULL, NULL),
+(23, 'Axel grupo', 'Grupo creado por Axel', 'grupo.png', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -153,9 +162,28 @@ INSERT INTO `ingredientes` (`idingrediente`, `nombre_ingrediente`, `tipo_ingredi
 
 CREATE TABLE `ingredientes_de_receta` (
   `receta_idreceta` int(11) NOT NULL,
-  `ingredientes_idingrediente` int(11) NOT NULL,
+  `ingrediente` varchar(45) NOT NULL,
   `cantidad` decimal(3,2) DEFAULT NULL,
   `medidas_idmedida` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `ingredientes_de_receta`
+--
+
+INSERT INTO `ingredientes_de_receta` (`receta_idreceta`, `ingrediente`, `cantidad`, `medidas_idmedida`) VALUES
+(33, '', '0.00', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ins`
+--
+
+CREATE TABLE `ins` (
+  `id` int(11) NOT NULL,
+  `foto` mediumblob DEFAULT NULL,
+  `ingrediente` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -299,7 +327,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`idusuario`, `nombre_usuario`, `correo_electronico`, `contrasena`, `imagen`, `receta_favorita`, `receta_mas_preparada`, `receta_menos_preparada`) VALUES
-(1, 'admin', NULL, 'admin', NULL, NULL, NULL, NULL),
+(1, 'admin', NULL, 'admin', 'perfil_grupo.png', NULL, NULL, NULL),
 (7, 'vania', 'vania@correo.com', 'vania', 'foto_perfil2.png', NULL, NULL, NULL),
 (8, 'nora', 'nora@gmail.com', 'nora', 'foto_perfil4.png', NULL, NULL, NULL),
 (10, 'maria', 'maria@correo.com', 'maria', 'foto_perfil.png', NULL, NULL, NULL),
@@ -342,7 +370,12 @@ CREATE TABLE `usuarios_grupos` (
 
 INSERT INTO `usuarios_grupos` (`id_usuario`, `id_grupo`) VALUES
 (7, 1),
-(8, 1);
+(8, 1),
+(7, 19),
+(7, 20),
+(7, 21),
+(7, 22),
+(11, 23);
 
 -- --------------------------------------------------------
 
@@ -375,6 +408,15 @@ CREATE TABLE `usuarios_recetas_favoritas` (
   `id_usuario` int(11) NOT NULL,
   `id_receta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuarios_recetas_favoritas`
+--
+
+INSERT INTO `usuarios_recetas_favoritas` (`id_usuario`, `id_receta`) VALUES
+(11, 30),
+(11, 31),
+(7, 31);
 
 --
 -- Índices para tablas volcadas
@@ -410,7 +452,7 @@ ALTER TABLE `ingredientes`
 --
 ALTER TABLE `ingredientes_de_receta`
   ADD PRIMARY KEY (`receta_idreceta`) USING BTREE,
-  ADD KEY `fk_receta_has_ingredientes_ingredientes1_idx` (`ingredientes_idingrediente`),
+  ADD KEY `fk_receta_has_ingredientes_ingredientes1_idx` (`ingrediente`),
   ADD KEY `fk_receta_has_ingredientes_receta1_idx` (`receta_idreceta`),
   ADD KEY `fk_receta_has_ingredientes_medidas1_idx` (`medidas_idmedida`);
 
@@ -474,7 +516,7 @@ ALTER TABLE `alergias`
 -- AUTO_INCREMENT de la tabla `grupos`
 --
 ALTER TABLE `grupos`
-  MODIFY `idgrupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idgrupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
