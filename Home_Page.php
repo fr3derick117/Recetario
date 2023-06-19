@@ -33,6 +33,10 @@ $ConsultaRecetas = "SELECT * FROM receta";
 //echo $ConsultaReceta;
 $ResultadoRecetas = mysqli_query($conexion, $ConsultaRecetas);
 
+$ConsultaRecetas2 = "SELECT * FROM receta";
+//echo $ConsultaReceta;
+$ResultadoRecetas2 = mysqli_query($conexion, $ConsultaRecetas2);
+
 ?>
 
 <!DOCTYPE html>
@@ -166,46 +170,15 @@ $ResultadoRecetas = mysqli_query($conexion, $ConsultaRecetas);
                             <div class="container">
                                 <div class="row">
                                     <div class="categories__slider owl-carousel">
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
-                                                <h5><a href="#">Pasta</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-2.jpg">
-                                                <h5><a href="#">Pizza</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-3.jpg">
-                                                <h5><a href="#">Vegano</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-4.jpg">
-                                                <h5><a href="#">Postres</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                                                <h5><a href="#">Smoothies</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                                                <h5><a href="#">Desayuno</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                                                <h5><a href="#">Comida</a></h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                                                <h5><a href="#">Cena</a></h5>
-                                            </div>
-                                        </div>
+                                        <?php
+                                        while($row = mysqli_fetch_array($ResultadoRecetas)){
+                                            echo "<div class='col-lg-3'>";
+                                                echo "<div class='categories__item set-bg' data-setbg='img/recetas/" . $row['foto_principal'] . "'>";
+                                                    echo "<h5><a href='vista_receta.php?receta=".$row['idreceta']."'>". $row['nombre_receta'] ."</a></h5>";
+                                                echo "</div>";
+                                            echo "</div>";
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -218,17 +191,17 @@ $ResultadoRecetas = mysqli_query($conexion, $ConsultaRecetas);
                             <div class="container">
                                 <div class="row">
                                 <?php
-                                while($row = mysqli_fetch_array($ResultadoRecetas)){
+                                while($rows = mysqli_fetch_array($ResultadoRecetas2)){
                                     echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
                                         echo "<div class='blog__item'>";
                                             echo "<div class='blog__item__pic'>";
-                                                echo "<img src='img/recetas/" . $row['foto_principal'] . "' alt=''>";
+                                                echo "<img src='img/recetas/" . $rows['foto_principal'] . "' alt=''>";
                                             echo "</div>";
                                             echo "<div class='blog__item__text'>";
-                                                echo "<h5><a href='vista_receta.php?receta=".$row['idreceta']."''>" . $row['nombre_receta'] . "</a></h5>";
-                                                echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
-                                                echo "Preferencia: ".$row['tipo_preferencia']."</br>";
-                                                echo "Descripción: ".$row['descripcion']."</p>";
+                                                echo "<h5><a href='vista_receta.php?receta=".$rows['idreceta']."''>" . $rows['nombre_receta'] . "</a></h5>";
+                                                echo "<p> Tiempo de comida: ".$rows['tiempo_comida']."</br>";
+                                                echo "Preferencia: ".$rows['tipo_preferencia']."</br>";
+                                                echo "Descripción: ".$rows['descripcion']."</p>";
                                             echo "</div>";
                                         echo "</div>";
                                     echo "</div>";
