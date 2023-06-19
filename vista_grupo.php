@@ -256,15 +256,16 @@ $ResultadoGrupoRecetas = mysqli_query($conexion, $ConsultaGrupoRecetas);
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="blog__details__author">
-                                    <div class="blog__details__author__pic">
-                                        <img src="img/blog/details/details-author.jpg" alt="">
-                                    </div>
-                                    <div class="blog__details__author__text">
-                                        <?php
-                                            if($grupo = mysqli_fetch_array($ResultadoGrupo))
-                                                echo "<h2>".$grupo['nombre']."</h2>";
-                                        ?>
-                                    </div>
+                                    <?php
+                                        if($grupo = mysqli_fetch_array($ResultadoGrupo)){
+                                            echo "<div class='blog__details__author__pic'>";
+                                                echo "<img src='img/grupos/".$grupo['imagen_grupo']."' alt=''>";
+                                            echo "</div>";
+                                            echo "<div class='blog__details__author__text'>";
+                                                    echo "<h2>".$grupo['nombre']."</h2>";
+                                            echo "</div>";
+                                        }
+                                    ?>
                                 </div>
                             </div>
                             

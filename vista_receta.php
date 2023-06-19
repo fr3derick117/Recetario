@@ -21,9 +21,9 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
 $ConsultaReceta = "SELECT * FROM receta WHERE idreceta = '".$_GET['receta']."' ";
 $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
 
-$ConsultaIngrediente = "SELECT `ingredientes_de_receta`.*, `medidas`.*
-FROM `ingredientes_de_receta`, `medidas`
-WHERE ingredientes_de_receta.receta_idreceta = '".$_GET['receta']."'  AND `ingredientes_de_receta`.`medidas_idmedida` = medidas.idmedidas;";
+$ConsultaIngrediente = "SELECT ingredientes_de_receta.*, medidas.*
+    FROM ingredientes_de_receta, medidas
+    WHERE ingredientes_de_receta.receta_idreceta = '".$_GET['receta']."' AND ingredientes_de_receta.medidas_idmedida = medidas.idmedidas;";
 $ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngrediente);
 
 $ConsultaInstrucciones = "SELECT * FROM ins WHERE id_receta = '".$_GET['receta']."' ";
@@ -41,6 +41,21 @@ if(isset($_POST['agregar_favoritos'])){
     $ResultadoAgregarFavoritos = mysqli_query($conexion, $ConsultaAgregarFavoritos);
 }
 
+$ConsultaGrupos = "SELECT usuarios_grupos.*, grupos.*
+    FROM usuarios_grupos LEFT JOIN grupos ON usuarios_grupos.id_grupo = grupos.idgrupo
+    WHERE usuarios_grupos.id_usuario = '".$_SESSION['id_usuario']."' ";
+$ResultadoGrupos = mysqli_query($conexion, $ConsultaGrupos);
+
+if(isset($_POST['agregar_grupo'])){
+    $ConsultaGrupoEspecifico = "SELECT idgrupo FROM grupos WHERE nombre = '".$_POST['busqueda_grupos']."' ";
+    $ResultadoGrupoEspecifico = mysqli_query($conexion, $ConsultaGrupoEspecifico);
+    if($grupo_especifico = mysqli_fetch_array($ResultadoGrupoEspecifico)){
+        $id_grupo_especifico = $grupo_especifico['idgrupo'];
+    }
+    $ConsultaRecetaGrupo = "INSERT INTO grupos_recetas (id_grupo, id_recetas)
+        VALUES ('".$id_grupo_especifico."', '".$_GET['receta']."')";
+    $ResultadoRecetaGrupo = mysqli_query($conexion, $ConsultaRecetaGrupo);
+}
 
 ?>
 
@@ -108,6 +123,29 @@ if(isset($_POST['agregar_favoritos'])){
         .button-compra{
             color: rgb(101, 163, 88);
             font-size: 30px;
+        }
+        
+        button.button_close{
+            display: inline-block;
+            font-size: 17px;
+            padding: 10px 28px 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: #6f6f6f;
+            letter-spacing: 2px;
+        }
+
+        .text_cool{
+            font-size: 17px;
+            color: #030303;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .imagen_perfil{
+            background-color: #ffffff;
         }
         
     </style>
@@ -197,13 +235,8 @@ if(isset($_POST['agregar_favoritos'])){
                                 <th></th>
                                 <th></th>
                                 <td>
-                                    <form method="post" action="compartir.php">
-                                        <input type="hidden" name="id_grupo" value="ID_DEL_GRUPO_A_AGREGAR">
-                                        <input type="hidden" name="id_receta" value="ID_DE_LA_RECETA_ACTUAL">
-                                        <button type="submit" class="btn btn-success style" style="width: 100px;">Compartir</button>
-                                    </form>
+                                    <button type="submit" class="btn btn-success style" onclick="window.modal.showModal();" style="width: 100px;">Compartir</button>
                                 </td>
-                                <!-- Backend de favoritos -->
                                 <td>
                                     <form method="post" action="">
                                         <button type="submit" id="agregar_carrito" name="agregar_carrito" class="button-compra fa fa-shopping-bag" ></button>
@@ -213,7 +246,6 @@ if(isset($_POST['agregar_favoritos'])){
                                     <form method="post" action="">
                                         <button type="submit" id="agregar_favoritos" name="agregar_favoritos" class="button-favoritos fa fa-heart" ></button>
                                     </form>
-                                  <!-- Backend de favoritos -->
                                 </td>
 
                             </tr>
@@ -318,6 +350,47 @@ if(isset($_POST['agregar_favoritos'])){
                 </div>
             </div>
         </div>
+        
+        <dialog id="modal" class="col-lg-4 text-center">
+            <div class="section-title product__discount__title text-center"><br>
+                <h2>Compartir Receta con Grupo</h2><br><br><br>
+                <form id="formAuthentication" method="POST">
+                    <div class="col-lg-12 shoping__discount">
+                        <a class="text_cool">Elegir grupo para compartir</a>
+                        <br>
+                        <input type="search" id="busqueda_grupos" name="busqueda_grupos" placeholder="Nombre de grupos" list="grupos">
+                        <input type="button" onclick="agregarGrupo();" value="Elegir Grupo">
+                        <!--<input type="button" onclick="imprimir_lista();" value="Imprimir Lista">-->                         
+                        <br>
+                        <br>
+                        <a class="text_cool">Lista de Grupos</a>
+                        <ul id="lista_grupos">
+                        </ul>
+                    </div>
+                    <script>
+                        function agregarGrupo(){
+                            var grupo = document.getElementById("busqueda_grupos").value;
+                            var lista = document.getElementById("lista_grupos");
+                            var item = document.createElement("li");
+                            item.innerHTML = grupo;
+                            lista.appendChild(item);
+                        }
+                    </script>
+                    <div class="text-center">
+                        <br><br><br>
+                        <button class="primary-btn" type="submit" width="90px" id="agregar_grupo" name="agregar_grupo">Agregar Grupo</button>
+                        <button type="button" onclick="window.modal.close();" class="button_close" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+                <datalist id="grupos">
+                    <?php
+                    while($grupos = mysqli_fetch_array($ResultadoGrupos))
+                        echo "<option value='".$grupos['nombre']."'>"; 
+                    ?>
+                </datalist>
+            </div>
+        </dialog>
+
     </footer>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
