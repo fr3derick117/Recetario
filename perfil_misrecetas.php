@@ -263,7 +263,7 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                                                 echo "<img src='img/recetas/" . $row['foto_principal'] . "' width='100' >";
                                             echo "</div>";
                                             echo "<div class='blog__item__text'>";
-                                                echo "<h5><a href='vista_receta.php'> " . $row['nombre_receta'] . "</a></h5>";
+                                                echo "<h5><a href='vista_receta.php?receta=".$row['idreceta']."''> " . $row['nombre_receta'] . "</a></h5>";
                                                 echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
                                                 echo "Preferencia: ".$row['tipo_preferencia']."</br>";
                                                 echo "Descripción: ".$row['descripcion']."</p>";

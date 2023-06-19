@@ -146,14 +146,18 @@ if (!$conexion) {
 </script>
 <?php
 // Obtener los datos de la solicitud AJAX
-$recetaID = $_POST['recetaID'];
-$userID = $_POST['userID'];
+$recetaID = $_GET['receta'];
+
+//consulta para ver todos los registros de la tabla usuarios
+$ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
+//print_r($ConsultaUsuario);
+$ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
+//print_r($ResultadoUsuario);
 
 // Realizar las operaciones de validación y sanitización de datos si es necesario
 
 // Realizar la inserción en la tabla usuarios_recetas_favoritas
-$conexion = new mysqli('localhost', 'usuario', 'contraseña', 'basededatos');
-$query = "INSERT INTO usuarios_recetas_favoritas (id_usuario, id_receta) VALUES ('$userID', '$recetaID')";
+$query = "INSERT INTO usuarios_recetas_favoritas (id_usuario, id_receta) VALUES ('".$_SESSION['id_usuario']."', '$recetaID')";
 
 if ($conexion->query($query) === TRUE) {
   // La inserción fue exitosa

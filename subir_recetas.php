@@ -110,8 +110,8 @@ if (isset($_POST['agregar_receta'])) {
     $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);*/
 }
 
-print_r($ConsultaAgregarReceta);
-print_r($ResultadoAgregarReceta);
+//print_r($ConsultaAgregarReceta);
+//print_r($ResultadoAgregarReceta);
 $last_id = $last_id - 1;
 
 
@@ -139,7 +139,7 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
 //imprimir la consulta de ingredientes
 //print_r($ResultadoIngredientes);
 
-print_r($_POST);
+//print_r($_POST);
 
 ?>
 
