@@ -180,7 +180,7 @@ $ResultadoRecetaFav = mysqli_query($conexion, $ConsultaRecetasFav);
                                                         echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
                                                         echo "<li><a class='text-center' href='Home_Page.php'>Home Page</a></li>";
-                                                        echo "<li><a class='text-center' href='perfil_lista_compra.html'>Lista de Compras</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_lista_compra.php'>Lista de Compras</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_grupos.php'>Grupos</a></li>";
                                                         echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
                                                         echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";
@@ -239,10 +239,10 @@ $ResultadoRecetaFav = mysqli_query($conexion, $ConsultaRecetasFav);
                         <center> 
                             <nav class="header__menu">
                                 <ul>
-                                    <li><a href="perfil_grupos.php">Grupos</a></li>
+                                    <li><a href="perfil_grupos.php" class="active">Grupos</a></li>
                                     <li><a href="perfil_favoritos.php">Favoritos</a></li>
-                                    <li><a href="perfil_misrecetas.php" class="active">Mis Recetas</a></li>
-                                    <li><a href="contact.html">Lista de Compra</a></li>
+                                    <li><a href="perfil_misrecetas.php">Mis Recetas</a></li>
+                                    <li><a href="perfil_lista_compra.php">Lista de Compra</a></li>
                                 </ul>
                             </nav>
                         </center>
@@ -257,7 +257,7 @@ $ResultadoRecetaFav = mysqli_query($conexion, $ConsultaRecetasFav);
                                                 echo "<img src='img/recetas/". $row['foto_principal']. "' alt=''>";
                                             echo "</div>";
                                             echo "<div class='blog__item__text'>";
-                                                echo "<h5><a href='vista_receta.php'> ". $row['nombre_receta']. "</a></h5>";
+                                                echo "<h5><a href='vista_receta.php?receta=".$row['idreceta']."''>  ". $row['nombre_receta']. "</a></h5>";
                                                 echo "<p>". $row['descripcion']."</p>";
                                             echo "</div>";
                                         echo "</div>";

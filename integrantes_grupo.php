@@ -238,7 +238,7 @@ if (isset($_POST['agregar_usuario'])) {
                                                         echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
                                                         echo "<li><a class='text-center' href='Home_Page.php'>Home Page</a></li>";
-                                                        echo "<li><a class='text-center' href='perfil_lista_compra.html'>Lista de Compras</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_lista_compra.php'>Lista de Compras</a></li>";
                                                         echo "<li><a class='text-center' href='perfil_grupos.php'>Grupos</a></li>";
                                                         echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
                                                         echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";

@@ -294,7 +294,7 @@ $ResultadoGrupoRecetas = mysqli_query($conexion, $ConsultaGrupoRecetas);
                                             echo "<img src='img/recetas/" . $recetas['foto_principal'] . "' width='100' >";
                                         echo "</div>";
                                         echo "<div class='blog__item__text'>";
-                                            echo "<h5><a href='vista_receta.php'> " . $recetas['nombre_receta'] . "</a></h5>";
+                                            echo "<h5><a href='vista_receta.php?receta=".$recetas['idreceta']."''> " . $recetas['nombre_receta'] . "</a></h5>";
                                             echo "<p> Tiempo de comida: ".$recetas['tiempo_comida']."</br>";
                                             echo "Preferencia: ".$recetas['tipo_preferencia']."</br>";
                                             echo "Descripción: ".$recetas['descripcion']."</p>";

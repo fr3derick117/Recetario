@@ -3,16 +3,47 @@ session_start();
 if($_SESSION['login']=='' || $_SESSION['login']==null || $_SESSION['login']=='0' ){
     header('Location: login.php');
 }
+
 if (isset($_GET['logout'])) {
   session_unset();
   session_destroy();
   header("Location: login.php");
 }
+
 $conexion = mysqli_connect('localhost', 'root', '', 'ingsoft');
 if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
+
+$ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
+$ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
+
+$ConsultaReceta = "SELECT * FROM receta WHERE idreceta = '".$_GET['receta']."' ";
+$ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
+
+$ConsultaIngrediente = "SELECT `ingredientes_de_receta`.*, `medidas`.*
+FROM `ingredientes_de_receta`, `medidas`
+WHERE ingredientes_de_receta.receta_idreceta = '".$_GET['receta']."'  AND `ingredientes_de_receta`.`medidas_idmedida` = medidas.idmedidas;";
+$ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngrediente);
+
+$ConsultaInstrucciones = "SELECT * FROM ins WHERE id_receta = '".$_GET['receta']."' ";
+$ResultadoInstrucciones = mysqli_query($conexion, $ConsultaInstrucciones);
+
+if(isset($_POST['agregar_carrito'])){
+    $ConsultaAgregarCarrito = "INSERT INTO recetas_carrito (id_usuario, id_receta)
+        VALUES ('".$_SESSION['id_usuario']."', '".$_GET['receta']."')";
+    $ResultadoAgregarCarrito = mysqli_query($conexion, $ConsultaAgregarCarrito);
+}
+
+if(isset($_POST['agregar_favoritos'])){
+    $ConsultaAgregarFavoritos = "INSERT INTO usuarios_recetas_favoritas (id_usuario, id_receta)
+        VALUES ('".$_SESSION['id_usuario']."', '".$_GET['receta']."')";
+    $ResultadoAgregarFavoritos = mysqli_query($conexion, $ConsultaAgregarFavoritos);
+}
+
+
 ?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -32,12 +63,53 @@ if (!$conexion) {
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <style>
-        button{
-            padding:0;
-            border:0;
-            margin:0;
-            width: 1150px;
+        #form {
+        width: 250px;
+        margin: 0 auto;
+        height: 50px;
         }
+
+        #form p {
+        text-align: center;
+        }
+
+        #form label {
+        font-size: 30px;
+        }
+
+        input[type="radio"] {
+        display: none;
+        }
+
+        label {
+        color: grey;
+        }
+
+        .clasificacion {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+        font-size: 25px;
+        }
+
+        label:hover,
+        label:hover ~ label {
+        color: orange;
+        }
+
+        input[type="radio"]:checked ~ label {
+        color: orange;
+        }
+
+        .button-favoritos{
+            color: rgb(194, 23, 23);
+            font-size: 30px;
+        }
+
+        .button-compra{
+            color: rgb(101, 163, 88);
+            font-size: 30px;
+        }
+        
     </style>
 </head>
 <body>
@@ -71,18 +143,22 @@ if (!$conexion) {
                             <li>
                                 <nav class="header__menu">
                                     <ul>
-                                        <li><img src="img/foto_perfil.png" width="70px" height="70px"></img>
-                                            <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                <li><a class="text-center" href="perfil_misrecetas.php">Perfil</a></li>
-                                                <li><a class="text-center" href="perfil_misrecetas.php">Mis Recetas</a></li>
-                                                <li><a class="text-center" href="Home_Page.php">Home Page</a></li>
-                                                <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
-                                                <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
-                                                <li><a class="text-center">Planeador de Menú</a></li>
-                                                <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
-                                                <li><a class="text-center" href="login.php">Cerrar Sesión</a></li>
-                                            </ul>
-                                        </li>
+                                        <?php  
+                                            if($usuario = mysqli_fetch_array($ResultadoUsuario)){
+                                                echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px'></img>";
+                                                    echo "<ul class='header__menu__dropdown' width='60px' height='60px'>";
+                                                        echo "<li><a class='text-center' >".$usuario['nombre_usuario']."</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
+                                                        echo "<li><a class='text-center' href='Home_Page.php'>Home Page</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_lista_compra.php'>Lista de Compras</a></li>";
+                                                        echo "<li><a class='text-center' href='perfil_grupos.php'>Grupos</a></li>";
+                                                        echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
+                                                        echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";
+                                                    echo"</ul>";
+                                                echo"</li>";
+                                            }
+                                        ?>
                                     </ul>
                                 </nav>
                             </li>
@@ -100,85 +176,73 @@ if (!$conexion) {
             <div class="row">
                 <div class="col-lg-12">  
                     <div class="section-title product__discount__title">
-                        <h2> Strawberry Cream Cheesecake</h2>
-                    </div>
+                        <?php
+                            if($receta = mysqli_fetch_array($ResultadoReceta)){
+                                echo "<h2>".$receta['nombre_receta']."</h2>";
+                            }
+                        ?>
+                        </div>
                     <div>
-                        <img class="col-lg-12 col-md-6 col-sm-6" src="img/cheesecake_photo.png" width="100px" height="540px">
+                        <?php
+                            echo "<img class='col-lg-12 col-md-6 col-sm-6' src='img/recetas/".$receta['foto_principal']."' width='100px' height='540px'></img>";
+                        ?>
                     </div><br><br>
                         <table>
                             <tr  class="product__details__text">
                                 <th align="center" width="190px"><img src="img/reloj.png" width="17px" height="17px">   Tiempo de preparación </th>
                                 <th align="center" width="100px"><img src="img/porciones.png" width="20px" height="17px">   Porciones </th>
+                                <th align="center" width="110px"><img src="img/dificultad.png" width="20px" height="17px">Dificultad </th>
+                                <th align="center" width="110px">★ Ranking </th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <td>
-  <form method="post" action="compartir.php">
-    <input type="hidden" name="id_grupo" value="ID_DEL_GRUPO_A_AGREGAR">
-    <input type="hidden" name="id_receta" value="ID_DE_LA_RECETA_ACTUAL">
-<button type="submit" class="btn btn-success style" style="width: 100px;">Compartir</button>
-
-  </form>
-</td>
-<!-- Backend de favoritos -->
-<td>
-  <button class="btn btn-heart-small" data-receta="ID_RECETA_AQUI">
-    <i class="fa fa-heart"></i>
-  </button>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('.btn-heart-small').click(function() {
-      var recetaID = $(this).data('receta');
-      var userID = // Obtener el ID de usuario del usuario actual
-
-      $.ajax({
-        url: 'ruta_del_backend',
-        method: 'POST',
-        data: { recetaID: recetaID, userID: userID },
-        success: function(response) {
-          // Manejar la respuesta del backend si es necesario
-        },
-        error: function(xhr, status, error) {
-          // Manejar errores si es necesario
-        }
-      });
-    });
-  });
-</script>
-<?php
-// Obtener los datos de la solicitud AJAX
-$recetaID = $_GET['receta'];
-
-//consulta para ver todos los registros de la tabla usuarios
-$ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
-//print_r($ConsultaUsuario);
-$ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
-//print_r($ResultadoUsuario);
-
-// Realizar las operaciones de validación y sanitización de datos si es necesario
-
-// Realizar la inserción en la tabla usuarios_recetas_favoritas
-$query = "INSERT INTO usuarios_recetas_favoritas (id_usuario, id_receta) VALUES ('".$_SESSION['id_usuario']."', '$recetaID')";
-
-if ($conexion->query($query) === TRUE) {
-  // La inserción fue exitosa
-  echo json_encode(['status' => 'success']);
-} else {
-  // Ocurrió un error durante la inserción
-  echo json_encode(['status' => 'error', 'message' => $conexion->error]);
-}
-
-$conexion->close();
-?>
-
-  <!-- Backend de favoritos -->
-</td>
+                                    <form method="post" action="compartir.php">
+                                        <input type="hidden" name="id_grupo" value="ID_DEL_GRUPO_A_AGREGAR">
+                                        <input type="hidden" name="id_receta" value="ID_DE_LA_RECETA_ACTUAL">
+                                        <button type="submit" class="btn btn-success style" style="width: 100px;">Compartir</button>
+                                    </form>
+                                </td>
+                                <!-- Backend de favoritos -->
+                                <td>
+                                    <form method="post" action="">
+                                        <button type="submit" id="agregar_carrito" name="agregar_carrito" class="button-compra fa fa-shopping-bag" ></button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" action="">
+                                        <button type="submit" id="agregar_favoritos" name="agregar_favoritos" class="button-favoritos fa fa-heart" ></button>
+                                    </form>
+                                  <!-- Backend de favoritos -->
+                                </td>
 
                             </tr>
                             <tr>
-                                <td align="center" width="190px">120 mins</td>
-                                <td ></td>
-                                <td></td>
-                                <td>  </td>
+                                <?php
+                                    echo "<td align='center' width='190px'>".$receta['tiempo_preparacion']."</td>";
+                                    echo "<td align='center' width='100px'>".$receta['porciones']."</td>";
+                                    echo "<td align='center' width='100px'>".$receta['dificultad']."</td>";
+                                ?>
+                                <td align="center">
+                                    <form>
+                                        <p class="clasificacion">
+                                          <input id="radio1" type="radio" name="estrellas" value="5"><!--
+                                          --><label for="radio1">★</label><!--
+                                          --><input id="radio2" type="radio" name="estrellas" value="4"><!--
+                                          --><label for="radio2">★</label><!--
+                                          --><input id="radio3" type="radio" name="estrellas" value="3"><!--
+                                          --><label for="radio3">★</label><!--
+                                          --><input id="radio4" type="radio" name="estrellas" value="2"><!--
+                                          --><label for="radio4">★</label><!--
+                                          --><input id="radio5" type="radio" name="estrellas" value="1"><!--
+                                          --><label for="radio5">★</label>
+                                        </p>
+                                    </form>
+                                </td>
+                                <td align="center" width="110px"></td>   
+                                <td align="center" width="110px"></td>   
+                                <td align="center" width="110px"></td>   
+                                <td align="center" width="110px"></td>  
                             </tr>
                         </table><br>
                 </div>
@@ -191,61 +255,40 @@ $conexion->close();
                             <h2>Ingredientes</h2>
                         </div>
                         <table class="col-lg-6">
-                            <tr>
-                                <td class="checkout__input__checkbox">
-                                    <label for="1">
-                                        Galletas 
-                                        <input type="checkbox" id="1">
-                                        <span class="checkmark"></span>
-                                    </label> 
-                                </td>
-                                <td>400g</td>
-                            </tr>
-                            <tr>
-                                <td class="checkout__input__checkbox">
-                                    <label for="2">
-                                        Mantequilla
-                                        <input type="checkbox" id="2">
-                                        <span class="checkmark"></span>
-                                    </label> 
-                                </td>
-                                <td>175g</td>
-                            </tr>
-                            <tr>
-                                <td class="checkout__input__checkbox">
-                                    <label for="3">
-                                        Queso crema
-                                        <input type="checkbox" id="3">
-                                        <span class="checkmark"></span>
-                                    </label> 
-                                </td>
-                                <td>500g</td>
-                            </tr>
-                            <tr>
-                                <td class="checkout__input__checkbox">
-                                    <label for="4">
-                                        Bombones
-                                        <input type="checkbox" id="4">
-                                        <span class="checkmark"></span>
-                                    </label> 
-                                </td>
-                                <td>250g</td>
-                            </tr>
+                            <?php
+                                while($ingrediente = mysqli_fetch_array($ResultadoIngredientes)){
+                                    echo "<tr>";
+                                        echo "<td class='checkout__input__checkbox'>";
+                                            echo "<label for='1'>";
+                                                echo $ingrediente['ingrediente'];
+                                                echo "<input type='checkbox' id='1'>";
+                                                echo "<span class='checkmark'></span>";
+                                            echo "</label>";
+                                        echo "</td>";
+                                        echo "<td>".$ingrediente['cantidad']." ".$ingrediente['nombre_medida']."</td>";
+                                    echo "</tr>";
+                                }
+                            ?>
                         </table>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="section-title product__discount__title">
                             <h2>Instrucciones</h2>
                         </div>
-                        <textarea rows="30" cols="82" disabled>
-                            1. Licua las galletas hasta que queden finos pedazos.
-                            2. Agrega mantequilla a la mezcla y licua.
-                            3. Derrite los bombones por 30 segundos en el microondas.
-                            4. Agrega el queso crema a la mezcla y revuelve con los bombones.
-                            5. Sirve y disfruta!    
-                        </textarea>
+                        
+                            <?php
+                                echo "<ol>";
+                                while($instruccion = mysqli_fetch_array($ResultadoInstrucciones)){
+                                    echo "<li>".$instruccion['ingrediente']."</li>";
+                                    echo '<img src="' . $instruccion['foto'] . '" alt="Imagen" style="width: 100px;">';
+                                }
+                                echo "</ol>";
+                            ?> 
                     </div>
                 </div>
+            </div>
+            <div>
+                <p>.</p>
             </div>
     <footer class="footer spad">
         <div class="container">

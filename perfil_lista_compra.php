@@ -236,10 +236,10 @@ $ResultadoIngredientes =  mysqli_query($conexion, $ConsultaIngredientes);
                         <center> 
                             <nav class="header__menu">
                                 <ul>
-                                    <li><a href="perfil_grupos.html">Grupos</a></li>
-                                    <li><a href="perfil_favoritos.html">Favoritos</a></li>
-                                    <li><a href="perfil_misrecetas.html" class="active">Mis Recetas</a></li>
-                                    <li><a href="perfil_lista_compra.html">Lista de Compra</a></li>
+                                    <li><a href="perfil_grupos.php">Grupos</a></li>
+                                    <li><a href="perfil_favoritos.php">Favoritos</a></li>
+                                    <li><a href="perfil_misrecetas.php" class="active">Mis Recetas</a></li>
+                                    <li><a href="perfil_lista_compra.php">Lista de Compra</a></li>
                                 </ul>
                             </nav>
                         </center>
