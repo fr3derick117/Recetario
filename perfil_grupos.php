@@ -333,6 +333,7 @@ if (isset($_POST['agregar_grupo'])) {
                                 <h2>Nuevo grupo</h2><br><br><br>
                                 <form id="formAuthentication" action="perfil_grupos.php" method="POST" enctype="multipart/form-data">
                                     <div class="col-lg-12 col-1">
+                                        <a class="text_cool">Selecciona la foto del grupo</a><br>
                                         <label for="imagen">
                                             <img src="img/grupo_perfil.png" width="100px" id="imagen">
                                         </label>
@@ -351,6 +352,7 @@ if (isset($_POST['agregar_grupo'])) {
                                                 reader.readAsDataURL(e.target.files[0]);
                                             });
                                         </script> 
+                                        <a class="text_cool">Escribe el nombre del grupo</a>
                                         <input id="nom_grupo" name="nom_grupo" type="text" placeholder="Nombre del grupo" style="border-style: outset;" class="col-lg-9">
                                     </div>
                                     <div class="col-lg-12"><br>
