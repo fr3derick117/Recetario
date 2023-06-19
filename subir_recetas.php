@@ -2,15 +2,15 @@
 session_start();
 
 //Cerrar sesion
-if($_SESSION['login']=='' || $_SESSION['login']==null || $_SESSION['login']=='0' ){
+if ($_SESSION['login'] == '' || $_SESSION['login'] == null || $_SESSION['login'] == '0') {
     header('Location: login.php');
 }
 if (isset($_GET['logout'])) {
-  // Destruye la sesión actual
-  session_unset();
-  session_destroy();
-  // Redirecciona al usuario a la página de inicio de sesión
-  header("Location: login.php");
+    // Destruye la sesión actual
+    session_unset();
+    session_destroy();
+    // Redirecciona al usuario a la página de inicio de sesión
+    header("Location: login.php");
 }
 
 //Establecer la conexion a la base de datos
@@ -20,6 +20,11 @@ $conexion = mysqli_connect('localhost', 'root', '', 'ingsoft');
 if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
+
+//consulta para ver todos los registros de la tabla usuarios
+$ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
+//print_r($ConsultaUsuario);
+$ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
 
 //id de receta
 $sql = "SELECT MAX(idreceta) as last_id FROM receta";
@@ -31,7 +36,7 @@ if ($result->num_rows > 0) {
     // Obtener el último ID
     $last_id = $row["last_id"] + 1;
     // Imprimir el último ID
-} 
+}
 
 //Crear Receta
 //print_r($_FILES['imagen']);
@@ -44,28 +49,29 @@ if (isset($_FILES['imagen'])) {
     //crear una carpeta con el nombre de la receta
     //mover la imagen a la carpeta creada
     //crear una ruta que guarde la imagen en una carpeta con el nombre de la receta dentro de la carpeta receta
-    $receta = $_POST['titulo'];
-    mkdir("recetas/" . $receta);
-    $ruta = "recetas/" . $receta . "/" . $nombre;
-    //echo $ruta;
     
-    //if(move_uploaded_file($imagen, $ruta)){
-    //    echo "Se movio la imagen";}
+    $receta = $_POST['titulo'];
+    $ruta = "img/recetas/" . $nombre;
+    //echo $ruta;
+
+    if(move_uploaded_file($imagen, $ruta)){
+        echo "Se movio la imagen";
+    }
     // Aquí debes agregar código para conectarte a la base de datos MySQL
     // y guardar la imagen en una tabla de la base de datos.
-    $AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
-        VALUES (NULL, NULL, '$last_id', '$nombre')";
-    
+    //$AgregarImagen = "INSERT INTO preparaciones (idpreparacion, preparacion, receta_idreceta, nombre_imagen)
+    //    VALUES (NULL, NULL, '$last_id', '$nombre')";
 
-// Ejecutar la consulta
-    $ConsultaImagen = mysqli_query($conexion, $AgregarImagen);
+
+    // Ejecutar la consulta
+    //$ConsultaImagen = mysqli_query($conexion, $AgregarImagen);
 
 }
 
 
-if (isset($_POST['subir'])) {
-    $ConsultaAgregar = "INSERT INTO receta 
-        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, preparacion, fotos, usuario_idusuario ) 
+if (isset($_POST['agregar_receta'])) {
+    $ConsultaAgregarReceta = "INSERT INTO receta 
+        (idreceta, nombre_receta, porciones, tiempo_preparacion, tiempo_comida, tipo_comida, tipo_preferencia, dificultad, descripcion, foto_principal, usuario_idusuario, calificacion ) 
         VALUES 
         ('" . $last_id . "', 
         '" . $_POST['titulo'] . "', 
@@ -75,13 +81,12 @@ if (isset($_POST['subir'])) {
         '" . $_POST['tipo_comida'] . "', 
         '" . $_POST['tipo_preferencia'] . "', 
         '" . $_POST['dificultad'] . "', 
-        '" . $_POST['preparacion'] . "', 
-        'prueba', 
-        '".$_SESSION['id_usuario']."');";
-
-    $ResultadoAgregar = mysqli_query($conexion, $ConsultaAgregar);
+        '" . $_POST['descripcion'] . "', 
+        '".$nombre."', 
+        '" . $_SESSION['id_usuario'] . "',
+        NULL);";
+    $ResultadoAgregarReceta = mysqli_query($conexion, $ConsultaAgregarReceta);
     
-
     //crear una consulta con php a la tabla ingredientes_de_receta en la base de datos de ingsoft para insertar un nuevo registro
     //$ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
     //    (receta_idreceta, ingredientes_idingrediente, cantidad, medida) 
@@ -103,10 +108,12 @@ if (isset($_POST['subir'])) {
     '".$_POST['cantidad']."',
     '".$_POST['medida']."');";
     $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);*/
-
 }
 
-    
+print_r($ConsultaAgregarReceta);
+print_r($ResultadoAgregarReceta);
+$last_id = $last_id - 1;
+
 
 /*if(isset($_POST['mas'])){
 $SeleccionarUltimaReceta = "SELECT MAX(idreceta) FROM receta;"+1;
@@ -124,11 +131,11 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
 //echo "Parametros por POST: ";
 
 //una consulta para ver todos los registros de la tabla ingredientes
-$ConsultaIngredientes = "SELECT * FROM ingredientes;";
-$ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
+//$ConsultaIngredientes = "SELECT * FROM ingredientes;";
+//$ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
 
-$ConsultaMedidas = "SELECT * FROM medidas;";
-$ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
+//$ConsultaMedidas = "SELECT * FROM medidas;";
+//$ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
 //imprimir la consulta de ingredientes
 //print_r($ResultadoIngredientes);
 
@@ -160,7 +167,7 @@ print_r($_POST);
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
-    
+
 
     <style>
         button {
@@ -253,8 +260,7 @@ print_r($_POST);
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="header__logo">
-                            <a href="./index.html"><img src="img/logo_blog_de_comdia.png" alt="" width="100px"
-                                    height="100px"></a>
+                            <a href="./index.html"><img src="img/logo_blog_de_comdia.png" alt="" width="100px" height="100px"></a>
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -275,18 +281,22 @@ print_r($_POST);
                                 <li>
                                     <nav class="header__menu">
                                         <ul>
-                                            <li><img src="img/foto_perfil2.png" width="70px" height="70px">
-                                                <ul class="header__menu__dropdown" width="60px" height="60px">
-                                                    <li><a class="text-center" href="perfil_misrecetas.php">Perfil</a></li>
-                                                    <li><a class="text-center" href="perfil_misrecetas.php">Mis Recetas</a></li>
-                                                    <li><a class="text-center" href="Home_Page.html">Home Page</a></li>
-                                                    <li><a class="text-center" href="perfil_lista_compra.html">Lista de Compras</a></li>
-                                                    <li><a class="text-center" href="perfil_grupos.html">Grupos</a></li>
-                                                    <li><a class="text-center">Planeador de Menú</a></li>
-                                                    <li><a class="text-center" href="subir_recetas.php">Subir Receta</a></li>
-                                                    <li><a class="text-center" href="login.php">Cerrar Sesión</a></li>
-                                                </ul>
-                                            </li>
+                                            <?php  
+                                                if($usuario = mysqli_fetch_array($ResultadoUsuario)){
+                                                    echo "<li><img src='img/usuarios/".$usuario['imagen']."' width='70px' height='70px'></img>";
+                                                        echo "<ul class='header__menu__dropdown' width='60px' height='60px'>";
+                                                            echo "<li><a class='text-center' >".$usuario['nombre_usuario']."</a></li>";
+                                                            echo "<li><a class='text-center' href='perfil_misrecetas.php'>Perfil</a></li>";
+                                                            echo "<li><a class='text-center' href='perfil_misrecetas.php'>Mis Recetas</a></li>";
+                                                            echo "<li><a class='text-center' href='Home_Page.php'>Home Page</a></li>";
+                                                            echo "<li><a class='text-center' href='perfil_lista_compra.html'>Lista de Compras</a></li>";
+                                                            echo "<li><a class='text-center' href='perfil_grupos.php'>Grupos</a></li>";
+                                                            echo "<li><a class='text-center' href='subir_recetas.php'>Subir Receta</a></li>";
+                                                            echo "<li><a class='text-center' href='login.php'>Cerrar Sesión</a></li>";
+                                                        echo"</ul>";
+                                                    echo"</li>";
+                                                }
+                                            ?>
                                         </ul>
                                     </nav>
                                 </li>
@@ -331,62 +341,72 @@ print_r($_POST);
                                 <input id="titulo" name="titulo" type="text" placeholder="Título">
                             </div>
 
-                            <!--<form action="guardar_imagen.php" method="POST" enctype="multipart/form-data">-->
                             <button type="button">
-                              <img src="img/subetufoto.png" width="1150px" id="imagen"
-                                   onclick="document.getElementById('fileInput').click();">
-                              <input type="file" name="imagen" id="fileInput" style="display: none;"
-                                     onchange="cargarImagen(this);">
+                                <img src="img/subetufoto.png" width="1150px" id="imagen" onclick="document.getElementById('fileInput').click();">
+                                <input type="file" name="imagen" id="fileInput" style="display: none;" onchange="cargarImagen(this);">
                             </button>
 
                             <script>
-                            function cargarImagen(input) {
-                              // Obtener la imagen seleccionada
-                              var imagen = input.files[0];
-                            
-                              // Crear un objeto de tipo FileReader para leer la imagen
-                              var reader = new FileReader();
-                            
-                              // Cuando se haya cargado la imagen, crear una imagen con el tamaño deseado
-                              reader.onload = function(e) {
-                                var img = new Image();
-                                img.onload = function() {
-                                  // Crear un canvas con las dimensiones deseadas
-                                  var canvas = document.createElement('canvas');
-                                  var ctx = canvas.getContext('2d');
-                                  canvas.width = 1150;
-                                  canvas.height = 646.88;
-                                
-                                  // Copiar la imagen original en el canvas con las dimensiones deseadas
-                                  var ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
-                                  var width = img.width * ratio;
-                                  var height = img.height * ratio;
-                                  var x = (canvas.width - width) / 2;
-                                  var y = (canvas.height - height) / 2;
-                                  ctx.drawImage(img, x, y, width, height);
-                                
-                                  // Obtener la URL del canvas y asignarla a la imagen
-                                  var dataURL = canvas.toDataURL();
-                                  document.getElementById('imagen').src = dataURL;
-                                };
-                                img.src = e.target.result;
-                              };
-                          
-                              // Leer la imagen seleccionada como una URL de datos
-                              reader.readAsDataURL(imagen);
-                            }
-                            </script>
+                                /*const inputTitulo = document.getElementById('titulo');
+                                const valorTitulo = inputTitulo.value;
 
+                                async function createFolder() {
+                                    try {
+                                      const handle = await window.showDirectoryPicker();
+                                      await handle.getDirectoryHandle(valorTitulo, { create: true });
+                                      console.log('Carpeta creada exitosamente');
+                                    } catch (error) {
+                                      console.error('Error al crear la carpeta:', error);
+                                    }
+                                  }*/
+
+                                function cargarImagen(input) {
+                                    // Obtener la imagen seleccionada
+                                    var imagen = input.files[0];
+
+                                    // Crear un objeto de tipo FileReader para leer la imagen
+                                    var reader = new FileReader();
+
+                                    // Cuando se haya cargado la imagen, crear una imagen con el tamaño deseado
+                                    reader.onload = function(e) {
+                                        var img = new Image();
+                                        img.onload = function() {
+                                            // Crear un canvas con las dimensiones deseadas
+                                            var canvas = document.createElement('canvas');
+                                            var ctx = canvas.getContext('2d');
+                                            canvas.width = 1150;
+                                            canvas.height = 646.88;
+
+                                            // Copiar la imagen original en el canvas con las dimensiones deseadas
+                                            var ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+                                            var width = img.width * ratio;
+                                            var height = img.height * ratio;
+                                            var x = (canvas.width - width) / 2;
+                                            var y = (canvas.height - height) / 2;
+                                            ctx.drawImage(img, x, y, width, height);
+
+                                            // Obtener la URL del canvas y asignarla a la imagen
+                                            var dataURL = canvas.toDataURL();
+                                            document.getElementById('imagen').src = dataURL;
+                                        };
+                                        img.src = e.target.result;
+                                    };
+
+                                    // Leer la imagen seleccionada como una URL de datos
+                                    reader.readAsDataURL(imagen);
+                                    createFolder();
+                                }
+                                
+                                
+                            </script>
                             <!--<input type="submit" value="Guardar">-->
-                            <!--</form>-->
                             <br><br>
 
                             <div class="col-lg-12">
                                 <nav class="header__menu">
                                     <ul>
                                         <li>
-                                            <select id="tipo_comida" name="tipo_comida"
-                                                onchange="mostrarOpcionSeleccionadaTipoComida()">
+                                            <select id="tipo_comida" name="tipo_comida" onchange="mostrarOpcionSeleccionadaTipoComida()">
                                                 <option value="" disabled selected><strong>Tipo de Comida:</strong></option>
                                                 <option value="Entrada">Entrada</option>
                                                 <option value="Sopa">Sopa</option>
@@ -400,9 +420,7 @@ print_r($_POST);
                                             <p id="opcion-seleccionada"></p>
                                         </li>
                                         <li>
-
-                                            <select id="tiempo_comida" name="tiempo_comida"
-                                                onchange="mostrarOpcionSeleccionadaTiempoComida()">
+                                            <select id="tiempo_comida" name="tiempo_comida" onchange="mostrarOpcionSeleccionadaTiempoComida()">
                                                 <option value="" disabled selected><strong>Tiempo de Comida:</strong></option>
                                                 <option value="Desayuno">Desayuno</option>
                                                 <option value="Almuerzo">Almuerzo</option>
@@ -413,8 +431,7 @@ print_r($_POST);
                                             <p id="opcion-seleccionada"></p>
                                         </li>
                                         <li>
-                                            <select id="tipo_preferencia" name="tipo_preferencia"
-                                                onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
+                                            <select id="tipo_preferencia" name="tipo_preferencia" onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
                                                 <option value="" disabled selected><strong>Preferencias</strong></option>
                                                 <option value="Mariscos">Mariscos</option>
                                                 <option value="Lácteos">Lácteos</option>
@@ -427,8 +444,7 @@ print_r($_POST);
                                             <p id="opcion-seleccionada"></p>
                                         </li>
                                         <li>
-                                            <select id="dificultad" name="dificultad"
-                                                onchange="mostrarOpcionSeleccionadaDificultad()">
+                                            <select id="dificultad" name="dificultad" onchange="mostrarOpcionSeleccionadaDificultad()">
                                                 <option value="" disabled selected><strong>Dificultad:</strong></option>
                                                 <option value="Alta">Alta</option>
                                                 <option value="Media">Media</option>
@@ -438,330 +454,306 @@ print_r($_POST);
                                         </li>
                                         <li>
                                             <div class="row">
-                                                <input id="tiempo_preparacion" name="tiempo_preparacion" type="text"
-                                                    placeholder="Tiempo de Preparacion"
-                                                    style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
+                                                <input id="tiempo_preparacion" name="tiempo_preparacion" type="text" placeholder="Tiempo de Preparacion" style="border-radius: 10px; border: 2px solid #d9d9d9; padding: 5px; color: #333333;">
                                             </div>
                                         </li>
                                         <li>
                                             <div class="row">
-                                                <input id="porciones" name="porciones" type="text"
-                                                    placeholder="Porciones"
-                                                    style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
+                                                <input id="porciones" name="porciones" type="text" placeholder="Porciones" style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333;">
+                                            </div>
+                                        </li>
+                                        <li></li>
+                                        <li>
+                                            <div class="row">
+                                              <input id="descripcion" name="descripcion" type="text" placeholder="Descripción" style="border-radius: 5px; border: 1px solid #d9d9d9; padding: 5px; color: #333333; width: 1140px;">
                                             </div>
                                         </li>
                                     </ul>
                                 </nav><br>
                             </div>
+                            <input type="submit" id="agregar_receta" name="agregar_receta" value="Agregar Descrpición de Receta" onclick="createFolder()">
+                        </form>
 
-                            <div class="section-title product__discount__title">
-                                <h2>Ingredientes: </h2><br><br><br>
-
-<?php
-// Configuración de la conexión a la base de datos
-$host = 'localhost';
-$usuario = 'root';
-$contrasena = '';
-$base_de_datos = 'ingsoft';
-
-// Conexión a la base de datos
-$conexion = new mysqli($host, $usuario, $contrasena, $base_de_datos);
-if ($conexion->connect_error) {
-  die('Error de conexión: ' . $conexion->connect_error);
-}
-
-//id de receta
-$sql = "SELECT MAX(idreceta) as last_id FROM receta";
-$result = mysqli_query($conexion, $sql);
-// Comprobar si se encontró algún resultado
-if ($result->num_rows > 0) {
-  // Obtener el resultado como un arreglo asociativo
-  $row = $result->fetch_assoc();
-  // Obtener el último ID
-  $last_id = $row["last_id"] + 1;
-  // Imprimir el último ID
-}
-
-$ConsultaIngredientes = "SELECT * FROM ingredientes;";
-$ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
-
-$ConsultaMedidas = "SELECT * FROM medidas;";
-$ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
-
-$ConsultaAgregarIngredientesReceta = "INSERT INTO ingredientes_de_receta 
-(receta_idreceta, ingrediente, cantidad, medidas_idmedida) 
-VALUES
-('".$last_id."', 
-'".$_POST['ingredientes']."',
-'".$_POST['cantidad']."',
-'".$_POST['medida']."');";
-
-$ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientesReceta);
-
-
-
-// Verificar si se ha enviado el formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Obtener los datos del formulario
-  $ingrediente = isset($_POST['ingrediente']) ? $_POST['ingrediente'] : '';
-  $cantidad = isset($_POST['cantidad']) ? $_POST['cantidad'] : '';
-  $medida = isset($_POST['medida']) ? $_POST['medida'] : '';
-
-  // Procesar la imagen subida
-  $foto = isset($_FILES['foto']) ? $_FILES['foto'] : null;
-  $nombreArchivo = '';
-  $rutaArchivo = '';
-
-  if ($foto !== null && $foto['error'] === UPLOAD_ERR_OK) {
-    $nombreArchivo = $ingrediente . '.' . pathinfo($foto['name'], PATHINFO_EXTENSION);
-    $rutaArchivo = 'imagenes/' . $nombreArchivo;
-
-    // Mover la imagen a la carpeta de imágenes
-    move_uploaded_file($foto['tmp_name'], $rutaArchivo);
-
-    // Insertar los datos en la base de datos
-    $query = "INSERT INTO ingredientes (foto, ingrediente, cantidad, medida) VALUES ('$rutaArchivo', '$ingrediente', '$cantidad', '$medida')";
-
-    if ($conexion->query($query) === true) {
-      echo '<p>Receta subida correctamente.</p>';
-      // Actualizar la página para reflejar los cambios
-      echo '<script>window.location.href = "subir_recetas.php";</script>';
-    } else {
-      echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
-    }
-  }
-}
-?>
-
-
-<form method="POST" enctype="multipart/form-data">
-<style>
-  .form-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .form-row > * {
-    margin-right: 10px;
-  }
-
-  #cantidad {
-    width: 50px;
-  }
-
-  #medida {
-    width: 150px;
-  }
-</style>
-
-<div class="form-row">
-  <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
-    <option value="" disabled selected>Selecciona un ingrediente</option>
-    <?php
-    //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
-    while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
-      echo "<option value='" . $fila['imagen'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
-    }
-    ?>
-  </select>
-  <img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80">
-  <label for="cantidad">Cantidad:</label>
-  <input id="cantidad" name="cantidad" type="text" placeholder="Cantidad"  style="width: 200px;">
-  <label for="medida">Medida:</label>
-  <select id="medida" name="medida" placeholder="Selecciona una medida">
-    <option value="" disabled selected>Selecciona una medida</option>
-    <?php
-    //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
-    while ($fila = mysqli_fetch_array($ResultadoMedidas)) {
-      echo "<option value='" . $fila['idmedidas'] . "'>" . $fila['nombre_medida'] . "</option>";
-    }
-    ?>
-  </select>
-</div>
-
-<script>
-function cambiarImagen() {
-  var nombreIngrediente = document.getElementById("ingredientes").value;
-  document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
-}
-</script>
-
-
-  <input type="submit" value="Subir Receta">
-</form>
-
-
-</body>
-</html>
-
-
-<table>
-  <tr>
-    <th>Ingrediente</th>
-    <th>Cantidad</th>
-    <th>Medida</th>
-  </tr>
-  <?php
-  $ConsultaReceta = "SELECT * FROM ingredientes_de_receta WHERE receta_idreceta = '$last_id'";
-  $ResultadoReceta = mysqli_query($conexion, $ConsultaReceta);
-
-  while ($filaReceta = mysqli_fetch_array($ResultadoReceta)) {
-    echo "<tr>";
-    echo "<td>" . $filaReceta['ingrediente'] . "</td>";
-    echo "<td>" . $filaReceta['cantidad'] . "</td>";
-    echo "<td>" . $filaReceta['medidas_idmedida'] . "</td>";
-    echo "</tr>";
-  }
-  ?>
-</table>
-
-                            </div>
-
-                            <div class="section-title product__discount__title">
-                            <style>
-		.eliminar-fila,
-		.agregar-fila {
-			padding: 8px;
-			width: 150px;
-			height: 50px;
-			font-size: 16px;
-		}
-	</style>   
-                            <h2>Pasos de Preparación: </h2><br><br><br>
+                        <div class="section-title product__discount__title">
+                            <h2>Ingredientes: </h2><br><br><br>
 
                             <?php
-  // Configuración de la conexión a la base de datos
-  $host = 'localhost';
-  $usuario = 'root';
-  $contrasena = '';
-  $base_de_datos = 'ingsoft';
 
-  // Conexión a la base de datos
-  $conexion = new mysqli($host, $usuario, $contrasena, $base_de_datos);
-  if ($conexion->connect_error) {
-    die('Error de conexión: ' . $conexion->connect_error);
-  }
+                            $ConsultaIngredientes = "SELECT * FROM ingredientes;";
+                            $ResultadoIngredientes = mysqli_query($conexion, $ConsultaIngredientes);
 
-  // Verificar si se ha enviado el formulario
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener los datos del formulario
-    $ingrediente = isset($_POST['ingrediente']) ? $_POST['ingrediente'] : '';
+                            if (isset($_POST['ingredientes'])) {
+                                $ConsultaNombreIngrediente = "SELECT * FROM ingredientes WHERE imagen = '" . $_POST['ingredientes'] . "' ";
+                                //print_r($ConsultaNombreIngrediente);
+                                $ResultadoNombreIngrediente = mysqli_query($conexion, $ConsultaNombreIngrediente);
+                                //print_r($ResultadoNombreIngrediente);
+                                if ($ingrediente_especifico = mysqli_fetch_array($ResultadoNombreIngrediente)) {
+                                    $nombre_ingrediente_especifico = $ingrediente_especifico['nombre_ingrediente'];
+                                    //print_r($nombre_ingrediente_especifico);
+                                }
+                            }
 
-    // Procesar la imagen subida
-    $foto = isset($_FILES['foto']) ? $_FILES['foto'] : null;
-    $nombreArchivo = '';
-    $rutaArchivo = '';
+                            $ConsultaMedidas = "SELECT * FROM medidas;";
+                            $ResultadoMedidas = mysqli_query($conexion, $ConsultaMedidas);
 
-    if ($foto !== null && $foto['error'] === UPLOAD_ERR_OK) {
-      $nombreArchivo = $ingrediente . '.' . pathinfo($foto['name'], PATHINFO_EXTENSION);
-      $rutaArchivo = 'imagenes/' . $nombreArchivo;
-
-      // Mover la imagen a la carpeta de imágenes
-      move_uploaded_file($foto['tmp_name'], $rutaArchivo);
-
-      // Insertar los datos en la base de datos
-      $query = "INSERT INTO ins (foto, ingrediente) VALUES ('$rutaArchivo', '$ingrediente')";
-
-      if ($conexion->query($query) === true) {
-        echo '<p>Receta subida correctamente.</p>';
-        // Actualizar la página para reflejar los cambios
-        echo '<script>window.location.href = "subir_recetas.php";</script>';
-        exit; // Agregar exit para evitar la ejecución adicional del código
-      } else {
-        echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
-      }
-    }
-  }
-  ?>
+                            if (isset($_POST['agregar_ingrediente'])) {
+                                $ConsultaAgregarIngredientes = "INSERT INTO ingredientes_de_receta 
+                                    (receta_idreceta, ingrediente, cantidad, medidas_idmedida) 
+                                    VALUES
+                                    ('" . $last_id . "', 
+                                    '" . $nombre_ingrediente_especifico . "',
+                                    '" . $_POST['cantidad'] . "',
+                                    '" . $_POST['medida'] . "');";
+                                $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredientes);
+                                //print_r($ConsultaAgregarIngredientes);
+                                //print_r($ResultadoAgregarIngredientes);
+                            }
 
 
-<style>
-  .center-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 50vh;
-  }
-</style>
+                            // Verificar si se ha enviado el formulario
+                            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                // Obtener los datos del formulario
+                                $ingrediente = isset($_POST['ingrediente']) ? $_POST['ingrediente'] : '';
+                                $cantidad = isset($_POST['cantidad']) ? $_POST['cantidad'] : '';
+                                $medida = isset($_POST['medida']) ? $_POST['medida'] : '';
 
-<div class="center-form">
-  <form method="POST" enctype="multipart/form-data">
-    <label for="ingrediente">Instrucción:</label>
-    <input type="text" name="ingrediente" required style="width: 200px;"><br>
+                                // Procesar la imagen subida
+                                $foto = isset($_FILES['foto']) ? $_FILES['foto'] : null;
+                                $nombreArchivo = '';
+                                $rutaArchivo = '';
 
-    <label for="foto">Foto:</label>
-    <input type="file" name="foto" accept="image/*" required style="width: 200px;"><br>
+                                if ($foto !== null && $foto['error'] === UPLOAD_ERR_OK) {
+                                    $nombreArchivo = $ingrediente . '.' . pathinfo($foto['name'], PATHINFO_EXTENSION);
+                                    $rutaArchivo = 'imagenes/' . $nombreArchivo;
 
-    <input type="submit" value="Subir Instrucción o Paso" style="width: 200px;">
-  </form>
-</div>
+                                    // Mover la imagen a la carpeta de imágenes
+                                    move_uploaded_file($foto['tmp_name'], $rutaArchivo);
+
+                                    // Insertar los datos en la base de datos
+                                    $query = "INSERT INTO ingredientes (foto, ingrediente, cantidad, medida) VALUES ('$rutaArchivo', '$ingrediente', '$cantidad', '$medida')";
+
+                                    if ($conexion->query($query) === true) {
+                                        echo '<p>Receta subida correctamente.</p>';
+                                        // Actualizar la página para reflejar los cambios
+                                        echo '<script>window.location.href = "subir_recetas.php";</script>';
+                                    } else {
+                                        echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
+                                    }
+                                }
+                            }
+                            ?>
 
 
-  <?php
-  // Obtener todas las recetas de la base de datos
-  $queryRecetas = "SELECT * FROM ins";
-  $resultadoRecetas = $conexion->query($queryRecetas);
+                            <form method="POST" id=enctype="multipart/form-data">
+                                <style>
+                                    .form-row {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: flex-start;
+                                    }
 
-  if ($resultadoRecetas->num_rows > 0) {
-    echo '<h2></h2>';
+                                    .form-row>* {
+                                        margin-right: 10px;
+                                    }
 
-    echo '<table>';
-    echo '<tr><th>Instruccion</th><th>Foto</th><th>Eliminar</th></tr>'; // Corregir el nombre de la columna
+                                    #cantidad {
+                                        width: 50px;
+                                    }
 
-    while ($filaReceta = $resultadoRecetas->fetch_assoc()) {
-      echo '<tr>';
-      echo '<td>' . $filaReceta['ingrediente'] . '</td>';
-      echo '<td><img src="' . $filaReceta['foto'] . '" alt="Imagen" style="width: 100px;"></td>';
-      echo '<td>';
-      echo '<form method="POST" style="display: inline-block;">';
-      echo '<input type="hidden" name="id_receta" value="' . $filaReceta['id'] . '">';
-      echo '<input type="submit" name="eliminar" value="Eliminar">';
-      echo '</form>';
-      echo '</td>';
-      echo '</tr>';
-    }
+                                    #medida {
+                                        width: 150px;
+                                    }
+                                </style>
 
-    echo '</table>';
-  }
+                                <div class="form-row">
+                                    <select id="ingredientes" name="ingredientes" onchange="cambiarImagen()">
+                                        <option value="" disabled selected>Selecciona un ingrediente</option>
+                                        <?php
+                                        //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+                                        while ($fila = mysqli_fetch_array($ResultadoIngredientes)) {
+                                            echo "<option value='" . $fila['imagen'] . "'>" . $fila['nombre_ingrediente'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                    <img id="imagen-ingrediente" src="img/Ingredientes/default.png" width="80" height="80">
+                                    <label for="cantidad">Cantidad:</label>
+                                    <input id="cantidad" name="cantidad" type="text" placeholder="Cantidad" style="width: 200px;">
+                                    <label for="medida">Medida:</label>
+                                    <select id="medida" name="medida" placeholder="Selecciona una medida">
+                                        <option value="" disabled selected>Selecciona una medida</option>
+                                        <?php
+                                        //con la consulta $ResultadoIngredientes se agrega en la fila un select con value del parametro idingrediente y en la opcion el parametro nombre_ingrediente
+                                        while ($fila = mysqli_fetch_array($ResultadoMedidas)) {
+                                            echo "<option value='" . $fila['idmedidas'] . "'>" . $fila['nombre_medida'] . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
 
-  // Verificar si se ha enviado el formulario de eliminación
-  if (isset($_POST['id_receta'])) {
-    // Obtener el ID de la receta a eliminar
-    $idReceta = $_POST['id_receta'];
+                                <script>
+                                    function cambiarImagen() {
+                                        var nombreIngrediente = document.getElementById("ingredientes").value;
+                                        document.getElementById("imagen-ingrediente").src = "img/Ingredientes/" + nombreIngrediente;
+                                    }
+                                </script>
 
-    // Eliminar la receta de la base de datos
-    $queryEliminar = "DELETE FROM ins WHERE id='$idReceta'";
+                                <input type="submit" id="agregar_ingrediente" name="agregar_ingrediente" value="Agregar Ingrediente">
+                            </form>
 
-    if ($conexion->query($queryEliminar) === true) {
-      echo '<p>Receta eliminada correctamente.</p>';
-      // Actualizar la página para reflejar los cambios
-      echo '<script>window.location.href = "subir_recetas.php";</script>';
-      exit; // Agregar exit para evitar la ejecución adicional del código
-    } else {
-      echo '<p>Error al eliminar la receta: ' . $conexion->error . '</p>';
-    }
-  }
+                            <table>
+                                <tr>
+                                    <th>Ingrediente</th>
+                                    <th>Cantidad</th>
+                                    <th>Medida</th>
+                                </tr>
+                                <?php
+                                $ConsultaIngredientesReceta = "SELECT * FROM ingredientes_de_receta WHERE receta_idreceta = '" . $last_id . "' ";
+                                $ResultadoIngredientesReceta = mysqli_query($conexion, $ConsultaIngredientesReceta);
 
-  $conexion->close();
-  ?>
+                                while ($filaIngredientesReceta = mysqli_fetch_array($ResultadoIngredientesReceta)) {
+                                    $ConsultaMedidasRecetas = "SELECT * FROM medidas WHERE idmedidas = '" . $filaIngredientesReceta['medidas_idmedida'] . "' ";
+                                    //print_r($ConsultaMedidasRecetas);
+                                    $ResultadoMedidasRecetas = mysqli_query($conexion, $ConsultaMedidasRecetas);
+                                    //print_r($ResultadoMedidasRecetas);
+                                    if ($filaMedidasReceta = mysqli_fetch_array($ResultadoMedidasRecetas)) {
+                                        $nombre_medidas = $filaMedidasReceta['nombre_medida'];
+                                    }
+                                    echo "<tr>";
+                                    echo "<td>" . $filaIngredientesReceta['ingrediente'] . "</td>";
+                                    echo "<td>" . $filaIngredientesReceta['cantidad'] . "</td>";
+                                    echo "<td>" . $nombre_medidas . "</td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </table>
+                            
                             </div>
-                            <button type="submit" id="subir" name="subir" class="site-btn">SUBIR RECETA</button>
-                        </form>
+                            
+                            <div class="section-title product__discount__title">
+                                <style>
+                                    .eliminar-fila,
+                                    .agregar-fila {
+                                        padding: 8px;
+                                        width: 150px;
+                                        height: 50px;
+                                        font-size: 16px;
+                                    }
+                                </style>
+                                <h2>Pasos de Preparación: </h2><br><br><br>
+                                
+                                <?php
+                                // Verificar si se ha enviado el formulario
+                                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                    // Obtener los datos del formulario
+                                    $ingrediente = isset($_POST['ingrediente']) ? $_POST['ingrediente'] : '';
+
+                                    // Procesar la imagen subida
+                                    $foto = isset($_FILES['foto']) ? $_FILES['foto'] : null;
+                                    $nombreArchivo = '';
+                                    $rutaArchivo = '';
+
+                                    if ($foto !== null && $foto['error'] === UPLOAD_ERR_OK) {
+                                      $nombreArchivo = $ingrediente . '.' . pathinfo($foto['name'], PATHINFO_EXTENSION);
+                                      $rutaArchivo = 'img/recetas/' . $nombreArchivo;
+                                    
+                                      // Mover la imagen a la carpeta de imágenes
+                                      move_uploaded_file($foto['tmp_name'], $rutaArchivo);
+                                    
+                                      // Insertar los datos en la base de datos
+                                      $query = "INSERT INTO ins (id, id_receta, foto, ingrediente) VALUES (NULL, '$last_id','$rutaArchivo', '$ingrediente')";
+                                    
+                                      if ($conexion->query($query) === true) {
+                                        echo '<p>Receta subida correctamente.</p>';
+                                        // Actualizar la página para reflejar los cambios
+                                        echo '<script>window.location.href = "subir_recetas.php";</script>';
+                                        exit; // Agregar exit para evitar la ejecución adicional del código
+                                      } else {
+                                        echo '<p>Error al subir la receta: ' . $conexion->error . '</p>';
+                                      }
+                                    }
+                                }                             
+                                ?>
+
+                            
+                                <style>
+                                    .center-form {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        justify-content: center;
+                                        height: 50vh;
+                                    }
+                                </style>
+
+                                <div class="center-form">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        <label for="ingrediente">Instrucción:</label>
+                                        <input type="text" name="ingrediente" required style="width: 200px;"><br>
+                                
+                                        <label for="foto">Foto:</label>
+                                        <input type="file" name="foto" accept="image/*" required style="width: 200px;"><br>
+                                
+                                        <input type="submit" id="agregar_instruccion" name="agregar_instruccion" value="Subir Instrucción o Paso" style="width: 200px;">
+                                    </form>
+                                </div>
+                                
+                                
+                                <?php
+                                // Obtener todas las recetas de la base de datos
+                                $queryRecetas = "SELECT * FROM ins";
+                                $resultadoRecetas = $conexion->query($queryRecetas);
+                                if ($resultadoRecetas->num_rows > 0) {
+                                    echo '<h2></h2>';
+                                    echo '<table>';
+                                    echo '<tr><th>Instruccion</th><th>Foto</th><th>Eliminar</th></tr>'; // Corregir el nombre de la columna
+                                    while ($filaReceta = $resultadoRecetas->fetch_assoc()) {
+                                        echo '<tr>';
+                                        echo '<td>' . $filaReceta['ingrediente'] . '</td>';
+                                        echo '<td><img src="' . $filaReceta['foto'] . '" alt="Imagen" style="width: 100px;"></td>';
+                                        echo '<td>';
+                                        echo '<form method="POST" style="display: inline-block;">';
+                                        echo '<input type="hidden" name="id_receta" value="' . $filaReceta['id'] . '">';
+                                        echo '<input type="submit" name="eliminar" value="Eliminar">';
+                                        echo '</form>';
+                                        echo '</td>';
+                                        echo '</tr>';
+                                    }
+                                    echo '</table>';
+                                }
+                            
+                                // Verificar si se ha enviado el formulario de eliminación
+                                if (isset($_POST['id_receta'])) {
+                                    // Obtener el ID de la receta a eliminar
+                                    $idReceta = $_POST['id_receta'];
+                                    // Eliminar la receta de la base de datos
+                                    $queryEliminar = "DELETE FROM ins WHERE id='$idReceta'";
+                                    if ($conexion->query($queryEliminar) === true) {
+                                        echo '<p>Receta eliminada correctamente.</p>';
+                                        // Actualizar la página para reflejar los cambios
+                                        echo '<script>window.location.href = "subir_recetas.php";</script>';
+                                        exit; // Agregar exit para evitar la ejecución adicional del código
+                                    } else {
+                                        echo '<p>Error al eliminar la receta: ' . $conexion->error . '</p>';
+                                    }
+                                }
+                            
+                                $conexion->close();
+                                ?>
+                            </div>
+                            <button type="button" id="confirmar" name="confirmar" class="site-btn" onclick="window.location.href='perfil_misrecetas.php'">Confirmar Receta</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    <!-- Contact Form End -->
+<!-- Contact Form End -->
 
-    <!-- Footer Section Begin -->
+<!-- Footer Section Begin -->
 
-    <!-- Footer Section End -->
+<!-- Footer Section End -->
 
-    <!--
+<!--
 <script>
     // obtener elementos HTML
 const tablaDatos = document.getElementById('tablaDatos');
@@ -806,120 +798,117 @@ btnEliminarFila.addEventListener('click', eliminarFila);
 
 </script>    -->
 
-    <script>
-        // Obtener la tabla y el botón para agregar una fila
-        const tabla = document.getElementById('tablaDatos');
-        const btnAgregar = tabla.querySelector('button.btn-success');
+<script>
+    // Obtener la tabla y el botón para agregar una fila
+    const tabla = document.getElementById('tablaDatos');
+    const btnAgregar = tabla.querySelector('button.btn-success');
 
 
-        // Función para agregar una nueva fila
-        function agregarFila(event) {
-            // Obtener la fila en la que se encuentra el botón
-            const filaActual = event.target.closest('tr');
+    // Función para agregar una nueva fila
+    function agregarFila(event) {
+        // Obtener la fila en la que se encuentra el botón
+        const filaActual = event.target.closest('tr');
 
-            // Clonar la fila y limpiar los campos
-            const nuevaFila = filaActual.cloneNode(true);
-            const inputs = nuevaFila.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
+        // Clonar la fila y limpiar los campos
+        const nuevaFila = filaActual.cloneNode(true);
+        const inputs = nuevaFila.querySelectorAll('input');
+        inputs.forEach(input => input.value = '');
 
-            // Agregar el evento onclick al botón "+" de la nueva fila
-            const btnAgregarNuevaFila = nuevaFila.querySelector('button.btn-success');
-            btnAgregarNuevaFila.onclick = agregarFila;
+        // Agregar el evento onclick al botón "+" de la nueva fila
+        const btnAgregarNuevaFila = nuevaFila.querySelector('button.btn-success');
+        btnAgregarNuevaFila.onclick = agregarFila;
 
-            // Agregar el evento onclick al botón "-" de la nueva fila
-            const btnEliminar = nuevaFila.querySelector('button.btn-danger');
-            btnEliminar.onclick = eliminarFila;
+        // Agregar el evento onclick al botón "-" de la nueva fila
+        const btnEliminar = nuevaFila.querySelector('button.btn-danger');
+        btnEliminar.onclick = eliminarFila;
 
-            // Insertar la nueva fila después de la fila actual
-            tabla.querySelector('tbody').insertBefore(nuevaFila, filaActual.nextSibling);
-        }
+        // Insertar la nueva fila después de la fila actual
+        tabla.querySelector('tbody').insertBefore(nuevaFila, filaActual.nextSibling);
+    }
 
-        // Función para eliminar una fila
-        function eliminarFila(event) {
-            // Obtener la fila en la que se encuentra el botón
-            const filaActual = event.target.closest('tr');
+    // Función para eliminar una fila
+    function eliminarFila(event) {
+        // Obtener la fila en la que se encuentra el botón
+        const filaActual = event.target.closest('tr');
 
-            // Eliminar la fila de la tabla
-            tabla.querySelector('tbody').removeChild(filaActual);
-        }
+        // Eliminar la fila de la tabla
+        tabla.querySelector('tbody').removeChild(filaActual);
+    }
 
-        // Agregar el evento onclick al botón "+"
-        btnAgregar.onclick = agregarFila;
+    // Agregar el evento onclick al botón "+"
+    btnAgregar.onclick = agregarFila;
 
-        var numeroDeFilas = tabla.rows.length;
-        for (let index = 0; index < numeroDeFilas; index++) {
-            const element = array[index];
-        }
-
-    </script>
-    <script>
-        /*function mostrarOpcionSeleccionada() {
+    var numeroDeFilas = tabla.rows.length;
+    for (let index = 0; index < numeroDeFilas; index++) {
+        const element = array[index];
+    }
+</script>
+<script>
+    /*function mostrarOpcionSeleccionada() {
             var seleccion = document.getElementById("opciones").value;
 
         }*/
 
-        function mostrarOpcionSeleccionada() {
-            var seleccion = document.getElementById("opciones").value;
-        }
+    function mostrarOpcionSeleccionada() {
+        var seleccion = document.getElementById("opciones").value;
+    }
 
 
-        function mostrarOpcionSeleccionadaTipoComida() {
-            var seleccion = document.getElementById("tipo_comida").value;
-        }
+    function mostrarOpcionSeleccionadaTipoComida() {
+        var seleccion = document.getElementById("tipo_comida").value;
+    }
 
-        function mostrarOpcionSeleccionadaTipoPreferencia() {
-            var seleccion = document.getElementById("tipo_preferencia").value;
-        }
+    function mostrarOpcionSeleccionadaTipoPreferencia() {
+        var seleccion = document.getElementById("tipo_preferencia").value;
+    }
 
-        function mostrarOpcionSeleccionadaTiempoComida() {
-            var seleccion = document.getElementById("tiempo_comida").value;
-        }
+    function mostrarOpcionSeleccionadaTiempoComida() {
+        var seleccion = document.getElementById("tiempo_comida").value;
+    }
 
-        function mostrarOpcionSeleccionadaDificultad() {
-            var seleccion = document.getElementById("tiempo_comida").value;
-        }
+    function mostrarOpcionSeleccionadaDificultad() {
+        var seleccion = document.getElementById("tiempo_comida").value;
+    }
+</script>
 
-    </script>
-
-    </script>
-    <script>
-        function buscarTabla() {
-            var input, filtro, tabla, tr, td, i, j, encontrado;
-            input = document.getElementById("buscarInput");
-            filtro = input.value.toUpperCase();
-            tabla = document.getElementById("tablaDatos");
-            tr = tabla.getElementsByTagName("tr");
-            for (i = 0; i < tr.length; i++) {
-                if (i === 0) { // omitir la primera fila de la tabla (cabeceras)
-                    continue;
-                }
-                encontrado = false;
-                td = tr[i].getElementsByTagName("td");
-                for (j = 0; j < td.length; j++) {
-                    if (td[j].innerHTML.toUpperCase().indexOf(filtro) > -1) {
-                        encontrado = true;
-                    }
-                }
-                if (encontrado) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
+</script>
+<script>
+    function buscarTabla() {
+        var input, filtro, tabla, tr, td, i, j, encontrado;
+        input = document.getElementById("buscarInput");
+        filtro = input.value.toUpperCase();
+        tabla = document.getElementById("tablaDatos");
+        tr = tabla.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            if (i === 0) { // omitir la primera fila de la tabla (cabeceras)
+                continue;
+            }
+            encontrado = false;
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filtro) > -1) {
+                    encontrado = true;
                 }
             }
+            if (encontrado) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
         }
+    }
+</script>
 
-    </script>
 
-
-    <!-- Js Plugins -->
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/jquery.slicknav.js"></script>
-    <script src="js/mixitup.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/main.js"></script>
+<!-- Js Plugins -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.nice-select.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/jquery.slicknav.js"></script>
+<script src="js/mixitup.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/main.js"></script>
 
 
 
