@@ -28,7 +28,8 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
 // Consultar los ingredientes de la receta
 $ConsultaIngredientes = "SELECT recetas_carrito.*, ingredientes_de_receta.*, ingredientes.* ,medidas.*
 FROM recetas_carrito, ingredientes_de_receta, ingredientes, medidas
-WHERE ingredientes_de_receta.receta_idreceta = recetas_carrito.id_receta 
+WHERE recetas_carrito.id_usuario = '".$_SESSION['id_usuario']."' 
+AND ingredientes_de_receta.receta_idreceta = recetas_carrito.id_receta 
 AND ingredientes_de_receta.medidas_idmedida = medidas.idmedidas 
 AND ingredientes.nombre_ingrediente = ingredientes_de_receta.ingrediente;";
 $ResultadoIngredientes =  mysqli_query($conexion, $ConsultaIngredientes);

@@ -57,7 +57,7 @@ if (isset($_FILES['imagen'])) {
     //echo $ruta;
 
     if(move_uploaded_file($imagen, $ruta)){
-        echo "Se movio la imagen";
+        //echo "Se movio la imagen";
     }
     // Aquí debes agregar código para conectarte a la base de datos MySQL
     // y guardar la imagen en una tabla de la base de datos.

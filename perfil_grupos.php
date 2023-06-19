@@ -46,9 +46,9 @@ if (isset($_FILES['imagen-upload'])) {
     $tipo = $_FILES['imagen-upload']['type'];
     $ruta = "img/grupos/" . $nombre;
     if (move_uploaded_file($imagen, $ruta)) {
-        echo "El archivo se subió correctamente";
+        //echo "El archivo se subió correctamente";
     } else {
-        echo "Ocurrió un error al subir el archivo";
+        //echo "Ocurrió un error al subir el archivo";
     }
     //echo $ruta;
 }
