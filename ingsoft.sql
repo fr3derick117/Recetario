@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-06-2023 a las 07:20:59
+-- Tiempo de generación: 19-06-2023 a las 16:05:52
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.12
 
@@ -77,7 +77,8 @@ INSERT INTO `grupos` (`idgrupo`, `nombre`, `descripcion`, `imagen_grupo`, `recet
 (20, 'Grupo Vania', 'Grupo creado por Vania', 'grupo1.png', NULL, NULL, NULL),
 (21, 'Grupo Vania y Axel', 'Grupo de Vania y Axel', 'mesa.png', NULL, NULL, NULL),
 (22, 'Grupo Vania', 'Grupo creado por Vania', 'grupo1.png', NULL, NULL, NULL),
-(23, 'Axel grupo', 'Grupo creado por Axel', 'grupo.png', NULL, NULL, NULL);
+(23, 'Axel grupo', 'Grupo creado por Axel', 'grupo.png', NULL, NULL, NULL),
+(24, 'Equipo VANCK', 'Equipo de todos', 'mesa.png', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -89,6 +90,15 @@ CREATE TABLE `grupos_recetas` (
   `id_grupo` int(11) NOT NULL,
   `id_recetas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `grupos_recetas`
+--
+
+INSERT INTO `grupos_recetas` (`id_grupo`, `id_recetas`) VALUES
+(23, 31),
+(1, 32),
+(19, 32);
 
 -- --------------------------------------------------------
 
@@ -139,7 +149,7 @@ INSERT INTO `ingredientes` (`idingrediente`, `nombre_ingrediente`, `tipo_ingredi
 (29, 'Harina de arroz', 'Solido', 'harina_arroz.png'),
 (30, 'Oregano', 'Solido', 'oregano.png'),
 (31, 'Tomate', 'Pieza', 'tomate.png'),
-(32, 'Lechuga', 'Pieza', 'lechega.png'),
+(32, 'Lechuga', 'Pieza', 'lechuga.png'),
 (33, 'Papa', 'Pieza', 'papa.png'),
 (34, 'Pimiento', 'Pieza', 'pimiento.png'),
 (35, 'Zanahoria', 'Pieza', 'zanahoria.png'),
@@ -172,7 +182,10 @@ CREATE TABLE `ingredientes_de_receta` (
 --
 
 INSERT INTO `ingredientes_de_receta` (`receta_idreceta`, `ingrediente`, `cantidad`, `medidas_idmedida`) VALUES
-(33, '', '0.00', 0);
+(36, 'Lechuga', '1.00', 7),
+(36, 'Tomate', '0.50', 7),
+(37, 'Leche', '1.00', 8),
+(37, 'Avena', '0.50', 7);
 
 -- --------------------------------------------------------
 
@@ -182,9 +195,20 @@ INSERT INTO `ingredientes_de_receta` (`receta_idreceta`, `ingrediente`, `cantida
 
 CREATE TABLE `ins` (
   `id` int(11) NOT NULL,
+  `id_receta` int(11) NOT NULL,
   `foto` mediumblob DEFAULT NULL,
   `ingrediente` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `ins`
+--
+
+INSERT INTO `ins` (`id`, `id_receta`, `foto`, `ingrediente`) VALUES
+(1, 36, 0x696d672f726563657461732f41677265676172206c6563687567612e6a7067, 'Agregar lechuga'),
+(2, 36, 0x696d672f726563657461732f4167726567617220746f6d6174652e6a7067, 'Agregar tomate'),
+(3, 37, 0x696d672f726563657461732f4167726567617220656c2063657265616c2e6a7067, 'Agregar el cereal'),
+(4, 37, 0x696d672f726563657461732f41677265676172206c61206c656368652e6a7067, 'Agregar la leche');
 
 -- --------------------------------------------------------
 
@@ -260,20 +284,6 @@ CREATE TABLE `preparaciones` (
   `nombre_imagen` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `preparaciones`
---
-
-INSERT INTO `preparaciones` (`idpreparacion`, `preparacion`, `receta_idreceta`, `nombre_imagen`) VALUES
-(15, NULL, 29, 'lp-3.jpg'),
-(16, NULL, 29, 'lp-3.jpg'),
-(17, NULL, 29, 'lp-3.jpg'),
-(18, NULL, 29, ''),
-(19, NULL, 29, 'lp-3.jpg'),
-(20, NULL, 29, 'lp-3.jpg'),
-(21, NULL, 29, 'lp-3.jpg'),
-(22, NULL, 29, 'lp-2.jpg');
-
 -- --------------------------------------------------------
 
 --
@@ -300,10 +310,34 @@ CREATE TABLE `receta` (
 --
 
 INSERT INTO `receta` (`idreceta`, `nombre_receta`, `porciones`, `tiempo_preparacion`, `tiempo_comida`, `tipo_comida`, `tipo_preferencia`, `dificultad`, `descripcion`, `foto_principal`, `usuario_idusuario`, `calificacion`) VALUES
-(29, 'prueba26/04/23', 4, '1 min', 'Desayuno', 'Entrada', 'Mariscos', 'Alta', 'prueba a cambia', 'prueba.png', 1, NULL),
 (30, 'Sandwich', 1, '5 min', 'Desayuno', 'Entrada', 'Saludables', 'Baja', 'Pan y jamon', 'sandwich.png', 1, NULL),
 (31, 'Leche con chocolate', 1, '1 min', 'Desayuno', 'Bebida', 'Lacteos', 'Baja', 'Agregar chocolate a la leche', 'leche_chocolate.png', 1, NULL),
-(32, 'Huevo a la mexicana', 4, '10 min', 'Desayuno', 'Plato Principal', 'Omnívoro', 'Media', 'Huevo al estilo mexicano', 'huevito_mexicana.png', 7, NULL);
+(32, 'Huevo a la mexicana', 4, '10 min', 'Desayuno', 'Plato Principal', 'Omnívoro', 'Media', 'Huevo al estilo mexicano', 'huevito_mexicana.png', 7, NULL),
+(33, 'Prueba', 5, '4', 'Desayuno', 'Entrada', 'Mariscos', 'Media', '', 'prueba.png', 7, NULL),
+(34, 'Hamburguesa', 4, '30 min', 'Comida', 'Plato Principa', 'Omnívoro', 'Media', 'Hamburguesa de res', 'product-5.jpg', 7, NULL),
+(35, 'Ensalada dulce', 1, '30 min', 'Almuerzo', 'Ensalada', 'Vegetariano', 'Baja', 'Ensalada completa', 'blog-4.jpg', 7, NULL),
+(36, 'Ensalada', 1, '30 min', 'Almuerzo', 'Ensalada', 'Vegetariano', 'Baja', 'Ensalada completa', 'blog-4.jpg', 7, NULL),
+(37, 'Cereal', 1, '5 min', 'Cena', 'Entrada', 'Lácteos', 'Baja', 'Cereal con leche', 'cat-2.jpg', 7, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recetas_carrito`
+--
+
+CREATE TABLE `recetas_carrito` (
+  `id_usuario` int(11) NOT NULL,
+  `id_receta` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `recetas_carrito`
+--
+
+INSERT INTO `recetas_carrito` (`id_usuario`, `id_receta`) VALUES
+(7, 37),
+(7, 36),
+(7, 35);
 
 -- --------------------------------------------------------
 
@@ -375,7 +409,10 @@ INSERT INTO `usuarios_grupos` (`id_usuario`, `id_grupo`) VALUES
 (7, 20),
 (7, 21),
 (7, 22),
-(11, 23);
+(11, 23),
+(7, 23),
+(10, 23),
+(7, 24);
 
 -- --------------------------------------------------------
 
@@ -416,7 +453,9 @@ CREATE TABLE `usuarios_recetas_favoritas` (
 INSERT INTO `usuarios_recetas_favoritas` (`id_usuario`, `id_receta`) VALUES
 (11, 30),
 (11, 31),
-(7, 31);
+(7, 31),
+(7, 32),
+(7, 35);
 
 --
 -- Índices para tablas volcadas
@@ -451,10 +490,15 @@ ALTER TABLE `ingredientes`
 -- Indices de la tabla `ingredientes_de_receta`
 --
 ALTER TABLE `ingredientes_de_receta`
-  ADD PRIMARY KEY (`receta_idreceta`) USING BTREE,
   ADD KEY `fk_receta_has_ingredientes_ingredientes1_idx` (`ingrediente`),
   ADD KEY `fk_receta_has_ingredientes_receta1_idx` (`receta_idreceta`),
   ADD KEY `fk_receta_has_ingredientes_medidas1_idx` (`medidas_idmedida`);
+
+--
+-- Indices de la tabla `ins`
+--
+ALTER TABLE `ins`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `medidas`
@@ -481,6 +525,13 @@ ALTER TABLE `preparaciones`
 ALTER TABLE `receta`
   ADD PRIMARY KEY (`idreceta`),
   ADD KEY `fk_receta_usuario1` (`usuario_idusuario`);
+
+--
+-- Indices de la tabla `recetas_carrito`
+--
+ALTER TABLE `recetas_carrito`
+  ADD KEY `fk_recetas_carrito_usuario` (`id_usuario`),
+  ADD KEY `fk_recetas_carrito_receta` (`id_receta`);
 
 --
 -- Indices de la tabla `usuario`
@@ -516,7 +567,13 @@ ALTER TABLE `alergias`
 -- AUTO_INCREMENT de la tabla `grupos`
 --
 ALTER TABLE `grupos`
-  MODIFY `idgrupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `idgrupo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT de la tabla `ins`
+--
+ALTER TABLE `ins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
@@ -528,19 +585,19 @@ ALTER TABLE `medidas`
 -- AUTO_INCREMENT de la tabla `preferencias`
 --
 ALTER TABLE `preferencias`
-  MODIFY `idpreferencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idpreferencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `preparaciones`
 --
 ALTER TABLE `preparaciones`
-  MODIFY `idpreparacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `idpreparacion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `receta`
 --
 ALTER TABLE `receta`
-  MODIFY `idreceta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `idreceta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -570,6 +627,13 @@ ALTER TABLE `preparaciones`
 --
 ALTER TABLE `receta`
   ADD CONSTRAINT `fk_receta_usuario1` FOREIGN KEY (`usuario_idusuario`) REFERENCES `usuario` (`idusuario`);
+
+--
+-- Filtros para la tabla `recetas_carrito`
+--
+ALTER TABLE `recetas_carrito`
+  ADD CONSTRAINT `fk_recetas_carrito_receta` FOREIGN KEY (`id_receta`) REFERENCES `receta` (`idreceta`),
+  ADD CONSTRAINT `fk_recetas_carrito_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`idusuario`);
 
 --
 -- Filtros para la tabla `usuarios_grupos`

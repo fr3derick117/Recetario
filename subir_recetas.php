@@ -21,6 +21,8 @@ if (!$conexion) {
     die("Error al conectarse a la base de datos: " . mysqli_connect_error());
 }
 
+$last_id = 0;
+
 //consulta para ver todos los registros de la tabla usuarios
 $ConsultaUsuario = "SELECT * FROM usuario WHERE idusuario = '".$_SESSION['id_usuario']."' ";
 //print_r($ConsultaUsuario);
@@ -431,24 +433,24 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
                                             <p id="opcion-seleccionada"></p>
                                         </li>
                                         <li>
-                                            <select id="tipo_preferencia" name="tipo_preferencia" onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
-                                                <option value="" disabled selected><strong>Preferencias</strong></option>
-                                                <option value="Mariscos">Mariscos</option>
-                                                <option value="Lácteos">Lácteos</option>
-                                                <option value="Omnívoro">Omnívoro</option>
-                                                <option value="Vegetariano">Vegetariano</option>
-                                                <option value="Nueces y Dátlies">Nueces y Dátlies</option>
-                                                <option value="Saludables">Saludables</option>
-                                                <option value="Vegano">Vegano</option>
-                                            </select>
-                                            <p id="opcion-seleccionada"></p>
-                                        </li>
-                                        <li>
                                             <select id="dificultad" name="dificultad" onchange="mostrarOpcionSeleccionadaDificultad()">
                                                 <option value="" disabled selected><strong>Dificultad:</strong></option>
                                                 <option value="Alta">Alta</option>
                                                 <option value="Media">Media</option>
                                                 <option value="Baja">Baja</option>
+                                            </select>
+                                            <p id="opcion-seleccionada"></p>
+                                        </li>
+                                        <li>
+                                            <select id="tipo_preferencia" name="tipo_preferencia" onchange="mostrarOpcionSeleccionadaTipoPreferencia()">
+                                                <option value="" disabled selected><strong>Preferencias</strong></option>
+                                                <option value="Vegetariano">Vegetariano</option>
+                                                <option value="Vegano">Vegano</option>
+                                                <option value="Keto">Keto</option>
+                                                <option value="Sin alcohol">Sin alcohol</option>
+                                                <option value="Diabetico">Diabetico</option>
+                                                <option value="Carnivoro">Carnivoro</option>
+                                                <option value="Fitness">Fitness</option>
                                             </select>
                                             <p id="opcion-seleccionada"></p>
                                         </li>
@@ -700,7 +702,7 @@ $ResultadoAgregarIngredientes = mysqli_query($conexion, $ConsultaAgregarIngredie
                                 
                                 <?php
                                 // Obtener todas las recetas de la base de datos
-                                $queryRecetas = "SELECT * FROM ins";
+                                $queryRecetas = "SELECT * FROM ins  WHERE id_receta = '" . $last_id . "' ";
                                 $resultadoRecetas = $conexion->query($queryRecetas);
                                 if ($resultadoRecetas->num_rows > 0) {
                                     echo '<h2></h2>';

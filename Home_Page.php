@@ -28,6 +28,11 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
 //print_r($ResultadoUsuario);
 //print_r($_SESSION);
 
+//consulta para ver todos los registros de la tabla receta
+$ConsultaRecetas = "SELECT * FROM receta";
+//echo $ConsultaReceta;
+$ResultadoRecetas = mysqli_query($conexion, $ConsultaRecetas);
+
 ?>
 
 <!DOCTYPE html>
@@ -212,102 +217,27 @@ $ResultadoUsuario = mysqli_query($conexion, $ConsultaUsuario);
                         <div class="product__details__tab__desc">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-6">
-                                        <div class="blog__item">
-                                            <div class="blog__item__pic">
-                                                <img src="img/blog/blog-1.jpg" alt="">
-                                            </div>
-                                            <div class="blog__item__text">
-                                                <ul>
-                                                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                                </ul>
-                                                <h5><a href="#"> Receta 1</a></h5>
-                                                <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6">
-                                        <div class="blog__item">
-                                            <div class="blog__item__pic">
-                                                <img src="img/blog/blog-2.jpg" alt="">
-                                            </div>
-                                            <div class="blog__item__text">
-                                                <ul>
-                                                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                                </ul>
-                                                <h5><a href="#">Receta 2</a></h5>
-                                                <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6">
-                                        <div class="blog__item">
-                                            <div class="blog__item__pic">
-                                                <img src="img/blog/blog-3.jpg" alt="">
-                                            </div>
-                                            <div class="blog__item__text">
-                                                <ul>
-                                                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                                </ul>
-                                                <h5><a href="#">Receta 3</a></h5>
-                                                <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <?php
+                                while($row = mysqli_fetch_array($ResultadoRecetas)){
+                                    echo "<div class='col-lg-4 col-md-4 col-sm-6'>";
+                                        echo "<div class='blog__item'>";
+                                            echo "<div class='blog__item__pic'>";
+                                                echo "<img src='img/recetas/" . $row['foto_principal'] . "' alt=''>";
+                                            echo "</div>";
+                                            echo "<div class='blog__item__text'>";
+                                                echo "<h5><a href='vista_receta.php?receta=".$row['idreceta']."''>" . $row['nombre_receta'] . "</a></h5>";
+                                                echo "<p> Tiempo de comida: ".$row['tiempo_comida']."</br>";
+                                                echo "Preferencia: ".$row['tipo_preferencia']."</br>";
+                                                echo "Descripción: ".$row['descripcion']."</p>";
+                                            echo "</div>";
+                                        echo "</div>";
+                                    echo "</div>";
+                                }
+                                ?>
                                 </div>
                             </div>
                         </div>
                     </div><br><br>
-                    <div class="tab-pane" id="tabs-2" role="tabpanel">
-                        <div class="product__details__tab__desc">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-6">
-                                        <div class="blog__item">
-                                            <div class="blog__item__pic">
-                                                <img src="img/blog/blog-1.jpg" alt="">
-                                            </div>
-                                            <div class="blog__item__text">
-                                                <ul>
-                                                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                                </ul>
-                                                <h5><a href="#"> Receta 4</a></h5>
-                                                <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6">
-                                        <div class="blog__item">
-                                            <div class="blog__item__pic">
-                                                <img src="img/blog/blog-2.jpg" alt="">
-                                            </div>
-                                            <div class="blog__item__text">
-                                                <ul>
-                                                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                                </ul>
-                                                <h5><a href="#">Receta 5</a></h5>
-                                                <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6">
-                                        <div class="blog__item">
-                                            <div class="blog__item__pic">
-                                                <img src="img/blog/blog-3.jpg" alt="">
-                                            </div>
-                                            <div class="blog__item__text">
-                                                <ul>
-                                                    <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                                </ul>
-                                                <h5><a href="#">Receta 6</a></h5>
-                                                <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 </div>
             </div>
